@@ -33,7 +33,11 @@ public class SurveyForm {
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
-    private Employee employee;
+    private Employee creator;
+
+    @ManyToOne
+    @JoinColumn(nullable = false, updatable = false)
+    private Employee evaluatedEmployee;
 
     @OneToMany(mappedBy = "surveyForm")
     private List<Question> questions;
