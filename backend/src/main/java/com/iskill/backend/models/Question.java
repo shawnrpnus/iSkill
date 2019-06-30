@@ -5,29 +5,22 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.math.BigDecimal;
 
 @Entity
 @Data
 @NoArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Question {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long questionId;
+    protected Long questionId;
 
     @NotBlank(message = "Question is required")
-    private String question;
-
-    private String stringAnswer;
-
-    private BigDecimal numericAnswer;
+    protected String questionText;
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
-    private SurveyForm surveyForm;
+    protected SurveyForm surveyForm;
 
-    public Question(@NotBlank(message = "Question is required") String question) {
-        this.question = question;
-    }
 }
