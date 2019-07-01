@@ -16,6 +16,9 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long questionId;
 
+    @NotBlank(message = "Question sequence / number is required")
+    protected Integer questionSequence;
+
     @NotBlank(message = "Question is required")
     protected String questionText;
 
