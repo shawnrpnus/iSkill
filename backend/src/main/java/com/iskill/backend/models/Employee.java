@@ -35,8 +35,11 @@ public class Employee {
     @JoinColumn(nullable = false)
     private Role role;
 
-    @OneToMany(mappedBy = "employee")
-    private List<SurveyForm> surveyForms = new ArrayList<>();
+    @OneToMany(mappedBy = "creator")
+    private List<SurveyForm> createdSurveyForms = new ArrayList<>();
+
+    @OneToMany(mappedBy = "evaluatedEmployee")
+    private List<SurveyForm> evaluatedSurveyForms = new ArrayList<>();
 
     public Employee(@NotBlank(message = "Name is required") String name,
                     @NotBlank(message = "Username is required") @Size(max = 12, min = 4, message = "Please use 4 to 12 characters") String username,
