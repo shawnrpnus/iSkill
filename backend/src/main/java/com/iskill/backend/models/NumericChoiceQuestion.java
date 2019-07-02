@@ -23,6 +23,7 @@ public class NumericChoiceQuestion extends Question {
     private Integer upperBound;
 
     public NumericChoiceQuestion(String questionText, Integer lowerBound, Integer upperBound) {
+        super();
         this.questionText = questionText;
         this.lowerBound = lowerBound;
         this.upperBound = upperBound;

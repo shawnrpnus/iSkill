@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,11 +29,11 @@ public class Question {
     protected SurveyForm surveyForm;
 
     @OneToMany(mappedBy = "question")
-    private List<Answer> answers;
+    protected List<Answer> answers = new ArrayList<>();
 
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
-    private Category category;
+    protected Category category;
 
     public Question(@NotBlank(message = "Question sequence / number is required") Integer questionSequence, @NotBlank(message = "Question is required") String questionText) {
         this.questionSequence = questionSequence;

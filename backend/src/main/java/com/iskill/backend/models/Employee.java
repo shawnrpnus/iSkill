@@ -44,7 +44,7 @@ public class Employee {
     private List<SurveyForm> createdSurveyForms = new ArrayList<>();
 
     @OneToMany(mappedBy = "evaluator")
-    private List<Evaluation> receivedEvaluation = new ArrayList<>();
+    private List<Evaluation> receivedEvaluations = new ArrayList<>();
 
     @OneToMany(mappedBy = "evaluatee")
     private List<Evaluation> givenEvaluations = new ArrayList<>();

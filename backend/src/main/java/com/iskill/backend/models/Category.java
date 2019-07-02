@@ -21,4 +21,8 @@ public class Category {
 
     @OneToMany(mappedBy="category")
     private List<Question> questions;
+
+    public Category(String categoryName){
+        this.categoryName = categoryName;
+    }
 }
