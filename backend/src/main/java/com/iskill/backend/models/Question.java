@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 @Entity
 @Data
@@ -26,4 +27,15 @@ public class Question {
     @JoinColumn(nullable = false, updatable = false)
     protected SurveyForm surveyForm;
 
+    @OneToMany(mappedBy = "question")
+    private List<Answer> answers;
+
+    @ManyToOne
+    @JoinColumn(nullable = false, updatable = false)
+    private Category category;
+
+    public Question(@NotBlank(message = "Question sequence / number is required") Integer questionSequence, @NotBlank(message = "Question is required") String questionText) {
+        this.questionSequence = questionSequence;
+        this.questionText = questionText;
+    }
 }

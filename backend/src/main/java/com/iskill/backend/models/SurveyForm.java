@@ -35,12 +35,16 @@ public class SurveyForm {
     @JoinColumn(nullable = false, updatable = false)
     private Employee creator;
 
-    @ManyToOne
-    @JoinColumn(nullable = false, updatable = false)
-    private Employee evaluatedEmployee;
-
     @OneToMany(mappedBy = "surveyForm")
     private List<Question> questions;
+
+    @ManyToOne
+    @JoinColumn(nullable = false, updatable = false)
+    private ToolProcess toolProcess;
+
+    @OneToMany(mappedBy = "surveyForm")
+    private Evaluation evaluation;
+
 
     public SurveyForm(@NotBlank(message = "Form name is required") String formName, @NotBlank(message = "Skill level is required") String skillLevel, @NotNull(message = "Evaluation type is required") EvaluationTypeEnum evaluationTypeEnum) {
         this.formName = formName;
