@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -20,7 +21,7 @@ public class Category {
     private String categoryName;
 
     @OneToMany(mappedBy="category")
-    private List<Question> questions;
+    private List<Question> questions = new ArrayList<>();
 
     public Category(String categoryName){
         this.categoryName = categoryName;

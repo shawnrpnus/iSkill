@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -19,7 +20,7 @@ public class ToolProcess {
     protected String toolProcessName;
 
     @OneToMany(mappedBy = "toolProcess")
-    private List<SurveyForm> surveyForms;
+    private List<SurveyForm> surveyForms = new ArrayList<>();
 
     public ToolProcess(@NotBlank(message = "Tool/Process Name is required") String toolProcessName) {
         this.toolProcessName = toolProcessName;

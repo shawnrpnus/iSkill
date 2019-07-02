@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,7 +19,7 @@ public class Role {
     private String name;
 
     @OneToMany(mappedBy = "role")
-    private List<Employee> employees;
+    private List<Employee> employees = new ArrayList<>();
 
     public Role(String name){
         this.name = name;

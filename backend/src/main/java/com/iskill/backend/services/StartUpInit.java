@@ -2,8 +2,10 @@ package com.iskill.backend.services;
 
 import com.iskill.backend.models.Employee;
 import com.iskill.backend.models.Role;
+import com.iskill.backend.models.ToolProcess;
 import com.iskill.backend.repositories.EmployeeRepository;
 import com.iskill.backend.repositories.RoleRepository;
+import com.iskill.backend.repositories.ToolProcessRepository;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -13,15 +15,21 @@ public class StartUpInit {
 
     private final EmployeeRepository employeeRepository;
     private final RoleRepository roleRepository;
+    private final ToolProcessRepository toolProcessRepository;
 
-    public StartUpInit(EmployeeRepository employeeRepository, RoleRepository roleRepository) {
+    public StartUpInit(EmployeeRepository employeeRepository,
+                       RoleRepository roleRepository,
+                       ToolProcessRepository toolProcessRepository) {
         this.employeeRepository = employeeRepository;
         this.roleRepository = roleRepository;
+        this.toolProcessRepository = toolProcessRepository;
     }
 
     @PostConstruct
     public void init(){
         createManagerIfNotFound();
+        createToolProcessIfNotFound();
+
     }
 
     private void createManagerIfNotFound(){
@@ -35,5 +43,11 @@ public class StartUpInit {
         Role role = roleRepository.findByName(name).orElse(new Role(name));
         roleRepository.save(role);
         return role;
+    }
+
+    private ToolProcess createToolProcessIfNotFound() {
+        ToolProcess toolProcess = toolProcessRepository.findByToolProcessName("Tool 1").orElse(new ToolProcess("Tool 1"));
+        toolProcessRepository.save(toolProcess);
+        return toolProcess;
     }
 }

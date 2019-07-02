@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -33,7 +34,7 @@ public class Evaluation {
     private SurveyForm surveyForm;
 
     @OneToMany
-    private List<Answer> answers;
+    private List<Answer> answers = new ArrayList<>();
 
     public Evaluation(String remarks, EvaluationStatusEnum status) {
         this.remarks = remarks;
