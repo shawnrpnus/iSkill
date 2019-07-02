@@ -27,7 +27,7 @@ public class StartUpInit {
     private void createManagerIfNotFound(){
         Role managerRole = createRoleIfNotFound("ROLE_MANAGER");
         Employee employee = employeeRepository.findByUsername("manager")
-                .orElse(new Employee("Manager", "manager", "password", managerRole));
+                .orElse(new Employee("Manager", "manager", "password", "Cost Center 1", "shift1", managerRole));
         employeeRepository.save(employee);
     }
 

@@ -3,10 +3,7 @@ package com.iskill.backend.models;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
@@ -22,5 +19,6 @@ public class Category {
     @NotBlank(message = "Category is required")
     private String categoryName;
 
+    @OneToMany(mappedBy="category")
     private List<Question> questions;
 }

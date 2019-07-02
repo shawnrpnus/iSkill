@@ -44,10 +44,10 @@ public class Employee {
     private List<SurveyForm> createdSurveyForms = new ArrayList<>();
 
     @OneToMany(mappedBy = "evaluator")
-    private Evaluation receivedEvaluation;
+    private List<Evaluation> receivedEvaluation;
 
     @OneToMany(mappedBy = "evaluatee")
-    private Evaluation givenEvaluations;
+    private List<Evaluation> givenEvaluations;
 
     public Employee(@NotBlank(message = "Name is required") String name,
                     @NotBlank(message = "Username is required") @Size(max = 12, min = 4, message = "Please use 4 to 12 characters") String username,

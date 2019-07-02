@@ -43,7 +43,7 @@ public class SurveyForm {
     private ToolProcess toolProcess;
 
     @OneToMany(mappedBy = "surveyForm")
-    private Evaluation evaluation;
+    private List<Evaluation> evaluations;
 
 
     public SurveyForm(@NotBlank(message = "Form name is required") String formName, @NotBlank(message = "Skill level is required") String skillLevel, @NotNull(message = "Evaluation type is required") EvaluationTypeEnum evaluationTypeEnum) {
