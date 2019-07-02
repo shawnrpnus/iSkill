@@ -10,7 +10,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.Validation;
 import java.util.Map;
 
 @RestController
@@ -39,7 +38,6 @@ public class SurveyFormController {
         }
 
         SurveyForm createdSurveyForm = surveyFormService.createNewSurveyForm(surveyForm, 1L, 1L);
-
         return new ResponseEntity<>(createdSurveyForm, HttpStatus.CREATED);
     }
 }

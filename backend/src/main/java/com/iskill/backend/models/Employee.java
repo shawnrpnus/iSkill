@@ -1,5 +1,6 @@
 package com.iskill.backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -41,6 +42,7 @@ public class Employee {
     private Role role;
 
     @OneToMany(mappedBy = "creator")
+    @JsonIgnore
     private List<SurveyForm> createdSurveyForms = new ArrayList<>();
 
     @OneToMany(mappedBy = "evaluator")

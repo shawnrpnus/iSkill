@@ -1,5 +1,6 @@
 package com.iskill.backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -20,6 +21,7 @@ public class ToolProcess {
     protected String toolProcessName;
 
     @OneToMany(mappedBy = "toolProcess")
+    @JsonIgnore
     private List<SurveyForm> surveyForms = new ArrayList<>();
 
     public ToolProcess(@NotBlank(message = "Tool/Process Name is required") String toolProcessName) {
