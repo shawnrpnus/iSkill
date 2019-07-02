@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
@@ -16,6 +17,7 @@ public class Evaluation {
 
     private String remarks;
 
+    @NotNull(message = "Evaluation Status is Required")
     private EvaluationStatusEnum status;
 
     @ManyToOne
@@ -30,7 +32,7 @@ public class Evaluation {
     @JoinColumn(nullable = false, updatable = false)
     private SurveyForm surveyForm;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany
     private List<Answer> answers;
 
     public Evaluation(String remarks, EvaluationStatusEnum status) {

@@ -30,8 +30,8 @@ public class Question {
     @OneToMany(mappedBy = "question")
     private List<Answer> answers;
 
-    @ManyToOne
-    @JoinColumn(nullable = false, updatable = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
     private Category category;
 
     public Question(@NotBlank(message = "Question sequence / number is required") Integer questionSequence, @NotBlank(message = "Question is required") String questionText) {

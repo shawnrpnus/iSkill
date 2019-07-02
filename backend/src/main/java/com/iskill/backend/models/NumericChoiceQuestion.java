@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @Getter
 @Setter
-public class NumericRangeQuestion extends Question {
+public class NumericChoiceQuestion extends Question {
 
     @NotBlank(message = "Lower bound is required")
     @Column(nullable = false)
@@ -22,11 +22,7 @@ public class NumericRangeQuestion extends Question {
     @Column(nullable = false)
     private Integer upperBound;
 
-    @NotBlank(message = "Answer is required")
-    @Column(nullable = false)
-    private Integer answer;
-
-    public NumericRangeQuestion(String questionText, Integer lowerBound, Integer upperBound) {
+    public NumericChoiceQuestion(String questionText, Integer lowerBound, Integer upperBound) {
         this.questionText = questionText;
         this.lowerBound = lowerBound;
         this.upperBound = upperBound;

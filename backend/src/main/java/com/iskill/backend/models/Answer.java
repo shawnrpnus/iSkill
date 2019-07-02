@@ -27,4 +27,12 @@ public class Answer {
     public Answer(Integer numericAnswer) {
         this.numericAnswer = numericAnswer;
     }
+
+    public Answer(String textAnswer){
+        this.textAnswer = textAnswer;
+    }
+
+    public Answer(Boolean yesNoAnswer){
+        this.yesNoAnswer = yesNoAnswer;
+    }
 }
