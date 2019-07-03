@@ -1,5 +1,7 @@
 package com.iskill.backend.exceptions;
 
+import com.iskill.backend.exceptions.Category.CategoryNotFound.CategoryNotFoundException;
+import com.iskill.backend.exceptions.Category.CategoryNotFound.CategoryNotFoundExceptionResponse;
 import com.iskill.backend.exceptions.Employee.EmployeeNotFound.EmployeeNotFoundException;
 import com.iskill.backend.exceptions.Employee.EmployeeNotFound.EmployeeNotFoundExceptionResponse;
 import com.iskill.backend.exceptions.SurveyForm.CreateSurveyForm.CreateNewSurveyFormException;
@@ -41,6 +43,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler
     public final ResponseEntity<Object> handleCreateNewSurveyFormException(CreateNewSurveyFormException ex, WebRequest req){
         CreateNewSurveyFormExceptionResponse expRsp = new CreateNewSurveyFormExceptionResponse(ex.getMessage()); //format to json response
+        return new ResponseEntity<>(expRsp, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public final ResponseEntity<Object> handleCategoryNotFoundException(CategoryNotFoundException ex, WebRequest req){
+        CategoryNotFoundExceptionResponse expRsp = new CategoryNotFoundExceptionResponse(ex.getMessage()); //format to json response
         return new ResponseEntity<>(expRsp, HttpStatus.BAD_REQUEST);
     }
 

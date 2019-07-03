@@ -58,15 +58,14 @@ public class SurveyFormController {
     }
 
     @PostMapping("/updateSurveyForm")
-    public ResponseEntity<?> updateSurveyForm(@Valid @RequestBody UpdateSurveyFormRequest updateSurveyFormRequest,
+    public ResponseEntity<?> updateSurveyForm(@Valid @RequestBody SurveyForm surveyForm,
                                               BindingResult result) {
         ResponseEntity<Map<String, String>> errorMapRsp = validationService.generateErrorMapResponse(result);
         if (errorMapRsp != null) {
             return errorMapRsp;
         }
 
-        SurveyForm updatedSurveyForm = surveyFormService.updateSurveyForm(updateSurveyFormRequest.getSurveyForm(),
-                updateSurveyFormRequest.getQuestions());
+        SurveyForm updatedSurveyForm = surveyFormService.updateSurveyForm(surveyForm);
 
         return new ResponseEntity<>(updatedSurveyForm, HttpStatus.OK);
     }

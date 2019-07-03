@@ -1,10 +1,11 @@
 package com.iskill.backend.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -12,7 +13,9 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 @NoArgsConstructor
 public class SurveyForm {
 
@@ -35,7 +38,8 @@ public class SurveyForm {
     @JoinColumn(nullable = false, updatable = false)
     private Employee creator;
 
-    @ManyToMany(mappedBy = "surveyForms")
+    @OneToMany(mappedBy = "surveyForm")
+    @Valid
     private List<Question> questions = new ArrayList<>();
 
     @ManyToOne
