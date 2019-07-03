@@ -4,6 +4,7 @@ import com.iskill.backend.exceptions.Employee.EmployeeNotFound.EmployeeNotFoundE
 import com.iskill.backend.exceptions.SurveyForm.SurveyFormNotFound.SurveyFormNotFoundException;
 import com.iskill.backend.exceptions.ToolProcess.ToolProcessNotFound.ToolProcessNotFoundException;
 import com.iskill.backend.models.Employee;
+import com.iskill.backend.models.Question;
 import com.iskill.backend.models.SurveyForm;
 import com.iskill.backend.models.ToolProcess;
 import com.iskill.backend.repositories.EmployeeRepository;
@@ -13,6 +14,7 @@ import com.iskill.backend.repositories.ToolProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -49,5 +51,24 @@ public class SurveyFormService {
         manager.getCreatedSurveyForms().add(surveyForm);
 
         return surveyFormRepository.save(surveyForm);
+    }
+
+    public SurveyForm updateSurveyForm(SurveyForm surveyForm, List<Question> questions){
+        SurveyForm surveyFormToUpdate = surveyFormRepository.findById(surveyForm.getFormId()).orElseThrow(
+                () -> new SurveyFormNotFoundException("Survey form with id '" + surveyForm.getFormId() + "' not found")
+        );
+
+        surveyForm.setQuestions(questions);
+        for (Question question : questions){
+            question.setSurveyForm(surveyForm);
+            questionRepository.save(question);
+        }
+
+        surveyFormToUpdate.setFormName(surveyForm.getFormName());
+        surveyFormToUpdate.setTotalScore(surveyForm.getTotalScore());
+        surveyFormToUpdate.setActualScore(surveyForm.getActualScore());
+        surveyFormToUpdate.setSkillLevel(surveyForm.getSkillLevel());
+
+        return surveyFormToUpdate;
     }
 }
