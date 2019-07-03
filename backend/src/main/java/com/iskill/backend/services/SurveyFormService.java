@@ -53,6 +53,12 @@ public class SurveyFormService {
         return surveyFormRepository.save(surveyForm);
     }
 
+    public SurveyForm getSurveyForm(Long surveyFormId){
+        return surveyFormRepository.findById(surveyFormId).orElseThrow(
+                () -> new SurveyFormNotFoundException("Survey form with id '" + surveyFormId + "' not found")
+        );
+    }
+
     public SurveyForm updateSurveyForm(SurveyForm surveyForm, List<Question> questions){
         SurveyForm surveyFormToUpdate = surveyFormRepository.findById(surveyForm.getFormId()).orElseThrow(
                 () -> new SurveyFormNotFoundException("Survey form with id '" + surveyForm.getFormId() + "' not found")
@@ -69,6 +75,6 @@ public class SurveyFormService {
         surveyFormToUpdate.setActualScore(surveyForm.getActualScore());
         surveyFormToUpdate.setSkillLevel(surveyForm.getSkillLevel());
 
-        return surveyFormToUpdate;
+        return surveyFormRepository.save(surveyFormToUpdate);
     }
 }

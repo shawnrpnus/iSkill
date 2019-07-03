@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.naming.Binding;
 import javax.validation.Valid;
+import javax.xml.ws.Response;
 import java.util.Map;
 
 @RestController
@@ -43,6 +44,13 @@ public class SurveyFormController {
 
         SurveyForm createdSurveyForm = surveyFormService.createNewSurveyForm(surveyForm, toolProcessId, creatorEmployeeId);
         return new ResponseEntity<>(createdSurveyForm, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{surveyFormId}")
+    public ResponseEntity<?> getSurveyForm(@PathVariable Long surveyFormId){
+        SurveyForm surveyForm = surveyFormService.getSurveyForm(surveyFormId);
+
+        return new ResponseEntity<>(surveyForm, HttpStatus.OK);
     }
 
     @PostMapping("/updateSurveyForm")
