@@ -17,7 +17,7 @@ import java.util.List;
 public class UpdateSurveyFormRequest {
 
     @Valid
-    private SurveyForm surveyForm; //should contain formName, totalScore, actualScore, skillLevel
+    private SurveyForm surveyForm; //should contain surveyFormName, totalScore, actualScore, skillLevel
     //dont update creator, toolprocess and evaluations
     @Valid
     private List<Question> questions;

@@ -10,9 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.naming.Binding;
 import javax.validation.Valid;
-import javax.xml.ws.Response;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -53,6 +52,11 @@ public class SurveyFormController {
         return new ResponseEntity<>(surveyForm, HttpStatus.OK);
     }
 
+    @GetMapping("/")
+    public ResponseEntity<?> getAllSurveyForms(){
+        return new ResponseEntity<>(surveyFormService.getAllSurveyForms(), HttpStatus.OK);
+    }
+
     @PostMapping("/updateSurveyForm")
     public ResponseEntity<?> updateSurveyForm(@Valid @RequestBody UpdateSurveyFormRequest updateSurveyFormRequest,
                                               BindingResult result) {
@@ -67,5 +71,15 @@ public class SurveyFormController {
         return new ResponseEntity<>(updatedSurveyForm, HttpStatus.OK);
     }
 
+    @DeleteMapping("/deleteSurveyForm")
+    public ResponseEntity<?> deleteSurveyForm(@RequestParam("surveyFormId") Long surveyFormId){
+        String deletedSurveyFormName = surveyFormService.deleteSurveyForm(surveyFormId);
+
+        HashMap<String, String> deleteSuccessMessage = new HashMap<>();
+
+        deleteSuccessMessage.put("SurveyFormDeleted", deletedSurveyFormName);
+
+        return new ResponseEntity<>(deleteSuccessMessage, HttpStatus.OK);
+    }
 
 }

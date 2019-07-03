@@ -18,10 +18,11 @@ public class SurveyForm {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long formId;
+    private Long surveyFormId;
 
     @NotBlank(message = "Form name is required")
-    private String formName;
+    @Column(unique = true)
+    private String surveyFormName;
 
     private BigDecimal totalScore;
 
@@ -34,7 +35,7 @@ public class SurveyForm {
     @JoinColumn(nullable = false, updatable = false)
     private Employee creator;
 
-    @OneToMany(mappedBy = "surveyForm")
+    @ManyToMany(mappedBy = "surveyForms")
     private List<Question> questions = new ArrayList<>();
 
     @ManyToOne
@@ -50,9 +51,9 @@ public class SurveyForm {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss Z", locale = "en_SG", timezone = "GMT+8")
     private Date updated_At;
 
-    public SurveyForm(@NotBlank(message = "Form name is required") String formName,
+    public SurveyForm(@NotBlank(message = "Form name is required") String surveyFormName,
                       @NotBlank(message = "Skill level is required") String skillLevel) {
-        this.formName = formName;
+        this.surveyFormName = surveyFormName;
         this.skillLevel = skillLevel;
 
     }

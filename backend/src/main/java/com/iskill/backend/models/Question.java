@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,9 +25,8 @@ public class Question {
     @NotBlank(message = "Question is required")
     protected String questionText;
 
-    @ManyToOne
-    @JoinColumn(nullable = false, updatable = false)
-    protected SurveyForm surveyForm;
+    @ManyToMany
+    protected List<SurveyForm> surveyForms;
 
     @OneToMany(mappedBy = "question")
     protected List<Answer> answers = new ArrayList<>();
