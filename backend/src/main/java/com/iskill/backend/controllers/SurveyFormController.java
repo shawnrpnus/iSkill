@@ -29,15 +29,17 @@ public class SurveyFormController {
         this.validationService = validationService;
     }
 
-    @PostMapping("")
-    public ResponseEntity<?> createNewSurveyForm(@Valid @RequestBody SurveyForm surveyForm, BindingResult result) {
+    @PostMapping("/{toolProcessId}/{creatorEmployeeId}")
+    public ResponseEntity<?> createNewSurveyForm(@Valid @RequestBody SurveyForm surveyForm, BindingResult result,
+                                                 @PathVariable Long toolProcessId,
+                                                 @PathVariable Long creatorEmployeeId) {
 
         ResponseEntity<Map<String,String>> errorMapRsp = validationService.generateErrorMapResponse(result);
         if(errorMapRsp != null) {
             return errorMapRsp;
         }
 
-        SurveyForm createdSurveyForm = surveyFormService.createNewSurveyForm(surveyForm, 1L, 1L);
+        SurveyForm createdSurveyForm = surveyFormService.createNewSurveyForm(surveyForm, toolProcessId, creatorEmployeeId);
         return new ResponseEntity<>(createdSurveyForm, HttpStatus.CREATED);
     }
 }

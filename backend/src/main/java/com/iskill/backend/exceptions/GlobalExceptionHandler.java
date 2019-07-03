@@ -1,5 +1,9 @@
 package com.iskill.backend.exceptions;
 
+import com.iskill.backend.exceptions.Employee.EmployeeNotFound.EmployeeNotFoundException;
+import com.iskill.backend.exceptions.Employee.EmployeeNotFound.EmployeeNotFoundExceptionResponse;
+import com.iskill.backend.exceptions.ToolProcess.ToolProcessNotFound.ToolProcessNotFoundException;
+import com.iskill.backend.exceptions.ToolProcess.ToolProcessNotFound.ToolProcessNotFoundExceptionResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -17,6 +21,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         EmployeeNotFoundExceptionResponse expRsp = new EmployeeNotFoundExceptionResponse(ex.getMessage()); //format to json response
         return new ResponseEntity<>(expRsp, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler
+    public final ResponseEntity<Object> handleToolProcessNotFoundException(ToolProcessNotFoundException ex, WebRequest req){
+        ToolProcessNotFoundExceptionResponse expRsp = new ToolProcessNotFoundExceptionResponse(ex.getMessage()); //format to json response
+        return new ResponseEntity<>(expRsp, HttpStatus.BAD_REQUEST);
+    }
+
 
 
 }

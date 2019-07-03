@@ -1,4 +1,4 @@
-package com.iskill.backend.exceptions;
+package com.iskill.backend.exceptions.SurveyForm.CreateSurveyForm;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

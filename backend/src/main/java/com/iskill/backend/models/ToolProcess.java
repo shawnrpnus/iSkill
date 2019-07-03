@@ -18,6 +18,7 @@ public class ToolProcess {
     protected Long toolProcessId;
 
     @NotBlank(message = "Tool/Process Name is required")
+    @Column(unique = true)
     protected String toolProcessName;
 
     @OneToMany(mappedBy = "toolProcess")

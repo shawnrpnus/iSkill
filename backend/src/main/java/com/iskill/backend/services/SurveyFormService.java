@@ -1,9 +1,8 @@
 package com.iskill.backend.services;
 
-import com.iskill.backend.exceptions.CreateNewSurveyFormException;
-import com.iskill.backend.exceptions.EmployeeNotFoundException;
-import com.iskill.backend.exceptions.SurveyFormNotFoundException;
-import com.iskill.backend.exceptions.ToolProcessNotFoundException;
+import com.iskill.backend.exceptions.Employee.EmployeeNotFound.EmployeeNotFoundException;
+import com.iskill.backend.exceptions.SurveyForm.SurveyFormNotFound.SurveyFormNotFoundException;
+import com.iskill.backend.exceptions.ToolProcess.ToolProcessNotFound.ToolProcessNotFoundException;
 import com.iskill.backend.models.Employee;
 import com.iskill.backend.models.SurveyForm;
 import com.iskill.backend.models.ToolProcess;
@@ -36,28 +35,19 @@ public class SurveyFormService {
     }
 
     public SurveyForm createNewSurveyForm (SurveyForm surveyForm, Long toolProcessId, Long employeeId){
-        try {
-            ToolProcess toolProcess = toolProcessRepository.findByToolProcessId(toolProcessId).orElseThrow(
-                    () -> new ToolProcessNotFoundException("Tool/Process not found")
-            );
+        ToolProcess toolProcess = toolProcessRepository.findByToolProcessId(toolProcessId).orElseThrow(
+                () -> new ToolProcessNotFoundException("Tool/Process with id '" + toolProcessId + "' not found!")
+        );
 
-            Employee manager = employeeRepository.findById(employeeId).orElseThrow(
-                    () -> new EmployeeNotFoundException("Employee with id" + employeeId + "not found!")
-            );
+        Employee manager = employeeRepository.findById(employeeId).orElseThrow(
+                () -> new EmployeeNotFoundException("Employee with id '" + employeeId + "' not found!")
+        );
 
-            surveyForm.setToolProcess(toolProcess);
-            toolProcess.getSurveyForms().add(surveyForm);
-            surveyForm.setCreator(manager);
-            manager.getCreatedSurveyForms().add(surveyForm);
+        surveyForm.setToolProcess(toolProcess);
+        toolProcess.getSurveyForms().add(surveyForm);
+        surveyForm.setCreator(manager);
+        manager.getCreatedSurveyForms().add(surveyForm);
 
-            return surveyFormRepository.save(surveyForm);
-        } catch(Exception e) {
-            Optional<SurveyForm> surveyFormOptional = surveyFormRepository.findById(surveyForm.getFormId());
-            surveyFormOptional.ifPresent(project1 -> {
-                throw new SurveyFormNotFoundException("Project ID " +
-                        " already exists!");
-            });
-            return null;
-        }
+        return surveyFormRepository.save(surveyForm);
     }
 }

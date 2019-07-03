@@ -1,4 +1,4 @@
-package com.iskill.backend.exceptions;
+package com.iskill.backend.exceptions.Employee.EmployeeNotFound;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @AllArgsConstructor
 @Getter @Setter
-class EmployeeNotFoundExceptionResponse {
+public class EmployeeNotFoundExceptionResponse {
 
     private String EmployeeNotFound;
 
