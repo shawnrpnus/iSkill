@@ -4,7 +4,6 @@ import com.iskill.backend.exceptions.Category.CategoryNotFound.CategoryNotFoundE
 import com.iskill.backend.exceptions.Question.QuestionCannotDelete.QuestionCannotDeleteException;
 import com.iskill.backend.models.Category;
 import com.iskill.backend.models.Question;
-import com.iskill.backend.models.SurveyForm;
 import com.iskill.backend.repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -23,21 +22,6 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
         this.questionService = questionService;
     }
-
-    //surveyForm already contains the category object
-    //surveyForm must already exist in database
-
-//    public Category createNewCategory(SurveyForm surveyForm, Category category){
-//
-//        category.setSurveyForm(surveyForm);
-//
-//        //questions already in category object
-//        for (Question question : category.getQuestions()){
-//            question.setCategory(category);
-//        }
-//
-//        return category;
-//    }
 
     public Category updateCategory(Category category){
         Category categoryToUpdate = getCategory(category.getCategoryId());

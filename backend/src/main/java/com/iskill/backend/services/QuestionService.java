@@ -1,12 +1,8 @@
 package com.iskill.backend.services;
 
-import com.iskill.backend.exceptions.Category.CategoryNotFound.CategoryNotFoundException;
 import com.iskill.backend.exceptions.Question.QuestionCannotDelete.QuestionCannotDeleteException;
 import com.iskill.backend.exceptions.Question.QuestionNotFound.QuestionNotFoundException;
-import com.iskill.backend.models.Category;
 import com.iskill.backend.models.Question;
-import com.iskill.backend.models.SurveyForm;
-import com.iskill.backend.repositories.CategoryRepository;
 import com.iskill.backend.repositories.QuestionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,19 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class QuestionService {
 
     private final QuestionRepository questionRepository;
-    private final CategoryRepository categoryRepository;
 
-    public QuestionService(QuestionRepository questionRepository, CategoryRepository categoryRepository) {
+    public QuestionService(QuestionRepository questionRepository) {
         this.questionRepository = questionRepository;
-        this.categoryRepository = categoryRepository;
-    }
-
-    public Question createNewQuestion(Question question, Category category){
-
-        question.setCategory(category);
-        category.getQuestions().add(question);
-
-        return questionRepository.save(question);
     }
 
     public Question getQuestion(Long questionId){
