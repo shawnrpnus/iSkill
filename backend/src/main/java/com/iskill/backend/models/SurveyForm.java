@@ -11,11 +11,11 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
 @Setter
-@EqualsAndHashCode
 @NoArgsConstructor
 public class SurveyForm {
 
@@ -73,5 +73,18 @@ public class SurveyForm {
     @PreUpdate
     protected void onUpdate(){
         this.updated_At = new Date();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SurveyForm)) return false;
+        SurveyForm that = (SurveyForm) o;
+        return this.surveyFormId != null && that.surveyFormId != null && surveyFormId.equals(that.surveyFormId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(surveyFormId);
     }
 }

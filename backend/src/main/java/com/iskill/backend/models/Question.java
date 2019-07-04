@@ -55,7 +55,7 @@ public class Question {
         if (this == o) return true;
         if (!(o instanceof Question)) return false;
         Question question = (Question) o;
-        return questionId.equals(question.questionId);
+        return this.questionId != null && question.questionId != null && questionId.equals(question.questionId);
     }
 
     @Override

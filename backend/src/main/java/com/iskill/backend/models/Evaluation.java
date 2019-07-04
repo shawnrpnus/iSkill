@@ -8,11 +8,11 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
 @Setter
-@EqualsAndHashCode
 @NoArgsConstructor
 public class Evaluation {
     @Id
@@ -51,12 +51,25 @@ public class Evaluation {
     }
 
     @PrePersist
-    protected void onCreate(){
+    protected void onCreate() {
         this.created_At = new Date();
     }
 
     @PreUpdate
-    protected void onUpdate(){
+    protected void onUpdate() {
         this.updated_At = new Date();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Evaluation)) return false;
+        Evaluation that = (Evaluation) o;
+        return this.evaluationId != null && that.evaluationId != null && evaluationId.equals(that.evaluationId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(evaluationId);
     }
 }
