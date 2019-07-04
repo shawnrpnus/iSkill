@@ -2,6 +2,7 @@ package com.iskill.backend.services;
 
 import com.iskill.backend.exceptions.Question.QuestionCannotDelete.QuestionCannotDeleteException;
 import com.iskill.backend.exceptions.Question.QuestionNotFound.QuestionNotFoundException;
+import com.iskill.backend.models.NumericChoiceQuestion;
 import com.iskill.backend.models.Question;
 import com.iskill.backend.repositories.QuestionRepository;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,11 @@ public class QuestionService {
         Question questionToUpdate = getQuestion(question.getQuestionId());
         questionToUpdate.setQuestionText(question.getQuestionText());
         questionToUpdate.setQuestionSequence(question.getQuestionSequence());
+        if (questionToUpdate instanceof NumericChoiceQuestion && question instanceof NumericChoiceQuestion){
+            ((NumericChoiceQuestion) questionToUpdate).setLowerBound(((NumericChoiceQuestion) question).getLowerBound());
+            ((NumericChoiceQuestion) questionToUpdate).setUpperBound(((NumericChoiceQuestion) question).getUpperBound());
+
+        }
         return questionToUpdate;
     }
 
