@@ -1,7 +1,9 @@
 package com.iskill.backend.services;
 
 import com.iskill.backend.exceptions.Employee.EmployeeNotFound.EmployeeNotFoundException;
+import com.iskill.backend.exceptions.Question.QuestionCannotDelete.QuestionCannotDeleteException;
 import com.iskill.backend.exceptions.SurveyForm.CreateSurveyForm.CreateNewSurveyFormException;
+import com.iskill.backend.exceptions.SurveyForm.DeleteSurveyForm.SurveyFormCannotDeleteException;
 import com.iskill.backend.exceptions.SurveyForm.SurveyFormCannotUpdate.SurveyFormCannotUpdatexception;
 import com.iskill.backend.exceptions.SurveyForm.SurveyFormNotFound.SurveyFormNotFoundException;
 import com.iskill.backend.exceptions.ToolProcess.ToolProcessNotFound.ToolProcessNotFoundException;
@@ -157,29 +159,27 @@ public class SurveyFormService {
         return surveyFormRepository.save(surveyFormToUpdate);
     }
 
-    //    public String deleteSurveyForm(Long surveyFormId){
-//        SurveyForm surveyForm = getSurveyForm(surveyFormId);
-//
-//        if (surveyForm.getEvaluations() != null && surveyForm.getEvaluations().size() > 0){ //has evaluations
-//            throw new SurveyFormCannotDeleteException("Survey form cannot be deleted: There are evaluations " +
-//                    "done using this survey form");
-//        }
-//        //clear associations
-//        surveyForm.getCreator().getCreatedSurveyForms().remove(surveyForm);
-//        surveyForm.setCreator(null);
-//
-//        for (Question question : surveyForm.getQuestions()){
-//            questionService.deleteQuestion(question.getQuestionId());
-//        }
-//        surveyForm.setQuestions(null);
-//
-//        surveyForm.getToolProcess().getSurveyForms().remove(surveyForm);
-//        surveyForm.setToolProcess(null);
-//
-//        surveyFormRepository.delete(surveyForm);
-//        return surveyForm.getSurveyFormName();
-//    }
-//
+    public String deleteSurveyForm(Long surveyFormId){
+        SurveyForm surveyForm = getSurveyForm(surveyFormId);
+
+        if (surveyForm.getEvaluations() != null && surveyForm.getEvaluations().size() > 0){ //has evaluations
+            throw new SurveyFormCannotDeleteException("Survey form cannot be deleted: There are evaluations " +
+                    surveyForm.getEvaluations().size() + "done using this survey form");
+        }
+        //clear associations
+        surveyForm.getCreator().getCreatedSurveyForms().remove(surveyForm);
+        surveyForm.setCreator(null);
+
+        for (Category category : surveyForm.getCategories()) {
+            categoryService.deleteCategory(category.getCategoryId());
+        }
+        surveyForm.getToolProcess().getSurveyForms().remove(surveyForm);
+        surveyForm.setToolProcess(null);
+
+        surveyFormRepository.delete(surveyForm);
+        return surveyForm.getSurveyFormName();
+    }
+
     private void checkForDuplicateFormName(String surveyFormName) {
         Optional<SurveyForm> surveyFormResult = surveyFormRepository.findBySurveyFormNameIgnoreCase(surveyFormName);
         surveyFormResult.ifPresent(surveyForm1 -> {
