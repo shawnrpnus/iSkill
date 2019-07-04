@@ -7,6 +7,7 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @NoArgsConstructor
@@ -14,11 +15,11 @@ import javax.validation.constraints.NotBlank;
 @Setter
 public class NumericChoiceQuestion extends Question {
 
-    @NotBlank(message = "Lower bound is required")
+    @NotNull(message = "Lower bound is required")
     @Column(nullable = false)
     private Integer lowerBound;
 
-    @NotBlank(message = "Upper bound is required")
+    @NotNull(message = "Upper bound is required")
     @Column(nullable = false)
     private Integer upperBound;
 
