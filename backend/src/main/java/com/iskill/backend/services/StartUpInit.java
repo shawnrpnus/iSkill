@@ -48,10 +48,11 @@ public class StartUpInit {
         return role;
     }
 
-    private ToolProcess createToolProcessIfNotFound() {
-        ToolProcess toolProcess = toolProcessRepository.findByToolProcessName("Tool 1").orElse(new ToolProcess("Tool 1"));
-        toolProcessRepository.save(toolProcess);
-        return toolProcess;
+    private void createToolProcessIfNotFound() {
+        ToolProcess toolProcess1 = toolProcessRepository.findByToolProcessName("Tool 1").orElse(new ToolProcess("Tool 1"));
+        ToolProcess toolProcess2 = toolProcessRepository.findByToolProcessName("Tool 2").orElse(new ToolProcess("Tool 2"));
+        toolProcessRepository.save(toolProcess1);
+        toolProcessRepository.save(toolProcess2);
     }
 
 }

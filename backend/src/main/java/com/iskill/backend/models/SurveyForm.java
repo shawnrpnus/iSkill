@@ -38,12 +38,13 @@ public class SurveyForm {
     @JoinColumn(nullable = false, updatable = false)
     private Employee creator;
 
-    @OneToMany(mappedBy = "surveyForm", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(mappedBy = "surveyForm", fetch = FetchType.EAGER,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @Valid
     private List<Category> categories = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(nullable = false, updatable = false)
+    @JoinColumn(nullable = false)
     private ToolProcess toolProcess;
 
     @OneToMany(mappedBy = "surveyForm")
@@ -64,7 +65,9 @@ public class SurveyForm {
 
     @PrePersist
     protected void onCreate(){
+
         this.created_At = new Date();
+
     }
 
     @PreUpdate

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -84,6 +85,7 @@ public class SurveyFormService {
         return surveyFormRepository.findAll();
     }
 
+    //update categories & questions, toolProcess & own attributes
     public SurveyForm updateSurveyForm(SurveyForm receivedSurveyForm) {
 
         //check if survey form has been used for evaluations
@@ -96,6 +98,18 @@ public class SurveyFormService {
         if (!surveyFormToUpdate.getSurveyFormName().equalsIgnoreCase(receivedSurveyForm.getSurveyFormName())) {
             checkForDuplicateFormName(receivedSurveyForm.getSurveyFormName());
         }
+
+        //---------------- Update ToolProcess -------------------
+        ToolProcess newToolProcessForForm = toolProcessRepository.findByToolProcessName(receivedSurveyForm.getToolProcess().getToolProcessName()).orElseThrow(
+                () -> new ToolProcessNotFoundException("Tool/Process with name '" + receivedSurveyForm.getToolProcess().getToolProcessName() + "' not found!")
+        );
+        //change tool process associated with the form
+        surveyFormToUpdate.getToolProcess().getSurveyForms().remove(surveyFormToUpdate);
+        surveyFormToUpdate.setToolProcess(newToolProcessForForm);
+        newToolProcessForForm.getSurveyForms().add(surveyFormToUpdate);
+        //---------------End of Update ToolProcess---------------
+
+        //-------------Update Categories and Questions-----------
 
         //categories before receiving the post request
         List<Category> previousCategories = surveyFormToUpdate.getCategories();
@@ -148,12 +162,15 @@ public class SurveyFormService {
                 }
             }
         }
+        //--------End of update Categories and Questions---------
 
-        //update SurveyForm's attributes
+        //------------update SurveyForm's attributes-------------
         surveyFormToUpdate.setSurveyFormName(receivedSurveyForm.getSurveyFormName());
         surveyFormToUpdate.setTotalScore(receivedSurveyForm.getTotalScore());
         surveyFormToUpdate.setActualScore(receivedSurveyForm.getActualScore());
         surveyFormToUpdate.setSkillLevel(receivedSurveyForm.getSkillLevel());
+        surveyFormToUpdate.setUpdated_At(new Date());
+        //---------End of update SurveyForm's attributes---------
 
         //updates cascaded to Categories and Questions
         return surveyFormRepository.save(surveyFormToUpdate);
