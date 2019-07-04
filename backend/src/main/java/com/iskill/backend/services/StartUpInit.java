@@ -33,8 +33,6 @@ public class StartUpInit {
     public void init(){
         createManagerIfNotFound();
         createToolProcessIfNotFound();
-        createTestCategoryIfNotFound();
-
     }
 
     private void createManagerIfNotFound(){
@@ -56,8 +54,4 @@ public class StartUpInit {
         return toolProcess;
     }
 
-    private void createTestCategoryIfNotFound() {
-        Category category = categoryRepository.findByCategoryNameIgnoreCase("TestCategory").orElse(new Category("TestCategory"));
-        categoryRepository.save(category);
-    }
 }

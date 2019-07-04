@@ -9,8 +9,10 @@ import com.iskill.backend.models.SurveyForm;
 import com.iskill.backend.repositories.CategoryRepository;
 import com.iskill.backend.repositories.QuestionRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class QuestionService {
 
     private final QuestionRepository questionRepository;
@@ -21,12 +23,7 @@ public class QuestionService {
         this.categoryRepository = categoryRepository;
     }
 
-    public Question createNewQuestion(Question question, SurveyForm surveyForm, String categoryName){
-        Category category = categoryRepository.findByCategoryNameIgnoreCase(categoryName).orElseThrow(
-                () -> new CategoryNotFoundException(String.format("Category '%s' not found", categoryName))
-        );
-
-        question.setSurveyForm(surveyForm);
+    public Question createNewQuestion(Question question, Category category){
 
         question.setCategory(category);
         category.getQuestions().add(question);
@@ -43,7 +40,7 @@ public class QuestionService {
         Question questionToUpdate = getQuestion(question.getQuestionId());
         questionToUpdate.setQuestionText(question.getQuestionText());
         questionToUpdate.setQuestionSequence(question.getQuestionSequence());
-        return questionRepository.save(questionToUpdate);
+        return questionToUpdate;
     }
 
     public Long deleteQuestion(Long questionId){
@@ -54,9 +51,7 @@ public class QuestionService {
                     format("Question with id '%s' cannot be deleted as it has already been answered", questionId));
         }
 
-        question.getSurveyForm().getQuestions().remove(question);
-        question.setSurveyForm(null);
-        question.getCategory().getQuestions().remove(question);
+        //remove question from category in surveyFormService
         question.setCategory(null);
 
         questionRepository.delete(question);

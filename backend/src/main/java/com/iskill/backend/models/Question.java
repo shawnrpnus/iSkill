@@ -31,17 +31,12 @@ public class Question {
     @NotBlank(message = "Question is required")
     protected String questionText;
 
-    @ManyToOne
-    @JoinColumn(updatable = false)
-    @JsonIgnore
-    protected SurveyForm surveyForm;
-
     @OneToMany(mappedBy = "question")
     protected List<Answer> answers = new ArrayList<>();
 
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
-    @Valid
+    @JsonIgnore
     protected Category category;
 
     public Question(@NotBlank(message = "Question sequence / number is required") Integer questionSequence, @NotBlank(message = "Question is required") String questionText) {

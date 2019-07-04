@@ -69,16 +69,16 @@ public class SurveyFormController {
 
         return new ResponseEntity<>(updatedSurveyForm, HttpStatus.OK);
     }
-
-    @DeleteMapping("/deleteSurveyForm")
-    public ResponseEntity<?> deleteSurveyForm(@RequestParam("surveyFormId") Long surveyFormId){
-        String deletedSurveyFormName = surveyFormService.deleteSurveyForm(surveyFormId);
-
-        HashMap<String, String> deleteSuccessMessage = new HashMap<>();
-
-        deleteSuccessMessage.put("SurveyFormDeleted", deletedSurveyFormName);
-
-        return new ResponseEntity<>(deleteSuccessMessage, HttpStatus.OK);
-    }
+//
+//    @DeleteMapping("/deleteSurveyForm")
+//    public ResponseEntity<?> deleteSurveyForm(@RequestParam("surveyFormId") Long surveyFormId){
+//        String deletedSurveyFormName = surveyFormService.deleteSurveyForm(surveyFormId);
+//
+//        HashMap<String, String> deleteSuccessMessage = new HashMap<>();
+//
+//        deleteSuccessMessage.put("SurveyFormDeleted", deletedSurveyFormName);
+//
+//        return new ResponseEntity<>(deleteSuccessMessage, HttpStatus.OK);
+//    }
 
 }
