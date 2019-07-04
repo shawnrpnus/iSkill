@@ -38,8 +38,7 @@ public class SurveyForm {
     @JoinColumn(nullable = false, updatable = false)
     private Employee creator;
 
-    @OneToMany(mappedBy = "surveyForm", fetch = FetchType.EAGER,
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(mappedBy = "surveyForm", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @Valid
     private List<Category> categories = new ArrayList<>();
 

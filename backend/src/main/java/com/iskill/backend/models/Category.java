@@ -34,8 +34,7 @@ public class Category {
     @JsonIgnore
     private SurveyForm surveyForm;
 
-    @OneToMany(mappedBy="category", fetch = FetchType.EAGER,
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(mappedBy="category", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @Valid
     private List<Question> questions = new ArrayList<>();
 

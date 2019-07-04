@@ -1,7 +1,9 @@
 package com.iskill.backend.services;
 
+import com.iskill.backend.exceptions.Category.CategoryNotFound.CategoryNotFoundException;
 import com.iskill.backend.exceptions.Employee.EmployeeNotFound.EmployeeNotFoundException;
 import com.iskill.backend.exceptions.Question.QuestionCannotDelete.QuestionCannotDeleteException;
+import com.iskill.backend.exceptions.Question.QuestionNotFound.QuestionNotFoundException;
 import com.iskill.backend.exceptions.SurveyForm.CreateSurveyForm.CreateNewSurveyFormException;
 import com.iskill.backend.exceptions.SurveyForm.DeleteSurveyForm.SurveyFormCannotDeleteException;
 import com.iskill.backend.exceptions.SurveyForm.SurveyFormCannotUpdate.SurveyFormCannotUpdatexception;
@@ -62,15 +64,13 @@ public class SurveyFormService {
 
         for (Category category : surveyForm.getCategories()) {
             category.setSurveyForm(surveyForm);
-            System.out.println(category);
             //questions already in category object
             for (Question question : category.getQuestions()) {
                 question.setCategory(category);
             }
         }
-
+        System.out.println(surveyForm.getCategories().size());
         return surveyFormRepository.save(surveyForm);
-
 
     }
 
@@ -78,7 +78,6 @@ public class SurveyFormService {
         return surveyFormRepository.findById(surveyFormId).orElseThrow(
                 () -> new SurveyFormNotFoundException("Survey form with id '" + surveyFormId + "' not found")
         );
-
     }
 
     public List<SurveyForm> getAllSurveyForms() {
@@ -134,6 +133,11 @@ public class SurveyFormService {
                 //questions are already in category
                 for (Question question : receivedCategory.getQuestions()) {
                     question.setCategory(receivedCategory);
+                    if (question.getQuestionId()!=null){
+                        throw new QuestionNotFoundException(
+                                "New questions should not have a id field."
+                        );
+                    }
                 }
             } else if (previousCategories.contains(receivedCategory)) { //existing category from before the update
                 /*this method changes attributes of the category in the list fetched from DB,
@@ -158,8 +162,17 @@ public class SurveyFormService {
                     } else if (previousCategoryQuestions.contains(question)) { //existing, so just update
                         //update attributes of question in the question object fetched from db
                         questionService.updateQuestion(question); //only update text and sequence
+                    } else {
+                        throw new QuestionNotFoundException(
+                                String.format("Question with id '%s' was not found in this form category. " +
+                                        "New questions should not have a id field.", question.getQuestionId())
+                        );
                     }
                 }
+            } else {
+                throw new CategoryNotFoundException(
+                        String.format("Category with id '%s' was not found in this form. " +
+                                "New categories should not have a id field.", receivedCategory.getCategoryId()));
             }
         }
         //--------End of update Categories and Questions---------
