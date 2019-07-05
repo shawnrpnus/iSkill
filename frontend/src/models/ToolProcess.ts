@@ -1,16 +1,11 @@
 import SurveyForm from "./SurveyForm";
 
 export default class ToolProcess {
-	private toolProcessId: Number;
+	private toolProcessId?: Number;
 	private toolProcessName: String;
 	private surveyForms: SurveyForm[];
 
-	constructor(
-		$toolProcessId: Number,
-		$toolProcessName: String,
-		$surveyForms: SurveyForm[]
-	) {
-		this.toolProcessId = $toolProcessId;
+	constructor($toolProcessName: String, $surveyForms: SurveyForm[]) {
 		this.toolProcessName = $toolProcessName;
 		this.surveyForms = $surveyForms;
 	}
@@ -19,7 +14,7 @@ export default class ToolProcess {
 	 * Getter $toolProcessId
 	 * @return {Number}
 	 */
-	public get $toolProcessId(): Number {
+	public get $toolProcessId(): Number | undefined {
 		return this.toolProcessId;
 	}
 
@@ -37,14 +32,6 @@ export default class ToolProcess {
 	 */
 	public get $surveyForms(): SurveyForm[] {
 		return this.surveyForms;
-	}
-
-	/**
-	 * Setter $toolProcessId
-	 * @param {Number} value
-	 */
-	public set $toolProcessId(value: Number) {
-		this.toolProcessId = value;
 	}
 
 	/**

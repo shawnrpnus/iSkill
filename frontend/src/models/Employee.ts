@@ -9,8 +9,6 @@ export default class Employee {
 
 	private username: String;
 
-	private password: String;
-
 	private costCenter: String;
 
 	private shift: String;
@@ -26,14 +24,12 @@ export default class Employee {
 	constructor(
 		$name: String,
 		$username: String,
-		$password: String,
 		$costCenter: String,
 		$shift: String,
 		$role: Role
 	) {
 		this.name = $name;
 		this.username = $username;
-		this.password = $password;
 		this.costCenter = $costCenter;
 		this.shift = $shift;
 		this.role = $role;
@@ -53,14 +49,6 @@ export default class Employee {
 	 */
 	public get $username(): String {
 		return this.username;
-	}
-
-	/**
-	 * Getter $password
-	 * @return {String}
-	 */
-	public get $password(): String {
-		return this.password;
 	}
 
 	/**
@@ -101,14 +89,6 @@ export default class Employee {
 	 */
 	public set $username(value: String) {
 		this.username = value;
-	}
-
-	/**
-	 * Setter $password
-	 * @param {String} value
-	 */
-	public set $password(value: String) {
-		this.password = value;
 	}
 
 	/**

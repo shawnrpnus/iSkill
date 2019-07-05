@@ -3,7 +3,7 @@ import Question from "./Question";
 export default class Answer {
 	private answerId?: Number;
 
-	private numericAnswer: Number;
+	private numericAnswer?: Number;
 
 	private textAnswer?: String;
 
@@ -11,8 +11,7 @@ export default class Answer {
 
 	private question: Question;
 
-	constructor($numericAnswer: Number, $question: Question) {
-		this.numericAnswer = $numericAnswer;
+	constructor($question: Question) {
 		this.question = $question;
 	}
 
@@ -28,7 +27,7 @@ export default class Answer {
 	 * Getter $numericAnswer
 	 * @return {Number}
 	 */
-	public get $numericAnswer(): Number {
+	public get $numericAnswer(): Number | undefined {
 		return this.numericAnswer;
 	}
 
@@ -68,7 +67,7 @@ export default class Answer {
 	 * Setter $numericAnswer
 	 * @param {Number} value
 	 */
-	public set $numericAnswer(value: Number) {
+	public set $numericAnswer(value: Number | undefined) {
 		this.numericAnswer = value;
 	}
 

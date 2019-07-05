@@ -6,7 +6,7 @@ import EvaluationStatusEnum from "./EvaluationStatusEnum";
 export default class Evaluation {
 	private evaluationId?: Number;
 
-	private remarks: String;
+	private remarks?: String;
 
 	private status: EvaluationStatusEnum;
 
@@ -36,7 +36,7 @@ export default class Evaluation {
 	 * Getter $remarks
 	 * @return {String}
 	 */
-	public get $remarks(): String {
+	public get $remarks(): String | undefined {
 		return this.remarks;
 	}
 
@@ -76,7 +76,7 @@ export default class Evaluation {
 	 * Setter $remarks
 	 * @param {String} value
 	 */
-	public set $remarks(value: String) {
+	public set $remarks(value: String | undefined) {
 		this.remarks = value;
 	}
 

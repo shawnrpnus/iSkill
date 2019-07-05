@@ -10,12 +10,11 @@ export default class NumericChoiceQuestion extends Question {
 	constructor(
 		questionSeq: Number,
 		qnText: String,
-		surveyForm: SurveyForm,
 		category: Category,
 		$lowerBound: Number,
 		$upperBound: Number
 	) {
-		super(questionSeq, qnText, surveyForm, category);
+		super(questionSeq, qnText, category);
 		this.lowerBound = $lowerBound;
 		this.upperBound = $upperBound;
 	}

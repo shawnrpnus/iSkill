@@ -9,21 +9,13 @@ export default class Question {
 
 	protected questionText: String;
 
-	protected surveyForm: SurveyForm;
-
 	protected answers?: Answer[];
 
 	protected category: Category;
 
-	constructor(
-		questionSeq: Number,
-		qnText: String,
-		surveyForm: SurveyForm,
-		category: Category
-	) {
+	constructor(questionSeq: Number, qnText: String, category: Category) {
 		this.questionSequence = questionSeq;
 		this.questionText = qnText;
-		this.surveyForm = surveyForm;
 		this.category = category;
 	}
 
@@ -49,14 +41,6 @@ export default class Question {
 	 */
 	public get $questionText(): String {
 		return this.questionText;
-	}
-
-	/**
-	 * Getter $surveyForm
-	 * @return {SurveyForm}
-	 */
-	public get $surveyForm(): SurveyForm {
-		return this.surveyForm;
 	}
 
 	/**
@@ -97,14 +81,6 @@ export default class Question {
 	 */
 	public set $questionText(value: String) {
 		this.questionText = value;
-	}
-
-	/**
-	 * Setter $surveyForm
-	 * @param {SurveyForm} value
-	 */
-	public set $surveyForm(value: SurveyForm) {
-		this.surveyForm = value;
 	}
 
 	/**

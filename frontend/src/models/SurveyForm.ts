@@ -1,18 +1,18 @@
 import ToolProcess from "./ToolProcess";
-import Question from "./Question";
+import Category from "./Question";
 import Evaluation from "./Evaluation";
 import Employee from "./Employee";
 
 export default class SurveyForm {
-	private formId?: Number;
-	private formName: String;
-	private totalScore: Number;
-	private actualScore: Number;
+	private surveyFormId?: Number;
+	private surveyFormName: String;
+	private totalScore?: Number;
+	private actualScore?: Number;
 	private skillLevel: String;
 
 	private creator: Employee;
 
-	private questions: Question[];
+	private categories: Category[];
 
 	private toolProcess: ToolProcess[];
 
@@ -24,16 +24,16 @@ export default class SurveyForm {
 		$actualScore: Number,
 		$skillLevel: String,
 		$creator: Employee,
-		$questions: Question[],
+		$categories: Category[],
 		$toolProcess: ToolProcess[],
 		$evaluations: Evaluation[]
 	) {
-		this.formName = $formName;
+		this.surveyFormName = $formName;
 		this.totalScore = $totalScore;
 		this.actualScore = $actualScore;
 		this.skillLevel = $skillLevel;
 		this.creator = $creator;
-		this.questions = $questions;
+		this.categories = $categories;
 		this.toolProcess = $toolProcess;
 		this.evaluations = $evaluations;
 	}
@@ -43,7 +43,7 @@ export default class SurveyForm {
 	 * @return {Number}
 	 */
 	public get $formId(): Number | undefined {
-		return this.formId;
+		return this.surveyFormId;
 	}
 
 	/**
@@ -51,14 +51,14 @@ export default class SurveyForm {
 	 * @return {String}
 	 */
 	public get $formName(): String {
-		return this.formName;
+		return this.surveyFormName;
 	}
 
 	/**
 	 * Getter $totalScore
 	 * @return {Number}
 	 */
-	public get $totalScore(): Number {
+	public get $totalScore(): Number | undefined {
 		return this.totalScore;
 	}
 
@@ -66,7 +66,7 @@ export default class SurveyForm {
 	 * Getter $actualScore
 	 * @return {Number}
 	 */
-	public get $actualScore(): Number {
+	public get $actualScore(): Number | undefined {
 		return this.actualScore;
 	}
 
@@ -88,10 +88,10 @@ export default class SurveyForm {
 
 	/**
 	 * Getter $questions
-	 * @return {Question[]}
+	 * @return {Category[]}
 	 */
-	public get $questions(): Question[] {
-		return this.questions;
+	public get $questions(): Category[] {
+		return this.categories;
 	}
 
 	/**
@@ -115,7 +115,7 @@ export default class SurveyForm {
 	 * @param {Number} value
 	 */
 	public set $formId(value: Number | undefined) {
-		this.formId = value;
+		this.surveyFormId = value;
 	}
 
 	/**
@@ -123,14 +123,14 @@ export default class SurveyForm {
 	 * @param {String} value
 	 */
 	public set $formName(value: String) {
-		this.formName = value;
+		this.surveyFormName = value;
 	}
 
 	/**
 	 * Setter $totalScore
 	 * @param {Number} value
 	 */
-	public set $totalScore(value: Number) {
+	public set $totalScore(value: Number | undefined) {
 		this.totalScore = value;
 	}
 
@@ -138,7 +138,7 @@ export default class SurveyForm {
 	 * Setter $actualScore
 	 * @param {Number} value
 	 */
-	public set $actualScore(value: Number) {
+	public set $actualScore(value: Number | undefined) {
 		this.actualScore = value;
 	}
 
@@ -160,10 +160,10 @@ export default class SurveyForm {
 
 	/**
 	 * Setter $questions
-	 * @param {Question[]} value
+	 * @param {Category[]} value
 	 */
-	public set $questions(value: Question[]) {
-		this.questions = value;
+	public set $questions(value: Category[]) {
+		this.categories = value;
 	}
 
 	/**
