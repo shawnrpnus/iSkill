@@ -1,15 +1,16 @@
 import * as React from "react";
 import { Row, Col, Input, Select, Radio } from "antd";
 import { RadioChangeEvent } from "antd/lib/radio";
+import { WrappedFormUtils } from "antd/lib/form/Form";
 const { Option } = Select;
 
-export interface IQuestionProps {}
+export interface IQuestionProps {
+	form: WrappedFormUtils<any>;
+}
 
 export interface IQuestionState {
 	lowerBoundOptions: Array<number>;
 	upperBoundOptions: Array<number>;
-	currentLowerBound: number;
-	currentUpperBound: number;
 	currentRadioOption: number;
 }
 
@@ -20,14 +21,14 @@ export default class Question extends React.Component<IQuestionProps, IQuestionS
 		this.state = {
 			lowerBoundOptions: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
 			upperBoundOptions: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-			currentLowerBound: 1,
-			currentUpperBound: 5,
 			currentRadioOption: 1
 		};
 
 		this.upperBoundChange = this.upperBoundChange.bind(this);
 		this.lowerBoundChange = this.lowerBoundChange.bind(this);
 		this.onRadioChange = this.onRadioChange.bind(this);
+		this.onTaskNameChange = this.onTaskNameChange.bind(this);
+		this.loadRadioOptions = this.loadRadioOptions.bind(this);
 	}
 
 	lowerBoundChange(lowerBoundValue: number) {
@@ -35,15 +36,17 @@ export default class Question extends React.Component<IQuestionProps, IQuestionS
 		for (let i = lowerBoundValue + 1; i <= 10; i++) {
 			newUpperBoundOptions.push(i);
 		}
+		let currentUpperBound =
+			this.props.form.getFieldValue("upperBound") <= lowerBoundValue
+				? lowerBoundValue + 1
+				: this.props.form.getFieldValue("upperBound");
 		this.setState((prevState, props) => ({
 			upperBoundOptions: newUpperBoundOptions,
-			currentLowerBound: lowerBoundValue,
-			currentUpperBound:
-				prevState.currentUpperBound <= lowerBoundValue
-					? lowerBoundValue + 1
-					: prevState.currentUpperBound,
 			currentRadioOption: lowerBoundValue
 		}));
+		this.props.form.setFieldsValue({
+			upperBound: currentUpperBound
+		});
 	}
 
 	upperBoundChange(upperBoundValue: number) {
@@ -53,15 +56,16 @@ export default class Question extends React.Component<IQuestionProps, IQuestionS
 		}
 
 		let currentLowerBound =
-			this.state.currentLowerBound >= upperBoundValue
+			this.props.form.getFieldValue("lowerBound") >= upperBoundValue
 				? upperBoundValue - 1
-				: this.state.currentLowerBound;
+				: this.props.form.getFieldValue("lowerBound");
 		this.setState((prevState, props) => ({
 			lowerBoundOptions: newLowerBoundOptions,
-			currentUpperBound: upperBoundValue,
-			currentLowerBound: currentLowerBound,
 			currentRadioOption: currentLowerBound
 		}));
+		this.props.form.setFieldsValue({
+			lowerBound: currentLowerBound
+		});
 	}
 
 	onRadioChange(event: RadioChangeEvent) {
@@ -70,47 +74,60 @@ export default class Question extends React.Component<IQuestionProps, IQuestionS
 		}));
 	}
 
-	public render() {
+	onTaskNameChange() {
+		// TODO: Redux
+	}
+
+	loadRadioOptions() {
 		let currentRadioOptions = [];
 		for (
-			let i = this.state.currentLowerBound;
-			i <= this.state.currentUpperBound;
+			let i = this.props.form.getFieldValue("lowerBound");
+			i <= this.props.form.getFieldValue("upperBound");
 			i++
 		) {
 			currentRadioOptions.push(i);
 		}
+		return currentRadioOptions;
+	}
+
+	public render() {
+		const { getFieldDecorator } = this.props.form;
 		return (
 			<Row>
 				<Col span={8}>
-					<Input allowClear placeholder="Enter task name" />
+					{getFieldDecorator("questionText")(
+						<Input allowClear placeholder="Enter task name" />
+					)}
 				</Col>
 				<Col span={2}>
-					<Select
-						value={this.state.currentLowerBound}
-						onChange={this.lowerBoundChange}
-					>
-						{this.state.lowerBoundOptions.map(option => {
-							return (
-								<Option key={`lowerBound${option}`} value={option}>
-									{option}
-								</Option>
-							);
-						})}
-					</Select>
+					{getFieldDecorator("lowerBound", {
+						initialValue: 1
+					})(
+						<Select onChange={this.lowerBoundChange}>
+							{this.state.lowerBoundOptions.map(option => {
+								return (
+									<Option key={`lowerBound${option}`} value={option}>
+										{option}
+									</Option>
+								);
+							})}
+						</Select>
+					)}
 				</Col>
 				<Col span={2}>
-					<Select
-						value={this.state.currentUpperBound}
-						onChange={this.upperBoundChange}
-					>
-						{this.state.upperBoundOptions.map(option => {
-							return (
-								<Option key={`upperBound${option}`} value={option}>
-									{option}
-								</Option>
-							);
-						})}
-					</Select>
+					{getFieldDecorator("upperBound", {
+						initialValue: 5
+					})(
+						<Select onChange={this.upperBoundChange}>
+							{this.state.upperBoundOptions.map(option => {
+								return (
+									<Option key={`upperBound${option}`} value={option}>
+										{option}
+									</Option>
+								);
+							})}
+						</Select>
+					)}
 				</Col>
 				<Col span={12} style={{ paddingLeft: "1vw" }}>
 					<Radio.Group
@@ -118,8 +135,12 @@ export default class Question extends React.Component<IQuestionProps, IQuestionS
 						buttonStyle="solid"
 						onChange={this.onRadioChange}
 					>
-						{currentRadioOptions.map(option => {
-							return <Radio value={option}>{option}</Radio>;
+						{this.loadRadioOptions().map(option => {
+							return (
+								<Radio key={`radio${option}`} value={option}>
+									{option}
+								</Radio>
+							);
 						})}
 					</Radio.Group>
 				</Col>

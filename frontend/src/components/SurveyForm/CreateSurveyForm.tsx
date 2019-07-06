@@ -70,7 +70,7 @@ class CreateSurveyForm extends React.Component<
 					</Col>
 				</Row>
 				<hr />
-				<Question />
+				<Question form={this.props.form} />
 			</Form>
 		);
 	}
