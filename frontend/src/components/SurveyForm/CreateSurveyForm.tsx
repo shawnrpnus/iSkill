@@ -8,6 +8,7 @@ import SurveyFormModel from "../../models/SurveyForm";
 import Category from "./Category/Category";
 import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
 import NumericChoiceQuestion from "../../models/NumericChoiceQuestion";
+import { createSurveyForm } from "../../actions/surveyFormActions";
 
 const reorder = (list: Iterable<any>, startIndex: number, endIndex: number) => {
 	const result = Array.from(list);
@@ -18,6 +19,7 @@ const reorder = (list: Iterable<any>, startIndex: number, endIndex: number) => {
 
 export interface ICreateSurveyFormProps extends FormComponentProps {
 	errors: any;
+	createSurveyForm: typeof createSurveyForm;
 }
 
 export interface ICreateSurveyFormState {
@@ -138,18 +140,19 @@ class CreateSurveyForm extends React.Component<
 		}));
 	}
 
-	handleSubmit() {
+	handleSubmit(e: React.FormEvent<EventTarget>) {
+		e.preventDefault();
 		let categoryModelList = [];
 		let stateCategories = this.state.categories;
 		for (let i = 0; i < stateCategories.length; i++) {
 			let categoryName = this.props.form.getFieldValue(
 				`categoryName-${stateCategories[i].categoryId}`
 			);
-			let categorySequence = i;
+			let categorySequence = i + 1;
 			let categoryQuestions = stateCategories[i].questions;
 			let questionModelList: Array<NumericChoiceQuestion> = [];
 			for (let j = 0; j < categoryQuestions.length; j++) {
-				let qnSequence = i;
+				let qnSequence = i + 1;
 				let qnText = this.props.form.getFieldValue(
 					`questionText-${stateCategories[i].categoryId}-${
 						categoryQuestions[j]
@@ -187,13 +190,15 @@ class CreateSurveyForm extends React.Component<
 		);
 
 		console.log(surveyFormModel);
+		let employeeId = 1;
+		let toolProcessId = 1;
+		this.props.createSurveyForm(surveyFormModel, employeeId, toolProcessId);
 	}
 
 	public render() {
 		const { getFieldDecorator } = this.props.form;
 		return (
 			<Form onSubmit={this.handleSubmit} style={{ padding: "2vw 10vw 0 10vw" }}>
-				<Button onClick={() => this.handleSubmit()}>Fields Value</Button>
 				<Row gutter={16}>
 					<Col span={8}>
 						<Form.Item
@@ -295,6 +300,11 @@ class CreateSurveyForm extends React.Component<
 					<Icon type="plus-circle" />
 					Add Category
 				</Button>
+				<Form.Item>
+					<Button type="primary" htmlType="submit" onSubmit={this.handleSubmit}>
+						Submit
+					</Button>
+				</Form.Item>
 			</Form>
 		);
 	}
@@ -304,7 +314,9 @@ const wrappedCreateSurveyForm = Form.create({ name: "create_survey_form" })(
 	CreateSurveyForm
 );
 const mapStateToProps = (state: any) => ({});
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+	createSurveyForm
+};
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps

@@ -1,6 +1,4 @@
-import SurveyForm from "./SurveyForm";
 import Answer from "./Answer";
-import Category from "./Category";
 
 export default class Question {
 	protected type?: String;

@@ -1,18 +1,10 @@
 import * as React from "react";
 import { Card, Form, Input, Button, Icon, Row, Col, Tooltip } from "antd";
 import Question from "../Question/Question";
-import NumericChoiceQuestion from "../../../models/NumericChoiceQuestion";
-import CategoryModel from "../../../models/Category";
 import { WrappedFormUtils } from "antd/lib/form/Form";
 import "./Category.css";
 import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
 
-const reorder = (list: Iterable<number>, startIndex: number, endIndex: number) => {
-	const result = Array.from(list);
-	const [removed] = result.splice(startIndex, 1);
-	result.splice(endIndex, 0, removed);
-	return result;
-};
 export interface ICategoryProps {
 	form: WrappedFormUtils<any>;
 	categoryId: number;

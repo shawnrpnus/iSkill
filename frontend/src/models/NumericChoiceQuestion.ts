@@ -1,6 +1,4 @@
 import Question from "./Question";
-import SurveyForm from "./SurveyForm";
-import Category from "./Category";
 
 export default class NumericChoiceQuestion extends Question {
 	private lowerBound: Number;
