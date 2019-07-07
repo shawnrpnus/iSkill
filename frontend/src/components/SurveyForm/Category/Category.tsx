@@ -1,7 +1,8 @@
 import * as React from "react";
 import { Card, Form, Input, Button, Icon, Row, Col, Tooltip } from "antd";
 import Question from "../Question/Question";
-import QuestionModel from "../../../models/Question";
+import NumericChoiceQuestion from "../../../models/NumericChoiceQuestion";
+import CategoryModel from "../../../models/Category";
 import { WrappedFormUtils } from "antd/lib/form/Form";
 import "./Category.css";
 import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
@@ -76,9 +77,42 @@ export default class Category extends React.Component<ICategoryProps, ICategoryS
 		}));
 	}
 
+	//TODO:  refactor to put questions tate in surveyform component
+	updateQuestionModels() {
+		const questionModels = this.props.form.getFieldValue(
+			`questionModelList-${this.props.categoryId}`
+		);
+		let questionModelList: Array<NumericChoiceQuestion> = [];
+		for (let i = 0; i < this.state.questions.length; i++) {
+			let qnSequence = i;
+			let qnText = this.props.form.getFieldValue(
+				`questionText-${this.props.categoryId}-${this.state.questions[i]}`
+			);
+			let lowerBound = this.props.form.getFieldValue(
+				`lowerBound-${this.props.categoryId}-${this.state.questions[i]}`
+			);
+			let upperBound = this.props.form.getFieldValue(
+				`upperBound-${this.props.categoryId}-${this.state.questions[i]}`
+			);
+			let questionModel: NumericChoiceQuestion = new NumericChoiceQuestion(
+				qnSequence,
+				qnText,
+				lowerBound,
+				upperBound
+			);
+			questionModelList.push(questionModel);
+		}
+		this.props.form.setFieldsValue({
+			[`questionModelList-${this.props.categoryId}`]: questionModelList
+		});
+	}
+
 	render() {
 		const { getFieldDecorator } = this.props.form;
 		let questions = this.state.questions;
+		getFieldDecorator(`questionModelList-${this.props.categoryId}`, {
+			initialValue: {}
+		});
 		return (
 			<Card
 				bordered={true}

@@ -23,6 +23,11 @@ export interface ICreateSurveyFormState {
 	categoryId: number;
 }
 
+interface ICategory {
+	categoryId: number;
+	questions: Array<number>;
+}
+
 class CreateSurveyForm extends React.Component<
 	ICreateSurveyFormProps,
 	ICreateSurveyFormState
@@ -44,8 +49,6 @@ class CreateSurveyForm extends React.Component<
 	getFormFieldsValue() {
 		console.log(this.props.form.getFieldsValue());
 	}
-
-	handleSubmit() {}
 
 	addCategory() {
 		this.setState((prevState, props) => ({
@@ -76,11 +79,32 @@ class CreateSurveyForm extends React.Component<
 		}));
 	}
 
+	handleSubmit() {
+		let categoryModelList = [];
+		for (let i = 0; i < this.state.categories.length; i++) {
+			let categoryName = this.props.form.getFieldValue(
+				`categoryName-${this.state.categories[i]}`
+			);
+			let categorySequence = i;
+			let questionModelList = this.props.form.getFieldValue(
+				`questionModelList-${this.state.categories[i]}`
+			);
+			let categoryModel: CategoryModel = new CategoryModel(
+				categoryName,
+				categorySequence,
+				questionModelList
+			);
+			categoryModelList.push(categoryModel);
+		}
+
+		console.log(JSON.stringify(categoryModelList));
+	}
+
 	public render() {
 		const { getFieldDecorator } = this.props.form;
 		return (
 			<Form onSubmit={this.handleSubmit} style={{ padding: "2vw 10vw 0 10vw" }}>
-				{/* <Button onClick={() => this.getFormFieldsValue}>Fields Value</Button> */}
+				<Button onClick={() => this.handleSubmit()}>Fields Value</Button>
 				<Row gutter={16}>
 					<Col span={8}>
 						<Form.Item

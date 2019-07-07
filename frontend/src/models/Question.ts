@@ -3,6 +3,8 @@ import Answer from "./Answer";
 import Category from "./Category";
 
 export default class Question {
+	protected type?: String;
+
 	protected questionId?: Number;
 
 	protected questionSequence: Number;
@@ -11,12 +13,9 @@ export default class Question {
 
 	protected answers?: Answer[];
 
-	protected category: Category;
-
-	constructor(questionSeq: Number, qnText: String, category: Category) {
+	constructor(questionSeq: Number, qnText: String) {
 		this.questionSequence = questionSeq;
 		this.questionText = qnText;
-		this.category = category;
 	}
 
 	/**
@@ -52,14 +51,6 @@ export default class Question {
 	}
 
 	/**
-	 * Getter $category
-	 * @return {Category}
-	 */
-	public get $category(): Category {
-		return this.category;
-	}
-
-	/**
 	 * Setter $questionId
 	 * @param {Number} value
 	 */
@@ -89,13 +80,5 @@ export default class Question {
 	 */
 	public set $answers(value: Answer[] | undefined) {
 		this.answers = value;
-	}
-
-	/**
-	 * Setter $category
-	 * @param {Category} value
-	 */
-	public set $category(value: Category) {
-		this.category = value;
 	}
 }
