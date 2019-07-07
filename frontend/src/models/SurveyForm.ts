@@ -1,5 +1,5 @@
 import ToolProcess from "./ToolProcess";
-import Category from "./Question";
+import Category from "./Category";
 import Evaluation from "./Evaluation";
 import Employee from "./Employee";
 
@@ -10,32 +10,18 @@ export default class SurveyForm {
 	private actualScore?: Number;
 	private skillLevel: String;
 
-	private creator: Employee;
+	private creator?: Employee;
 
 	private categories: Category[];
 
-	private toolProcess: ToolProcess[];
+	private toolProcess?: ToolProcess[];
 
-	private evaluations: Evaluation[];
+	private evaluations?: Evaluation[];
 
-	constructor(
-		$formName: String,
-		$totalScore: Number,
-		$actualScore: Number,
-		$skillLevel: String,
-		$creator: Employee,
-		$categories: Category[],
-		$toolProcess: ToolProcess[],
-		$evaluations: Evaluation[]
-	) {
+	constructor($formName: String, $skillLevel: String, $categories: Category[]) {
 		this.surveyFormName = $formName;
-		this.totalScore = $totalScore;
-		this.actualScore = $actualScore;
 		this.skillLevel = $skillLevel;
-		this.creator = $creator;
 		this.categories = $categories;
-		this.toolProcess = $toolProcess;
-		this.evaluations = $evaluations;
 	}
 
 	/**
@@ -82,15 +68,15 @@ export default class SurveyForm {
 	 * Getter $creator
 	 * @return {Employee}
 	 */
-	public get $creator(): Employee {
+	public get $creator(): Employee | undefined {
 		return this.creator;
 	}
 
 	/**
-	 * Getter $questions
+	 * Getter $categories
 	 * @return {Category[]}
 	 */
-	public get $questions(): Category[] {
+	public get $categories(): Category[] {
 		return this.categories;
 	}
 
@@ -98,7 +84,7 @@ export default class SurveyForm {
 	 * Getter $toolProcess
 	 * @return {ToolProcess[]}
 	 */
-	public get $toolProcess(): ToolProcess[] {
+	public get $toolProcess(): ToolProcess[] | undefined {
 		return this.toolProcess;
 	}
 
@@ -106,7 +92,7 @@ export default class SurveyForm {
 	 * Getter $evaluations
 	 * @return {Evaluation[]}
 	 */
-	public get $evaluations(): Evaluation[] {
+	public get $evaluations(): Evaluation[] | undefined {
 		return this.evaluations;
 	}
 
@@ -154,15 +140,15 @@ export default class SurveyForm {
 	 * Setter $creator
 	 * @param {Employee} value
 	 */
-	public set $creator(value: Employee) {
+	public set $creator(value: Employee | undefined) {
 		this.creator = value;
 	}
 
 	/**
-	 * Setter $questions
+	 * Setter $categories
 	 * @param {Category[]} value
 	 */
-	public set $questions(value: Category[]) {
+	public set $categories(value: Category[]) {
 		this.categories = value;
 	}
 
@@ -170,7 +156,7 @@ export default class SurveyForm {
 	 * Setter $toolProcess
 	 * @param {ToolProcess[]} value
 	 */
-	public set $toolProcess(value: ToolProcess[]) {
+	public set $toolProcess(value: ToolProcess[] | undefined) {
 		this.toolProcess = value;
 	}
 
@@ -178,7 +164,7 @@ export default class SurveyForm {
 	 * Setter $evaluations
 	 * @param {Evaluation[]} value
 	 */
-	public set $evaluations(value: Evaluation[]) {
+	public set $evaluations(value: Evaluation[] | undefined) {
 		this.evaluations = value;
 	}
 }

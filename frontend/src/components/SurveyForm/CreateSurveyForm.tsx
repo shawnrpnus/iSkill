@@ -4,10 +4,12 @@ import { Form, Input, Select, Row, Col, Button, Icon } from "antd";
 import { FormComponentProps } from "antd/lib/form";
 import "./CreateSurveyForm.css";
 import CategoryModel from "../../models/Category";
+import SurveyFormModel from "../../models/SurveyForm";
 import Category from "./Category/Category";
 import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
+import NumericChoiceQuestion from "../../models/NumericChoiceQuestion";
 
-const reorder = (list: Iterable<number>, startIndex: number, endIndex: number) => {
+const reorder = (list: Iterable<any>, startIndex: number, endIndex: number) => {
 	const result = Array.from(list);
 	const [removed] = result.splice(startIndex, 1);
 	result.splice(endIndex, 0, removed);
@@ -19,7 +21,7 @@ export interface ICreateSurveyFormProps extends FormComponentProps {
 }
 
 export interface ICreateSurveyFormState {
-	categories: Array<number>;
+	categories: Array<ICategory>;
 	categoryId: number;
 }
 
@@ -44,6 +46,9 @@ class CreateSurveyForm extends React.Component<
 		this.addCategory = this.addCategory.bind(this);
 		this.removeCategory = this.removeCategory.bind(this);
 		this.onDragEnd = this.onDragEnd.bind(this);
+		this.addQuestion = this.addQuestion.bind(this);
+		this.removeQuestion = this.removeQuestion.bind(this);
+		this.reorderQuestions = this.reorderQuestions.bind(this);
 	}
 
 	getFormFieldsValue() {
@@ -51,16 +56,70 @@ class CreateSurveyForm extends React.Component<
 	}
 
 	addCategory() {
+		let newCategory: ICategory = {
+			categoryId: this.state.categoryId,
+			questions: []
+		};
 		this.setState((prevState, props) => ({
-			categories: prevState.categories.concat(prevState.categoryId),
+			categories: prevState.categories.concat(newCategory),
 			categoryId: prevState.categoryId + 1
 		}));
 	}
 
 	removeCategory(categoryId: number) {
 		this.setState((prevState, props) => ({
-			categories: prevState.categories.filter(element => element !== categoryId)
+			categories: prevState.categories.filter(
+				category => category.categoryId !== categoryId
+			)
 		}));
+	}
+
+	addQuestion(categoryId: number, questionId: number) {
+		let categories: Array<ICategory> = JSON.parse(
+			JSON.stringify(this.state.categories)
+		); //deep copy
+		let category = categories.find(category => category.categoryId === categoryId);
+		if (category != null) {
+			category.questions.push(questionId);
+		}
+		this.setState({
+			categories: categories
+		});
+	}
+
+	removeQuestion(categoryId: number, questionId: number) {
+		let categories: Array<ICategory> = JSON.parse(
+			JSON.stringify(this.state.categories)
+		); //deep copy
+		let category = categories.find(category => category.categoryId === categoryId);
+		if (category != null) {
+			category.questions = category.questions.filter(
+				questionIdElement => questionIdElement !== questionId
+			);
+		}
+		this.setState({
+			categories: categories
+		});
+	}
+
+	reorderQuestions(categoryId: number, result: DropResult) {
+		if (!result.destination) {
+			return;
+		}
+		let categories: Array<ICategory> = JSON.parse(
+			JSON.stringify(this.state.categories)
+		); //deep copy
+		let category = categories.find(category => category.categoryId === categoryId);
+		if (category != null) {
+			category.questions = reorder(
+				category.questions,
+				result.source.index,
+				result.destination.index
+			);
+		}
+		this.setState({
+			categories: categories
+		});
 	}
 
 	onDragEnd(result: DropResult) {
@@ -81,14 +140,35 @@ class CreateSurveyForm extends React.Component<
 
 	handleSubmit() {
 		let categoryModelList = [];
-		for (let i = 0; i < this.state.categories.length; i++) {
+		let stateCategories = this.state.categories;
+		for (let i = 0; i < stateCategories.length; i++) {
 			let categoryName = this.props.form.getFieldValue(
-				`categoryName-${this.state.categories[i]}`
+				`categoryName-${stateCategories[i].categoryId}`
 			);
 			let categorySequence = i;
-			let questionModelList = this.props.form.getFieldValue(
-				`questionModelList-${this.state.categories[i]}`
-			);
+			let categoryQuestions = stateCategories[i].questions;
+			let questionModelList: Array<NumericChoiceQuestion> = [];
+			for (let j = 0; j < categoryQuestions.length; j++) {
+				let qnSequence = i;
+				let qnText = this.props.form.getFieldValue(
+					`questionText-${stateCategories[i].categoryId}-${
+						categoryQuestions[j]
+					}`
+				);
+				let lowerBound = this.props.form.getFieldValue(
+					`lowerBound-${stateCategories[i].categoryId}-${categoryQuestions[j]}`
+				);
+				let upperBound = this.props.form.getFieldValue(
+					`upperBound-${stateCategories[i].categoryId}-${categoryQuestions[j]}`
+				);
+				let questionModel: NumericChoiceQuestion = new NumericChoiceQuestion(
+					qnSequence,
+					qnText,
+					lowerBound,
+					upperBound
+				);
+				questionModelList.push(questionModel);
+			}
 			let categoryModel: CategoryModel = new CategoryModel(
 				categoryName,
 				categorySequence,
@@ -97,7 +177,16 @@ class CreateSurveyForm extends React.Component<
 			categoryModelList.push(categoryModel);
 		}
 
-		console.log(JSON.stringify(categoryModelList));
+		let surveyFormName = this.props.form.getFieldValue("surveyFormName");
+		let skillLevel = this.props.form.getFieldValue("skillLevel");
+
+		let surveyFormModel = new SurveyFormModel(
+			surveyFormName,
+			skillLevel,
+			categoryModelList
+		);
+
+		console.log(surveyFormModel);
 	}
 
 	public render() {
@@ -126,10 +215,11 @@ class CreateSurveyForm extends React.Component<
 							hasFeedback={true}
 						>
 							{getFieldDecorator("toolProcess")(
-								<Select
-									placeholder="Select Tool / Process"
-									size="large"
-								/>
+								<Select placeholder="Select Tool / Process" size="large">
+									<Select.Option value="1">
+										Tool/Process Id: 1
+									</Select.Option>
+								</Select>
 							)}
 						</Form.Item>
 					</Col>
@@ -140,7 +230,11 @@ class CreateSurveyForm extends React.Component<
 							hasFeedback={true}
 						>
 							{getFieldDecorator("skillLevel")(
-								<Select placeholder="Select Skill Level" size="large" />
+								<Select placeholder="Select Skill Level" size="large">
+									<Select.Option value="L1">L1</Select.Option>
+									<Select.Option value="L2">L2</Select.Option>
+									<Select.Option value="L3">L3</Select.Option>
+								</Select>
 							)}
 						</Form.Item>
 					</Col>
@@ -150,7 +244,8 @@ class CreateSurveyForm extends React.Component<
 					<Droppable droppableId="droppableCategories">
 						{(provided, snapshot) => (
 							<div ref={provided.innerRef} {...provided.droppableProps}>
-								{this.state.categories.map((categoryId, index) => {
+								{this.state.categories.map((categoryObj, index) => {
+									let categoryId = categoryObj.categoryId;
 									return (
 										<Draggable
 											key={categoryId}
@@ -173,6 +268,16 @@ class CreateSurveyForm extends React.Component<
 															}
 															isDragging={
 																snapshot.isDragging
+															}
+															questions={
+																categoryObj.questions
+															}
+															addQuestion={this.addQuestion}
+															removeQuestion={
+																this.removeQuestion
+															}
+															reorderQuestions={
+																this.reorderQuestions
 															}
 														/>
 													</div>

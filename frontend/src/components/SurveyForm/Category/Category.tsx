@@ -18,10 +18,13 @@ export interface ICategoryProps {
 	categoryId: number;
 	removeCategory: Function;
 	isDragging: boolean;
+	questions: Array<number>;
+	addQuestion: Function;
+	removeQuestion: Function;
+	reorderQuestions: Function;
 }
 
 export interface ICategoryState {
-	questions: Array<number>;
 	questionId: number;
 }
 
@@ -30,89 +33,32 @@ export default class Category extends React.Component<ICategoryProps, ICategoryS
 		super(props);
 
 		this.state = {
-			questions: [],
 			questionId: 0
 		};
 
 		this.addQuestion = this.addQuestion.bind(this);
-		this.removeQuestion = this.removeQuestion.bind(this);
 		this.removeSelf = this.removeSelf.bind(this);
 		this.onDragEnd = this.onDragEnd.bind(this);
 	}
 
 	addQuestion() {
+		this.props.addQuestion(this.props.categoryId, this.state.questionId);
 		this.setState((prevState, props) => ({
-			questions: prevState.questions.concat(prevState.questionId),
 			questionId: prevState.questionId + 1
-		}));
-		console.log(this.state);
-	}
-
-	removeQuestion(questionId: number) {
-		this.setState((prevState, props) => ({
-			questions: prevState.questions.filter(element => element !== questionId)
 		}));
 	}
 
 	removeSelf() {
-		this.setState((prevState, props) => ({
-			questions: []
-		}));
 		this.props.removeCategory(this.props.categoryId);
 	}
 
 	onDragEnd(result: DropResult) {
-		if (!result.destination) {
-			return;
-		}
-
-		const updatedQuestions = reorder(
-			this.state.questions,
-			result.source.index,
-			result.destination.index
-		);
-
-		this.setState((prevState, props) => ({
-			questions: updatedQuestions
-		}));
-	}
-
-	//TODO:  refactor to put questions tate in surveyform component
-	updateQuestionModels() {
-		const questionModels = this.props.form.getFieldValue(
-			`questionModelList-${this.props.categoryId}`
-		);
-		let questionModelList: Array<NumericChoiceQuestion> = [];
-		for (let i = 0; i < this.state.questions.length; i++) {
-			let qnSequence = i;
-			let qnText = this.props.form.getFieldValue(
-				`questionText-${this.props.categoryId}-${this.state.questions[i]}`
-			);
-			let lowerBound = this.props.form.getFieldValue(
-				`lowerBound-${this.props.categoryId}-${this.state.questions[i]}`
-			);
-			let upperBound = this.props.form.getFieldValue(
-				`upperBound-${this.props.categoryId}-${this.state.questions[i]}`
-			);
-			let questionModel: NumericChoiceQuestion = new NumericChoiceQuestion(
-				qnSequence,
-				qnText,
-				lowerBound,
-				upperBound
-			);
-			questionModelList.push(questionModel);
-		}
-		this.props.form.setFieldsValue({
-			[`questionModelList-${this.props.categoryId}`]: questionModelList
-		});
+		this.props.reorderQuestions(this.props.categoryId, result);
 	}
 
 	render() {
 		const { getFieldDecorator } = this.props.form;
-		let questions = this.state.questions;
-		getFieldDecorator(`questionModelList-${this.props.categoryId}`, {
-			initialValue: {}
-		});
+		let questions = this.props.questions;
 		return (
 			<Card
 				bordered={true}
@@ -209,7 +155,9 @@ export default class Category extends React.Component<ICategoryProps, ICategoryS
 																		className="dynamic-delete-button"
 																		type="minus-circle-o"
 																		onClick={() =>
-																			this.removeQuestion(
+																			this.props.removeQuestion(
+																				this.props
+																					.categoryId,
 																				questionId
 																			)
 																		}
