@@ -4,11 +4,19 @@ import Question from "../Question/Question";
 import QuestionModel from "../../../models/Question";
 import { WrappedFormUtils } from "antd/lib/form/Form";
 import "./Category.css";
+import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
 
+const reorder = (list: Iterable<number>, startIndex: number, endIndex: number) => {
+	const result = Array.from(list);
+	const [removed] = result.splice(startIndex, 1);
+	result.splice(endIndex, 0, removed);
+	return result;
+};
 export interface ICategoryProps {
 	form: WrappedFormUtils<any>;
 	categoryId: number;
 	removeCategory: Function;
+	isDragging: boolean;
 }
 
 export interface ICategoryState {
@@ -28,6 +36,7 @@ export default class Category extends React.Component<ICategoryProps, ICategoryS
 		this.addQuestion = this.addQuestion.bind(this);
 		this.removeQuestion = this.removeQuestion.bind(this);
 		this.removeSelf = this.removeSelf.bind(this);
+		this.onDragEnd = this.onDragEnd.bind(this);
 	}
 
 	addQuestion() {
@@ -51,15 +60,39 @@ export default class Category extends React.Component<ICategoryProps, ICategoryS
 		this.props.removeCategory(this.props.categoryId);
 	}
 
-	public render() {
+	onDragEnd(result: DropResult) {
+		if (!result.destination) {
+			return;
+		}
+
+		const updatedQuestions = reorder(
+			this.state.questions,
+			result.source.index,
+			result.destination.index
+		);
+
+		this.setState((prevState, props) => ({
+			questions: updatedQuestions
+		}));
+	}
+
+	render() {
 		const { getFieldDecorator } = this.props.form;
 		let questions = this.state.questions;
 		return (
 			<Card
 				bordered={true}
+				style={{
+					backgroundColor: this.props.isDragging ? "#fdffe3" : "white"
+				}}
 				title={
 					<Row>
-						<Col span={22}>
+						<Col span={1}>
+							<Form.Item style={{ marginBottom: 0 }}>
+								<Icon type="menu" />
+							</Form.Item>
+						</Col>
+						<Col span={21}>
 							<Form.Item
 								// validateStatus={
 								// 	this.props.errors.surveyFormName ? "error" : ""
@@ -92,36 +125,75 @@ export default class Category extends React.Component<ICategoryProps, ICategoryS
 					</Row>
 				}
 			>
-				{questions.map(questionId => {
-					return (
-						<Row
-							key={`questionRow-${questionId}`}
-							type="flex"
-							justify="space-between"
-							align="middle"
-						>
-							<Question
-								key={questionId}
-								form={this.props.form}
-								categoryId={this.props.categoryId}
-								questionId={questionId}
-							/>
-							<Col span={2} style={{ textAlign: "center" }}>
-								<Form.Item>
-									<Tooltip title="Delete this question">
-										<Icon
-											className="dynamic-delete-button"
-											type="minus-circle-o"
-											onClick={() =>
-												this.removeQuestion(questionId)
-											}
-										/>
-									</Tooltip>
-								</Form.Item>
-							</Col>
-						</Row>
-					);
-				})}
+				<DragDropContext onDragEnd={this.onDragEnd}>
+					<Droppable droppableId="droppableQuestions">
+						{(provided, snapshot) => (
+							<div ref={provided.innerRef} {...provided.droppableProps}>
+								{questions.map((questionId, index) => {
+									return (
+										<Draggable
+											key={questionId}
+											draggableId={questionId.toString()}
+											index={index}
+										>
+											{(provided, snapshot) => (
+												<div
+													ref={provided.innerRef}
+													{...provided.draggableProps}
+													{...provided.dragHandleProps}
+												>
+													<Row
+														key={`questionRow-${questionId}`}
+														type="flex"
+														justify="space-between"
+														align="middle"
+														style={{
+															backgroundColor:
+																snapshot.isDragging ||
+																this.props.isDragging
+																	? "#fdffe3"
+																	: "white"
+														}}
+													>
+														<Question
+															key={questionId}
+															form={this.props.form}
+															categoryId={
+																this.props.categoryId
+															}
+															questionId={questionId}
+														/>
+														<Col
+															span={2}
+															style={{
+																textAlign: "center"
+															}}
+														>
+															<Form.Item>
+																<Tooltip title="Delete this question">
+																	<Icon
+																		className="dynamic-delete-button"
+																		type="minus-circle-o"
+																		onClick={() =>
+																			this.removeQuestion(
+																				questionId
+																			)
+																		}
+																	/>
+																</Tooltip>
+															</Form.Item>
+														</Col>
+													</Row>
+												</div>
+											)}
+										</Draggable>
+									);
+								})}
+								{provided.placeholder}
+							</div>
+						)}
+					</Droppable>
+				</DragDropContext>
 				<Button type="primary" onClick={this.addQuestion}>
 					<Icon type="plus-circle" />
 					Add task

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Col, Input, Select, Radio } from "antd";
+import { Col, Input, Select, Radio, Icon } from "antd";
 import { RadioChangeEvent } from "antd/lib/radio";
 import Form, { WrappedFormUtils } from "antd/lib/form/Form";
 const { Option } = Select;
@@ -113,6 +113,11 @@ export default class Question extends React.Component<IQuestionProps, IQuestionS
 		const { getFieldDecorator } = this.props.form;
 		return (
 			<React.Fragment key={this.props.questionId}>
+				<Col span={1}>
+					<Form.Item>
+						<Icon type="menu" />
+					</Form.Item>
+				</Col>
 				<Col span={8}>
 					<Form.Item key={this.props.questionId}>
 						{getFieldDecorator(
@@ -176,7 +181,7 @@ export default class Question extends React.Component<IQuestionProps, IQuestionS
 						)}
 					</Form.Item>
 				</Col>
-				<Col span={10} style={{ paddingLeft: "1vw" }}>
+				<Col span={9} style={{ paddingLeft: "1vw" }}>
 					<Form.Item>
 						<Radio.Group
 							value={this.state.currentRadioOption}

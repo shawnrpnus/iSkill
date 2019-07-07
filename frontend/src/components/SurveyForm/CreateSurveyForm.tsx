@@ -5,6 +5,14 @@ import { FormComponentProps } from "antd/lib/form";
 import "./CreateSurveyForm.css";
 import CategoryModel from "../../models/Category";
 import Category from "./Category/Category";
+import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
+
+const reorder = (list: Iterable<number>, startIndex: number, endIndex: number) => {
+	const result = Array.from(list);
+	const [removed] = result.splice(startIndex, 1);
+	result.splice(endIndex, 0, removed);
+	return result;
+};
 
 export interface ICreateSurveyFormProps extends FormComponentProps {
 	errors: any;
@@ -30,6 +38,7 @@ class CreateSurveyForm extends React.Component<
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.addCategory = this.addCategory.bind(this);
 		this.removeCategory = this.removeCategory.bind(this);
+		this.onDragEnd = this.onDragEnd.bind(this);
 	}
 
 	getFormFieldsValue() {
@@ -48,6 +57,22 @@ class CreateSurveyForm extends React.Component<
 	removeCategory(categoryId: number) {
 		this.setState((prevState, props) => ({
 			categories: prevState.categories.filter(element => element !== categoryId)
+		}));
+	}
+
+	onDragEnd(result: DropResult) {
+		if (!result.destination) {
+			return;
+		}
+
+		const updatedCategories = reorder(
+			this.state.categories,
+			result.source.index,
+			result.destination.index
+		);
+
+		this.setState((prevState, props) => ({
+			categories: updatedCategories
 		}));
 	}
 
@@ -97,14 +122,46 @@ class CreateSurveyForm extends React.Component<
 					</Col>
 				</Row>
 				<hr />
-				{this.state.categories.map(categoryId => (
-					<Category
-						categoryId={categoryId}
-						key={categoryId}
-						form={this.props.form}
-						removeCategory={this.removeCategory}
-					/>
-				))}
+				<DragDropContext onDragEnd={this.onDragEnd}>
+					<Droppable droppableId="droppableCategories">
+						{(provided, snapshot) => (
+							<div ref={provided.innerRef} {...provided.droppableProps}>
+								{this.state.categories.map((categoryId, index) => {
+									return (
+										<Draggable
+											key={categoryId}
+											draggableId={categoryId.toString()}
+											index={index}
+										>
+											{(provided, snapshot) => {
+												return (
+													<div
+														ref={provided.innerRef}
+														{...provided.draggableProps}
+														{...provided.dragHandleProps}
+													>
+														<Category
+															categoryId={categoryId}
+															key={categoryId}
+															form={this.props.form}
+															removeCategory={
+																this.removeCategory
+															}
+															isDragging={
+																snapshot.isDragging
+															}
+														/>
+													</div>
+												);
+											}}
+										</Draggable>
+									);
+								})}
+								{provided.placeholder}
+							</div>
+						)}
+					</Droppable>
+				</DragDropContext>
 				<Button type="primary" onClick={this.addCategory}>
 					<Icon type="plus-circle" />
 					Add Category
