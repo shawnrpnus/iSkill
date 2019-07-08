@@ -202,7 +202,7 @@ class CreateSurveyForm extends React.Component<
 		return (
 			<Form onSubmit={this.handleSubmit} style={{ padding: "2vw 10vw 0 10vw" }}>
 				<Row gutter={16}>
-					<Col md={8} xs={24}>
+					<Col sm={8} xs={24}>
 						<Form.Item
 							validateStatus={
 								this.props.errors.surveyFormName ? "error" : ""
@@ -215,7 +215,7 @@ class CreateSurveyForm extends React.Component<
 							)}
 						</Form.Item>
 					</Col>
-					<Col md={8} xs={24}>
+					<Col sm={8} xs={24}>
 						<Form.Item
 							validateStatus={this.props.errors.toolProcess ? "error" : ""}
 							help={this.props.errors.toolProcess}
@@ -230,7 +230,7 @@ class CreateSurveyForm extends React.Component<
 							)}
 						</Form.Item>
 					</Col>
-					<Col md={8} xs={24}>
+					<Col sm={8} xs={24}>
 						<Form.Item
 							validateStatus={this.props.errors.skillLevel ? "error" : ""}
 							help={this.props.errors.skillLevel}

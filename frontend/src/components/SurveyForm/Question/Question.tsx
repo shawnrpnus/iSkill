@@ -118,12 +118,12 @@ class Question extends React.Component<IQuestionProps, IQuestionState> {
 		const { getFieldDecorator } = this.props.form;
 		return (
 			<React.Fragment key={this.props.questionId}>
-				<Col span={1}>
+				<Col sm={1} xs={2}>
 					<Form.Item>
 						<Icon type="menu" className="question-menu-icon" />
 					</Form.Item>
 				</Col>
-				<Col span={8}>
+				<Col sm={8} xs={14}>
 					<Form.Item
 						key={this.props.questionId}
 						validateStatus={
@@ -142,6 +142,7 @@ class Question extends React.Component<IQuestionProps, IQuestionState> {
 								}].questions[${this.props.index}].questionText`
 							]
 						}
+						hasFeedback={true}
 					>
 						{getFieldDecorator(
 							`questionText-${this.props.categoryId}-${
@@ -150,7 +151,7 @@ class Question extends React.Component<IQuestionProps, IQuestionState> {
 						)(<Input allowClear placeholder="Enter task name" />)}
 					</Form.Item>
 				</Col>
-				<Col span={2}>
+				<Col sm={2} xs={4}>
 					<Form.Item key={this.props.questionId}>
 						{getFieldDecorator(
 							`lowerBound-${this.props.categoryId}-${
@@ -177,7 +178,7 @@ class Question extends React.Component<IQuestionProps, IQuestionState> {
 						)}
 					</Form.Item>
 				</Col>
-				<Col span={2}>
+				<Col sm={2} xs={4}>
 					<Form.Item key={this.props.questionId}>
 						{getFieldDecorator(
 							`upperBound-${this.props.categoryId}-${
@@ -204,7 +205,7 @@ class Question extends React.Component<IQuestionProps, IQuestionState> {
 						)}
 					</Form.Item>
 				</Col>
-				<Col span={10} style={{ paddingLeft: "1vw" }}>
+				<Col sm={10} xs={22} style={{ paddingLeft: "1vw" }}>
 					<Form.Item>
 						<Radio.Group
 							value={this.state.currentRadioOption}

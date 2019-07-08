@@ -62,14 +62,14 @@ class Category extends React.Component<ICategoryProps, ICategoryState> {
 				}}
 				title={
 					<Row type="flex" justify="space-between">
-						<Col span={1} style={{ textAlign: "center" }}>
+						<Col md={1} xs={2} style={{ textAlign: "center" }}>
 							<Form.Item
 								style={{ marginBottom: 0, verticalAlign: "middle" }}
 							>
 								<Icon className="menu-icon" type="menu" />
 							</Form.Item>
 						</Col>
-						<Col span={22}>
+						<Col md={22} xs={18}>
 							<Form.Item
 								validateStatus={
 									this.props.errors[
@@ -86,7 +86,7 @@ class Category extends React.Component<ICategoryProps, ICategoryState> {
 								hasFeedback={true}
 								style={{
 									marginBottom: "0",
-									textAlign: "center"
+									fontWeight: "normal"
 								}}
 							>
 								{getFieldDecorator(
@@ -100,7 +100,7 @@ class Category extends React.Component<ICategoryProps, ICategoryState> {
 								)}
 							</Form.Item>
 						</Col>
-						<Col span={1} style={{ textAlign: "center" }}>
+						<Col md={1} xs={2} style={{ textAlign: "center" }}>
 							<Form.Item style={{ marginBottom: "0" }}>
 								<Tooltip title="Delete this category">
 									<Icon
@@ -157,7 +157,8 @@ class Category extends React.Component<ICategoryProps, ICategoryState> {
 															}
 														/>
 														<Col
-															span={1}
+															sm={1}
+															xs={2}
 															style={{
 																textAlign: "center"
 															}}
