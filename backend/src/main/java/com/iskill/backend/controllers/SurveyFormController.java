@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,7 +34,6 @@ public class SurveyFormController {
 
     @PostMapping("/createSurveyForm")
     public ResponseEntity<?> createNewSurveyForm(@Valid @RequestBody SurveyForm surveyForm, BindingResult result,
-                                                 @RequestParam("toolProcessId") Long toolProcessId,
                                                  @RequestParam("creatorEmployeeId") Long creatorEmployeeId) {
 
         ResponseEntity<Map<String, String>> errorMapRsp = validationService.generateErrorMapResponse(result);
@@ -41,7 +41,7 @@ public class SurveyFormController {
             return errorMapRsp;
         }
 
-        SurveyForm createdSurveyForm = surveyFormService.createNewSurveyForm(surveyForm, toolProcessId, creatorEmployeeId);
+        SurveyForm createdSurveyForm = surveyFormService.createNewSurveyForm(surveyForm, creatorEmployeeId);
         return new ResponseEntity<>(createdSurveyForm, HttpStatus.CREATED);
     }
 

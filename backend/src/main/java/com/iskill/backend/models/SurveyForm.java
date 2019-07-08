@@ -7,6 +7,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,6 +44,8 @@ public class SurveyForm {
     private List<Category> categories = new ArrayList<>();
 
     @ManyToOne
+    @Valid
+    @NotNull(message = "Tool/Process is required")
     @JoinColumn(nullable = false)
     private ToolProcess toolProcess;
 

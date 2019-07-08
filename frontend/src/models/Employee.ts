@@ -3,23 +3,23 @@ import Role from "./Role";
 import Evaluation from "./Evaluation";
 
 export default class Employee {
-	private employeeId?: Number;
+	employeeId?: Number;
 
-	private name: String;
+	name: String;
 
-	private username: String;
+	username: String;
 
-	private costCenter: String;
+	costCenter: String;
 
-	private shift: String;
+	shift: String;
 
-	private role: Role;
+	role: Role;
 
-	private createdSurveyForms?: SurveyForm[];
+	createdSurveyForms?: SurveyForm[];
 
-	private receivedEvaluations?: Evaluation[];
+	receivedEvaluations?: Evaluation[];
 
-	private givenEvaluations?: Evaluation[];
+	givenEvaluations?: Evaluation[];
 
 	constructor(
 		$name: String,
@@ -35,83 +35,4 @@ export default class Employee {
 		this.role = $role;
 	}
 
-	/**
-	 * Getter $name
-	 * @return {String}
-	 */
-	public get $name(): String {
-		return this.name;
-	}
-
-	/**
-	 * Getter $username
-	 * @return {String}
-	 */
-	public get $username(): String {
-		return this.username;
-	}
-
-	/**
-	 * Getter $costCenter
-	 * @return {String}
-	 */
-	public get $costCenter(): String {
-		return this.costCenter;
-	}
-
-	/**
-	 * Getter $shift
-	 * @return {String}
-	 */
-	public get $shift(): String {
-		return this.shift;
-	}
-
-	/**
-	 * Getter $role
-	 * @return {Role}
-	 */
-	public get $role(): Role {
-		return this.role;
-	}
-
-	/**
-	 * Setter $name
-	 * @param {String} value
-	 */
-	public set $name(value: String) {
-		this.name = value;
-	}
-
-	/**
-	 * Setter $username
-	 * @param {String} value
-	 */
-	public set $username(value: String) {
-		this.username = value;
-	}
-
-	/**
-	 * Setter $costCenter
-	 * @param {String} value
-	 */
-	public set $costCenter(value: String) {
-		this.costCenter = value;
-	}
-
-	/**
-	 * Setter $shift
-	 * @param {String} value
-	 */
-	public set $shift(value: String) {
-		this.shift = value;
-	}
-
-	/**
-	 * Setter $role
-	 * @param {Role} value
-	 */
-	public set $role(value: Role) {
-		this.role = value;
-	}
 }

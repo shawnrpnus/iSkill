@@ -43,12 +43,12 @@ public class SurveyFormService {
     }
 
 
-    public SurveyForm createNewSurveyForm(SurveyForm surveyForm, Long toolProcessId, Long employeeId) {
+    public SurveyForm createNewSurveyForm(SurveyForm surveyForm, Long employeeId) {
         //form has categories
         //categories have questions
         //Create new category objects for the form (associate questions with them as well)
-        ToolProcess toolProcess = toolProcessRepository.findByToolProcessId(toolProcessId).orElseThrow(
-                () -> new ToolProcessNotFoundException("Tool/Process with id '" + toolProcessId + "' not found!")
+        ToolProcess toolProcess = toolProcessRepository.findByToolProcessId(surveyForm.getToolProcess().getToolProcessId()).orElseThrow(
+                () -> new ToolProcessNotFoundException("Tool/Process with id '" + surveyForm.getToolProcess().getToolProcessId() + "' not found!")
         );
 
         Employee creator = employeeRepository.findById(employeeId).orElseThrow(

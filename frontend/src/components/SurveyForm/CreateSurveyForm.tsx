@@ -8,12 +8,19 @@ import SurveyFormModel from "../../models/SurveyForm";
 import Category from "./Category/Category";
 import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
 import NumericChoiceQuestion from "../../models/NumericChoiceQuestion";
-import { createSurveyForm, clearStateErrors } from "../../actions/surveyFormActions";
+import {
+	createSurveyForm,
+	clearStateErrors
+} from "../../actions/createSurveyFormActions";
+import { getAllToolProcess } from "../../actions/toolProcessActions";
+import ToolProcess from "../../models/ToolProcess";
 
 export interface ICreateSurveyFormProps extends FormComponentProps {
 	errors: any;
 	createSurveyForm: typeof createSurveyForm;
 	clearStateErrors: typeof clearStateErrors;
+	getAllToolProcess: typeof getAllToolProcess;
+	toolProcessList: Array<ToolProcess>;
 }
 
 export interface ICreateSurveyFormState {
@@ -45,6 +52,11 @@ class CreateSurveyForm extends React.Component<
 		this.addQuestion = this.addQuestion.bind(this);
 		this.removeQuestion = this.removeQuestion.bind(this);
 		this.reorderQuestions = this.reorderQuestions.bind(this);
+	}
+
+	componentWillMount() {
+		this.props.getAllToolProcess();
+		console.log(this.props.toolProcessList);
 	}
 
 	reorder(list: Iterable<any>, startIndex: number, endIndex: number) {
@@ -137,9 +149,9 @@ class CreateSurveyForm extends React.Component<
 			result.destination.index
 		);
 
-		this.setState((prevState, props) => ({
+		this.setState({
 			categories: updatedCategories
-		}));
+		});
 	}
 
 	handleSubmit(e: React.FormEvent<EventTarget>) {
@@ -185,22 +197,34 @@ class CreateSurveyForm extends React.Component<
 		let surveyFormName = this.props.form.getFieldValue("surveyFormName");
 		let skillLevel = this.props.form.getFieldValue("skillLevel");
 
+		let toolProcess = this.props.toolProcessList.find(
+			toolProcess =>
+				toolProcess.toolProcessId === this.props.form.getFieldValue("toolProcess")
+		);
+
 		let surveyFormModel = new SurveyFormModel(
 			surveyFormName,
 			skillLevel,
-			categoryModelList
+			categoryModelList,
+			toolProcess
 		);
 
-		console.log(surveyFormModel);
 		let employeeId = 1;
-		let toolProcessId = 1;
-		this.props.createSurveyForm(surveyFormModel, employeeId, toolProcessId);
+
+		this.props.createSurveyForm(surveyFormModel, employeeId);
 	}
 
 	public render() {
 		const { getFieldDecorator } = this.props.form;
 		return (
 			<Form onSubmit={this.handleSubmit} style={{ padding: "2vw 5vw 0 5vw" }}>
+				<Button
+					onClick={() =>
+						console.log(this.props.toolProcessList[0].toolProcessId)
+					}
+				>
+					toolprocess
+				</Button>
 				<Row>
 					<Col span={24}>
 						<Typography.Title style={{ textAlign: "center" }}>
@@ -231,11 +255,18 @@ class CreateSurveyForm extends React.Component<
 							hasFeedback={true}
 							label="Tool / Process"
 						>
-							{getFieldDecorator("toolProcess", {
-								initialValue: "1"
-							})(
+							{getFieldDecorator("toolProcess", {})(
 								<Select placeholder="Select Tool / Process" size="large">
-									<Select.Option value="1">Tool 1</Select.Option>
+									{this.props.toolProcessList.map(
+										(toolProcess: ToolProcess) => (
+											<Select.Option
+												key={toolProcess.toolProcessId}
+												value={toolProcess.toolProcessId}
+											>
+												{toolProcess.toolProcessName}
+											</Select.Option>
+										)
+									)}
 								</Select>
 							)}
 						</Form.Item>
@@ -247,9 +278,7 @@ class CreateSurveyForm extends React.Component<
 							hasFeedback={true}
 							label="Skill Level"
 						>
-							{getFieldDecorator("skillLevel", {
-								initialValue: "L1"
-							})(
+							{getFieldDecorator("skillLevel", {})(
 								<Select placeholder="Select Skill Level" size="large">
 									<Select.Option value="L1">L1</Select.Option>
 									<Select.Option value="L2">L2</Select.Option>
@@ -328,12 +357,16 @@ class CreateSurveyForm extends React.Component<
 const wrappedCreateSurveyForm = Form.create({ name: "create_survey_form" })(
 	CreateSurveyForm
 );
-const mapStateToProps = (state: any) => ({
-	errors: state.errors
-});
+const mapStateToProps = (state: any) => {
+	return {
+		errors: state.errors,
+		toolProcessList: state.toolProcess.toolProcessList
+	};
+};
 const mapDispatchToProps = {
 	createSurveyForm,
-	clearStateErrors
+	clearStateErrors,
+	getAllToolProcess
 };
 export default connect(
 	mapStateToProps,
