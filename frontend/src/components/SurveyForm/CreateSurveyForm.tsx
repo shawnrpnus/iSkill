@@ -56,7 +56,6 @@ class CreateSurveyForm extends React.Component<
 
 	componentWillMount() {
 		this.props.getAllToolProcess();
-		console.log(this.props.toolProcessList);
 	}
 
 	reorder(list: Iterable<any>, startIndex: number, endIndex: number) {
@@ -218,13 +217,6 @@ class CreateSurveyForm extends React.Component<
 		const { getFieldDecorator } = this.props.form;
 		return (
 			<Form onSubmit={this.handleSubmit} style={{ padding: "2vw 5vw 0 5vw" }}>
-				<Button
-					onClick={() =>
-						console.log(this.props.toolProcessList[0].toolProcessId)
-					}
-				>
-					toolprocess
-				</Button>
 				<Row>
 					<Col span={24}>
 						<Typography.Title style={{ textAlign: "center" }}>
