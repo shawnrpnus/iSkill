@@ -1,6 +1,6 @@
 import SurveyForm from "../models/SurveyForm";
 import axios from "axios";
-import { GET_ERRORS } from "./types";
+import { GET_ERRORS, CLEAR_ERRORS} from "./types";
 
 export const createSurveyForm = (
 	newSurveyForm: SurveyForm,
@@ -15,11 +15,12 @@ export const createSurveyForm = (
 				console.log(response);
 				dispatch(createSurveyFormSuccess(response));
 				alert("Create success!");
+				window.location.reload();
 			})
 			.catch(err => {
 				dispatch(createSurveyFormError(err.response.data));
-				alert("Create ERROR!");
-				console.log(err.reponse.data);
+				// alert("Create ERROR!");
+				console.log(err.response.data);
 			});
 	};
 };
@@ -32,4 +33,8 @@ const createSurveyFormSuccess = (payload: any) => ({
 const createSurveyFormError = (errorData: any) => ({
 	type: GET_ERRORS,
 	errorObj: errorData
+});
+
+export const clearStateErrors = () => ({
+	type: CLEAR_ERRORS
 });

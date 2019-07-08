@@ -4,6 +4,7 @@ import Question from "../Question/Question";
 import { WrappedFormUtils } from "antd/lib/form/Form";
 import "./Category.css";
 import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
+import { connect } from "react-redux";
 
 export interface ICategoryProps {
 	form: WrappedFormUtils<any>;
@@ -14,13 +15,15 @@ export interface ICategoryProps {
 	addQuestion: Function;
 	removeQuestion: Function;
 	reorderQuestions: Function;
+	index: any;
+	errors: any;
 }
 
 export interface ICategoryState {
 	questionId: number;
 }
 
-export default class Category extends React.Component<ICategoryProps, ICategoryState> {
+class Category extends React.Component<ICategoryProps, ICategoryState> {
 	constructor(props: ICategoryProps) {
 		super(props);
 
@@ -58,20 +61,33 @@ export default class Category extends React.Component<ICategoryProps, ICategoryS
 					backgroundColor: this.props.isDragging ? "#fdffe3" : "white"
 				}}
 				title={
-					<Row>
-						<Col span={1}>
-							<Form.Item style={{ marginBottom: 0 }}>
-								<Icon type="menu" />
+					<Row type="flex" justify="space-between">
+						<Col span={1} style={{ textAlign: "center" }}>
+							<Form.Item
+								style={{ marginBottom: 0, verticalAlign: "middle" }}
+							>
+								<Icon className="menu-icon" type="menu" />
 							</Form.Item>
 						</Col>
-						<Col span={21}>
+						<Col span={22}>
 							<Form.Item
-								// validateStatus={
-								// 	this.props.errors.surveyFormName ? "error" : ""
-								// }
-								// help={this.props.errors.surveyFormName}
+								validateStatus={
+									this.props.errors[
+										`categories[${this.props.index}].categoryName`
+									]
+										? "error"
+										: ""
+								}
+								help={
+									this.props.errors[
+										`categories[${this.props.index}].categoryName`
+									]
+								}
 								hasFeedback={true}
-								style={{ marginBottom: "0" }}
+								style={{
+									marginBottom: "0",
+									textAlign: "center"
+								}}
 							>
 								{getFieldDecorator(
 									`categoryName-${this.props.categoryId}`
@@ -79,11 +95,12 @@ export default class Category extends React.Component<ICategoryProps, ICategoryS
 									<Input
 										placeholder="Enter category name"
 										size="large"
+										className="categoryName"
 									/>
 								)}
 							</Form.Item>
 						</Col>
-						<Col span={2} style={{ textAlign: "center" }}>
+						<Col span={1} style={{ textAlign: "center" }}>
 							<Form.Item style={{ marginBottom: "0" }}>
 								<Tooltip title="Delete this category">
 									<Icon
@@ -134,9 +151,13 @@ export default class Category extends React.Component<ICategoryProps, ICategoryS
 																this.props.categoryId
 															}
 															questionId={questionId}
+															index={index}
+															parentCategoryIndex={
+																this.props.index
+															}
 														/>
 														<Col
-															span={2}
+															span={1}
 															style={{
 																textAlign: "center"
 															}}
@@ -176,3 +197,12 @@ export default class Category extends React.Component<ICategoryProps, ICategoryS
 		);
 	}
 }
+
+const mapStateToProps = (state: any) => ({
+	errors: state.errors
+});
+
+export default connect(
+	mapStateToProps,
+	null
+)(Category);

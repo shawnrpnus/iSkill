@@ -1,2 +1,3 @@
 export const CREATE_SURVEY_FORM = "CREATE_SURVEY_FORM";
 export const GET_ERRORS = "GET_ERRORS";
+export const CLEAR_ERRORS = "CLEAR_ERRORS";

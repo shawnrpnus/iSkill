@@ -8,18 +8,12 @@ import SurveyFormModel from "../../models/SurveyForm";
 import Category from "./Category/Category";
 import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
 import NumericChoiceQuestion from "../../models/NumericChoiceQuestion";
-import { createSurveyForm } from "../../actions/surveyFormActions";
-
-const reorder = (list: Iterable<any>, startIndex: number, endIndex: number) => {
-	const result = Array.from(list);
-	const [removed] = result.splice(startIndex, 1);
-	result.splice(endIndex, 0, removed);
-	return result;
-};
+import { createSurveyForm, clearStateErrors } from "../../actions/surveyFormActions";
 
 export interface ICreateSurveyFormProps extends FormComponentProps {
 	errors: any;
 	createSurveyForm: typeof createSurveyForm;
+	clearStateErrors: typeof clearStateErrors;
 }
 
 export interface ICreateSurveyFormState {
@@ -51,6 +45,14 @@ class CreateSurveyForm extends React.Component<
 		this.addQuestion = this.addQuestion.bind(this);
 		this.removeQuestion = this.removeQuestion.bind(this);
 		this.reorderQuestions = this.reorderQuestions.bind(this);
+	}
+
+	reorder(list: Iterable<any>, startIndex: number, endIndex: number) {
+		const result = Array.from(list);
+		const [removed] = result.splice(startIndex, 1);
+		result.splice(endIndex, 0, removed);
+		this.props.clearStateErrors();
+		return result;
 	}
 
 	getFormFieldsValue() {
@@ -113,7 +115,7 @@ class CreateSurveyForm extends React.Component<
 		); //deep copy
 		let category = categories.find(category => category.categoryId === categoryId);
 		if (category != null) {
-			category.questions = reorder(
+			category.questions = this.reorder(
 				category.questions,
 				result.source.index,
 				result.destination.index
@@ -129,7 +131,7 @@ class CreateSurveyForm extends React.Component<
 			return;
 		}
 
-		const updatedCategories = reorder(
+		const updatedCategories = this.reorder(
 			this.state.categories,
 			result.source.index,
 			result.destination.index
@@ -152,7 +154,7 @@ class CreateSurveyForm extends React.Component<
 			let categoryQuestions = stateCategories[i].questions;
 			let questionModelList: Array<NumericChoiceQuestion> = [];
 			for (let j = 0; j < categoryQuestions.length; j++) {
-				let qnSequence = i + 1;
+				let qnSequence = j + 1;
 				let qnText = this.props.form.getFieldValue(
 					`questionText-${stateCategories[i].categoryId}-${
 						categoryQuestions[j]
@@ -200,12 +202,12 @@ class CreateSurveyForm extends React.Component<
 		return (
 			<Form onSubmit={this.handleSubmit} style={{ padding: "2vw 10vw 0 10vw" }}>
 				<Row gutter={16}>
-					<Col span={8}>
+					<Col md={8} xs={24}>
 						<Form.Item
-							// validateStatus={
-							// 	this.props.errors.surveyFormName ? "error" : ""
-							// }
-							// help={this.props.errors.surveyFormName}
+							validateStatus={
+								this.props.errors.surveyFormName ? "error" : ""
+							}
+							help={this.props.errors.surveyFormName}
 							hasFeedback={true}
 						>
 							{getFieldDecorator("surveyFormName")(
@@ -213,28 +215,30 @@ class CreateSurveyForm extends React.Component<
 							)}
 						</Form.Item>
 					</Col>
-					<Col span={8}>
+					<Col md={8} xs={24}>
 						<Form.Item
-							// validateStatus={this.props.errors.toolProcess ? "error" : ""}
-							// help={this.props.errors.toolProcess}
+							validateStatus={this.props.errors.toolProcess ? "error" : ""}
+							help={this.props.errors.toolProcess}
 							hasFeedback={true}
 						>
-							{getFieldDecorator("toolProcess")(
+							{getFieldDecorator("toolProcess", {
+								initialValue: "1"
+							})(
 								<Select placeholder="Select Tool / Process" size="large">
-									<Select.Option value="1">
-										Tool/Process Id: 1
-									</Select.Option>
+									<Select.Option value="1">Tool 1</Select.Option>
 								</Select>
 							)}
 						</Form.Item>
 					</Col>
-					<Col span={8}>
+					<Col md={8} xs={24}>
 						<Form.Item
-							// validateStatus={this.props.errors.skillLevel ? "error" : ""}
-							// help={this.props.errors.SkillLevel}
+							validateStatus={this.props.errors.skillLevel ? "error" : ""}
+							help={this.props.errors.skillLevel}
 							hasFeedback={true}
 						>
-							{getFieldDecorator("skillLevel")(
+							{getFieldDecorator("skillLevel", {
+								initialValue: "L1"
+							})(
 								<Select placeholder="Select Skill Level" size="large">
 									<Select.Option value="L1">L1</Select.Option>
 									<Select.Option value="L2">L2</Select.Option>
@@ -284,6 +288,7 @@ class CreateSurveyForm extends React.Component<
 															reorderQuestions={
 																this.reorderQuestions
 															}
+															index={index}
 														/>
 													</div>
 												);
@@ -313,9 +318,12 @@ class CreateSurveyForm extends React.Component<
 const wrappedCreateSurveyForm = Form.create({ name: "create_survey_form" })(
 	CreateSurveyForm
 );
-const mapStateToProps = (state: any) => ({});
+const mapStateToProps = (state: any) => ({
+	errors: state.errors
+});
 const mapDispatchToProps = {
-	createSurveyForm
+	createSurveyForm,
+	clearStateErrors
 };
 export default connect(
 	mapStateToProps,

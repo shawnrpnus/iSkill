@@ -16,7 +16,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/surveyForm")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin
 public class SurveyFormController {
 
     private final SurveyFormService surveyFormService;

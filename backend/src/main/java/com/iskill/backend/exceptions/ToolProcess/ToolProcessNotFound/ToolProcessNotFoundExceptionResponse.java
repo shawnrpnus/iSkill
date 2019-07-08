@@ -8,6 +8,6 @@ import lombok.Setter;
 @Getter @Setter
 public class ToolProcessNotFoundExceptionResponse {
 
-    private String ToolProcessNotFound;
+    private String toolProcess;
 
 }

@@ -2,12 +2,17 @@ import * as React from "react";
 import { Col, Input, Select, Radio, Icon } from "antd";
 import { RadioChangeEvent } from "antd/lib/radio";
 import Form, { WrappedFormUtils } from "antd/lib/form/Form";
+import { connect } from "react-redux";
+import "./Question.css";
 const { Option } = Select;
 
 export interface IQuestionProps {
 	form: WrappedFormUtils<any>;
 	categoryId: number;
 	questionId: number;
+	errors: any;
+	index: number;
+	parentCategoryIndex: number;
 }
 
 export interface IQuestionState {
@@ -16,7 +21,7 @@ export interface IQuestionState {
 	currentRadioOption: number;
 }
 
-export default class Question extends React.Component<IQuestionProps, IQuestionState> {
+class Question extends React.Component<IQuestionProps, IQuestionState> {
 	constructor(props: IQuestionProps) {
 		super(props);
 
@@ -115,11 +120,29 @@ export default class Question extends React.Component<IQuestionProps, IQuestionS
 			<React.Fragment key={this.props.questionId}>
 				<Col span={1}>
 					<Form.Item>
-						<Icon type="menu" />
+						<Icon type="menu" className="question-menu-icon" />
 					</Form.Item>
 				</Col>
 				<Col span={8}>
-					<Form.Item key={this.props.questionId}>
+					<Form.Item
+						key={this.props.questionId}
+						validateStatus={
+							this.props.errors[
+								`categories[${
+									this.props.parentCategoryIndex
+								}].questions[${this.props.index}].questionText`
+							]
+								? "error"
+								: ""
+						}
+						help={
+							this.props.errors[
+								`categories[${
+									this.props.parentCategoryIndex
+								}].questions[${this.props.index}].questionText`
+							]
+						}
+					>
 						{getFieldDecorator(
 							`questionText-${this.props.categoryId}-${
 								this.props.questionId
@@ -181,7 +204,7 @@ export default class Question extends React.Component<IQuestionProps, IQuestionS
 						)}
 					</Form.Item>
 				</Col>
-				<Col span={9} style={{ paddingLeft: "1vw" }}>
+				<Col span={10} style={{ paddingLeft: "1vw" }}>
 					<Form.Item>
 						<Radio.Group
 							value={this.state.currentRadioOption}
@@ -207,3 +230,12 @@ export default class Question extends React.Component<IQuestionProps, IQuestionS
 		);
 	}
 }
+
+const mapStateToProps = (state: any) => ({
+	errors: state.errors
+});
+
+export default connect(
+	mapStateToProps,
+	null
+)(Question);
