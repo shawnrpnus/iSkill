@@ -1,6 +1,6 @@
 import * as React from "react";
 import { connect } from "react-redux";
-import { Form, Input, Select, Row, Col, Button, Icon } from "antd";
+import { Form, Input, Select, Row, Col, Button, Icon, Typography } from "antd";
 import { FormComponentProps } from "antd/lib/form";
 import "./CreateSurveyForm.css";
 import CategoryModel from "../../models/Category";
@@ -200,7 +200,15 @@ class CreateSurveyForm extends React.Component<
 	public render() {
 		const { getFieldDecorator } = this.props.form;
 		return (
-			<Form onSubmit={this.handleSubmit} style={{ padding: "2vw 10vw 0 10vw" }}>
+			<Form onSubmit={this.handleSubmit} style={{ padding: "2vw 5vw 0 5vw" }}>
+				<Row>
+					<Col span={24}>
+						<Typography.Title style={{ textAlign: "center" }}>
+							New Evaluation Form
+						</Typography.Title>
+						<hr />
+					</Col>
+				</Row>
 				<Row gutter={16}>
 					<Col sm={8} xs={24}>
 						<Form.Item
@@ -209,6 +217,7 @@ class CreateSurveyForm extends React.Component<
 							}
 							help={this.props.errors.surveyFormName}
 							hasFeedback={true}
+							label="Form Name"
 						>
 							{getFieldDecorator("surveyFormName")(
 								<Input placeholder="Enter form name" size="large" />
@@ -220,6 +229,7 @@ class CreateSurveyForm extends React.Component<
 							validateStatus={this.props.errors.toolProcess ? "error" : ""}
 							help={this.props.errors.toolProcess}
 							hasFeedback={true}
+							label="Tool / Process"
 						>
 							{getFieldDecorator("toolProcess", {
 								initialValue: "1"
@@ -235,6 +245,7 @@ class CreateSurveyForm extends React.Component<
 							validateStatus={this.props.errors.skillLevel ? "error" : ""}
 							help={this.props.errors.skillLevel}
 							hasFeedback={true}
+							label="Skill Level"
 						>
 							{getFieldDecorator("skillLevel", {
 								initialValue: "L1"
@@ -248,7 +259,6 @@ class CreateSurveyForm extends React.Component<
 						</Form.Item>
 					</Col>
 				</Row>
-				<hr />
 				<DragDropContext onDragEnd={this.onDragEnd}>
 					<Droppable droppableId="droppableCategories">
 						{(provided, snapshot) => (
