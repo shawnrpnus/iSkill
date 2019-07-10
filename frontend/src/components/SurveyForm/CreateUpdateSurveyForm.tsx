@@ -112,7 +112,7 @@ class CreateUpdateSurveyForm extends React.Component<
 			this.state.categories.length === 0 &&
 			!this.state.updating
 		) {
-			//initial load only
+			//initial load only for updating form
 			let existingCategories = sortCategoriesByCategorySequence(
 				this.props.surveyFormToUpdate.categories
 			);

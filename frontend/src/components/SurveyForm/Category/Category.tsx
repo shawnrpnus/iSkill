@@ -48,7 +48,7 @@ class Category extends React.Component<ICategoryProps, ICategoryState> {
 			nextQuestionId++;
 		}
 		this.setState((prevState, props) => ({
-			questionId: prevState.questionId + 1
+			questionId: nextQuestionId
 		}));
 	}
 
