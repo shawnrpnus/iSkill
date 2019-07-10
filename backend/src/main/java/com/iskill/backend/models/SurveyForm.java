@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,6 +42,7 @@ public class SurveyForm {
 
     @OneToMany(mappedBy = "surveyForm", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @Valid
+    @Size(min = 1, message = "Form must have at least one category")
     private List<Category> categories = new ArrayList<>();
 
     @ManyToOne

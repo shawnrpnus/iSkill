@@ -5,7 +5,7 @@ import { Layout, Menu } from "antd";
 import { Provider } from "react-redux";
 import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import Header from "./components/Layout/Header";
-import CreateSurveyForm from "./components/SurveyForm/CreateSurveyForm";
+import CreateUpdateSurveyForm from "./components/SurveyForm/CreateUpdateSurveyForm";
 
 const App: React.FC = () => {
 	return (
@@ -29,13 +29,15 @@ const App: React.FC = () => {
 								<Switch>
 									<Route
 										exact
+										key="create" //key is to force a rerender
 										path="/createForm"
-										component={CreateSurveyForm}
+										component={CreateUpdateSurveyForm}
 									/>
 									<Route
 										exact
-										path="/viewUpdateForm/:formId"
-										component={CreateSurveyForm}
+										key="update"
+										path="/updateForm/:formId"
+										component={CreateUpdateSurveyForm}
 									/>
 								</Switch>
 							</Layout.Content>

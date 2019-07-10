@@ -1,4 +1,4 @@
-import {GET_ERRORS, CLEAR_ERRORS} from "../actions/types";
+import { GET_ERRORS, CLEAR_ERRORS } from "../actions/types";
 
 const initialState = {};
 
@@ -7,7 +7,7 @@ interface Action {
 	errorObj: Object;
 }
 
-export default function(state = initialState, action: Action | any) {
+export default function (state = initialState, action: Action | any) {
 	switch (action.type) {
 		case GET_ERRORS:
 			return action.errorObj; //payload is a key:value mapping of fieldName:errorMessage

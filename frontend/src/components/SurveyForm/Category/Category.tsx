@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Card, Form, Input, Button, Icon, Row, Col, Tooltip } from "antd";
+import { Card, Form, Input, Button, Icon, Row, Col, Popconfirm } from "antd";
 import Question from "../Question/Question";
 import { WrappedFormUtils } from "antd/lib/form/Form";
 import "./Category.css";
@@ -117,13 +117,18 @@ class Category extends React.Component<ICategoryProps, ICategoryState> {
 						</Col>
 						<Col md={1} xs={2} style={{ textAlign: "center" }}>
 							<Form.Item style={{ marginBottom: "0" }}>
-								<Tooltip title="Delete this category">
+								<Popconfirm
+									title="Are you sure you want to delete this category?"
+									onConfirm={() => this.removeSelf()}
+									okText="Yes"
+									cancelText="No"
+									placement="topRight"
+								>
 									<Icon
 										className="dynamic-delete-button"
 										type="minus-circle"
-										onClick={() => this.removeSelf()}
 									/>
-								</Tooltip>
+								</Popconfirm>
 							</Form.Item>
 						</Col>
 					</Row>
@@ -184,19 +189,26 @@ class Category extends React.Component<ICategoryProps, ICategoryState> {
 															}}
 														>
 															<Form.Item>
-																<Tooltip title="Delete this question">
+																<Popconfirm
+																	title="Are you sure you want to delete this task?"
+																	onConfirm={() =>
+																		this.props.removeQuestion(
+																			this.props
+																				.categoryId,
+																			questionId
+																		)
+																	}
+																	okText="Yes"
+																	cancelText="No"
+																	placement="topRight"
+																>
+																	{/* <Tooltip title="Delete this question"> */}
 																	<Icon
 																		className="dynamic-delete-button"
 																		type="minus-circle-o"
-																		onClick={() =>
-																			this.props.removeQuestion(
-																				this.props
-																					.categoryId,
-																				questionId
-																			)
-																		}
 																	/>
-																</Tooltip>
+																	{/* </Tooltip> */}
+																</Popconfirm>
 															</Form.Item>
 														</Col>
 													</Row>

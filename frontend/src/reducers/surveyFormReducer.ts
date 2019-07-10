@@ -1,16 +1,16 @@
-import { CREATE_SURVEY_FORM, CREATE_NEW_FORM_SUCCESS, GET_SURVEY_FORM, UPDATE_FORM_SUCCESS } from "../actions/types";
+import { CREATE_SURVEY_FORM, CREATE_NEW_FORM_SUCCESS, GET_SURVEY_FORM, UPDATE_FORM_SUCCESS, CLEAR_UPDATING_FORM } from "../actions/types";
 import SurveyForm from "../models/SurveyForm";
 
 const initialState = {
 	//initialState of the surveyForm attribute in the global redux store (defined in RootReducer.ts)
 	surveyForms: [],
-	surveyFormToViewUpdate: undefined
+	surveyFormToUpdate: undefined
 };
 
 interface Action {
 	type: string;
 	surveyForms: SurveyForm[];
-	surveyFormToViewUpdate: SurveyForm;
+	surveyFormToUpdate: SurveyForm;
 	surveyFormId: number;
 }
 
@@ -30,10 +30,14 @@ export default function (state = initialState, action: Action | any) {
 			window.location.reload();
 			return state;
 		case GET_SURVEY_FORM:
-			console.log(action.surveyFormToViewUpdate)
 			return {
 				...state,
-				surveyFormToViewUpdate: action.surveyFormToViewUpdate
+				surveyFormToUpdate: action.surveyFormToUpdate
+			}
+		case CLEAR_UPDATING_FORM:
+			return {
+				...state,
+				surveyFormToUpdate: undefined
 			}
 		default:
 			return state;
