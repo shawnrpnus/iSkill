@@ -1,10 +1,10 @@
 import { combineReducers } from "redux";
-import createSurveyFormReducer from "./createSurveyFormReducer";
+import surveyFormReducer from "./surveyFormReducer";
 import errorReducer from "./errorReducer";
 import toolProcessReducer from "./toolProcessReducer";
 
 export default combineReducers({
-	surveyForm: createSurveyFormReducer,
+	surveyForm: surveyFormReducer,
 	errors: errorReducer,
 	toolProcess: toolProcessReducer
 });

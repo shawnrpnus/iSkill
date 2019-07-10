@@ -3,15 +3,15 @@ import Answer from "./Answer";
 export default class Question {
 	type?: String;
 
-	questionId?: Number;
+	questionId?: number;
 
-	questionSequence: Number;
+	questionSequence: number;
 
 	questionText: String;
 
 	answers?: Answer[];
 
-	constructor(questionSeq: Number, qnText: String) {
+	constructor(questionSeq: number, qnText: String) {
 		this.questionSequence = questionSeq;
 		this.questionText = qnText;
 	}

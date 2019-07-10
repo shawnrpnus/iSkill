@@ -4,6 +4,8 @@ import { RadioChangeEvent } from "antd/lib/radio";
 import Form, { WrappedFormUtils } from "antd/lib/form/Form";
 import { connect } from "react-redux";
 import "./Question.css";
+import QuestionModel from "../../../models/Question";
+import NumericChoiceQuestion from "../../../models/NumericChoiceQuestion";
 const { Option } = Select;
 
 export interface IQuestionProps {
@@ -13,6 +15,7 @@ export interface IQuestionProps {
 	errors: any;
 	index: number;
 	parentCategoryIndex: number;
+	existingQuestionObj?: QuestionModel;
 }
 
 export interface IQuestionState {
@@ -116,6 +119,7 @@ class Question extends React.Component<IQuestionProps, IQuestionState> {
 
 	public render() {
 		const { getFieldDecorator } = this.props.form;
+		let existingQuestionObj = this.props.existingQuestionObj;
 		return (
 			<React.Fragment key={this.props.questionId}>
 				<Col sm={1} xs={2}>
@@ -147,7 +151,12 @@ class Question extends React.Component<IQuestionProps, IQuestionState> {
 						{getFieldDecorator(
 							`questionText-${this.props.categoryId}-${
 								this.props.questionId
-							}`
+							}`,
+							{
+								initialValue: existingQuestionObj
+									? existingQuestionObj.questionText
+									: ""
+							}
 						)(<Input allowClear placeholder="Enter task name" />)}
 					</Form.Item>
 				</Col>
@@ -158,7 +167,12 @@ class Question extends React.Component<IQuestionProps, IQuestionState> {
 								this.props.questionId
 							}`,
 							{
-								initialValue: 1
+								initialValue:
+									existingQuestionObj &&
+									existingQuestionObj.hasOwnProperty("lowerBound")
+										? (existingQuestionObj as NumericChoiceQuestion)
+												.lowerBound
+										: 1
 							}
 						)(
 							<Select onChange={this.lowerBoundChange}>
@@ -185,7 +199,12 @@ class Question extends React.Component<IQuestionProps, IQuestionState> {
 								this.props.questionId
 							}`,
 							{
-								initialValue: 5
+								initialValue:
+									existingQuestionObj &&
+									existingQuestionObj.hasOwnProperty("upperBound")
+										? (existingQuestionObj as NumericChoiceQuestion)
+												.upperBound
+										: 5
 							}
 						)(
 							<Select onChange={this.upperBoundChange}>

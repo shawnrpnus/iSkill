@@ -1,16 +1,16 @@
 import Question from "./Question";
 
 export default class Category {
-	categoryId?: Number;
+	categoryId?: number;
 
-	categorySequence: Number;
+	categorySequence: number;
 	categoryName: String;
 
 	questions: Question[];
 
 	constructor(
 		$categoryName: String,
-		$categorySequence: Number,
+		$categorySequence: number,
 		$questions: Question[]
 	) {
 		this.categoryName = $categoryName;
@@ -18,5 +18,5 @@ export default class Category {
 		this.questions = $questions;
 	}
 
-	
+
 }

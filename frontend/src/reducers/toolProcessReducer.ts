@@ -14,8 +14,6 @@ interface Action {
 export default function (state = initialState, action: Action | any) {
     switch (action.type) {
         case GET_ALL_TOOL_PROCESS:
-            console.log("reducer");
-            console.log(action.toolProcessList);
             return {
                 ...state,
                 toolProcessList: action.toolProcessList

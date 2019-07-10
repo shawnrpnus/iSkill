@@ -5,6 +5,7 @@ import { WrappedFormUtils } from "antd/lib/form/Form";
 import "./Category.css";
 import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
 import { connect } from "react-redux";
+import CategoryModel from "../../../models/Category";
 
 export interface ICategoryProps {
 	form: WrappedFormUtils<any>;
@@ -17,6 +18,7 @@ export interface ICategoryProps {
 	reorderQuestions: Function;
 	index: any;
 	errors: any;
+	existingCategoryObj?: CategoryModel;
 }
 
 export interface ICategoryState {
@@ -38,6 +40,13 @@ class Category extends React.Component<ICategoryProps, ICategoryState> {
 
 	addQuestion() {
 		this.props.addQuestion(this.props.categoryId, this.state.questionId);
+		const questionIdExists = (questionId: number) => {
+			return this.props.questions.includes(questionId);
+		};
+		let nextQuestionId = this.state.questionId + 1;
+		while (questionIdExists(nextQuestionId)) {
+			nextQuestionId++;
+		}
 		this.setState((prevState, props) => ({
 			questionId: prevState.questionId + 1
 		}));
@@ -54,6 +63,7 @@ class Category extends React.Component<ICategoryProps, ICategoryState> {
 	render() {
 		const { getFieldDecorator } = this.props.form;
 		let questions = this.props.questions;
+		let existingCategoryObj = this.props.existingCategoryObj;
 		return (
 			<Card
 				bordered={true}
@@ -90,7 +100,12 @@ class Category extends React.Component<ICategoryProps, ICategoryState> {
 								}}
 							>
 								{getFieldDecorator(
-									`categoryName-${this.props.categoryId}`
+									`categoryName-${this.props.categoryId}`,
+									{
+										initialValue: existingCategoryObj
+											? existingCategoryObj.categoryName
+											: ""
+									}
 								)(
 									<Input
 										placeholder="Enter category name"
@@ -155,6 +170,11 @@ class Category extends React.Component<ICategoryProps, ICategoryState> {
 															parentCategoryIndex={
 																this.props.index
 															}
+															existingQuestionObj={getExistingQuestionByQuestionId(
+																this.props
+																	.existingCategoryObj,
+																questionId
+															)}
 														/>
 														<Col
 															sm={1}
@@ -198,6 +218,15 @@ class Category extends React.Component<ICategoryProps, ICategoryState> {
 		);
 	}
 }
+
+const getExistingQuestionByQuestionId = (
+	category: CategoryModel | undefined,
+	questionId: number
+) => {
+	return category
+		? category.questions.find(question => question.questionId === questionId)
+		: undefined;
+};
 
 const mapStateToProps = (state: any) => ({
 	errors: state.errors

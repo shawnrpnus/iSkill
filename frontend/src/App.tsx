@@ -32,6 +32,11 @@ const App: React.FC = () => {
 										path="/createForm"
 										component={CreateSurveyForm}
 									/>
+									<Route
+										exact
+										path="/viewUpdateForm/:formId"
+										component={CreateSurveyForm}
+									/>
 								</Switch>
 							</Layout.Content>
 						</Layout>

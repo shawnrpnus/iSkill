@@ -14,11 +14,11 @@ export default class SurveyForm {
 
 	categories: Category[];
 
-	toolProcess?: ToolProcess;
+	toolProcess: ToolProcess;
 
 	evaluations?: Evaluation[];
 
-	constructor($formName: String, $skillLevel: String, $categories: Category[], $toolProcess: ToolProcess | undefined) {
+	constructor($formName: String, $skillLevel: String, $categories: Category[], $toolProcess: ToolProcess) {
 		this.surveyFormName = $formName;
 		this.skillLevel = $skillLevel;
 		this.categories = $categories;
