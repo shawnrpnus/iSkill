@@ -1,6 +1,17 @@
 import * as React from "react";
 import { connect } from "react-redux";
-import { Form, Input, Select, Row, Col, Button, Icon, Typography, Alert } from "antd";
+import {
+	Form,
+	Input,
+	Select,
+	Row,
+	Col,
+	Button,
+	Icon,
+	Typography,
+	Alert,
+	Spin
+} from "antd";
 import { FormComponentProps } from "antd/lib/form";
 import "./CreateUpdateSurveyForm.css";
 import CategoryModel from "../../models/Category";
@@ -339,154 +350,179 @@ class CreateUpdateSurveyForm extends React.Component<
 		const { getFieldDecorator } = this.props.form;
 		let surveyFormToUpdate = this.props.surveyFormToUpdate;
 		return (
-			<Form onSubmit={this.handleSubmit} style={{ padding: "2vw 5vw 0 5vw" }}>
-				<Row>
-					<Col span={24}>
-						<Typography.Title style={{ textAlign: "center" }}>
-							{this.props.surveyFormToUpdate
-								? "Updating Evaluation Form"
-								: "New Evaluation Form"}
-						</Typography.Title>
-						<hr />
-					</Col>
-				</Row>
-				<Row gutter={16}>
-					<Col sm={8} xs={24}>
-						<Form.Item
-							validateStatus={
-								this.props.errors.surveyFormName ? "error" : ""
-							}
-							help={this.props.errors.surveyFormName}
-							hasFeedback={true}
-							label="Form Name"
-						>
-							{getFieldDecorator("surveyFormName", {
-								initialValue: surveyFormToUpdate
-									? surveyFormToUpdate.surveyFormName
-									: ""
-							})(<Input placeholder="Enter form name" size="large" />)}
-						</Form.Item>
-					</Col>
-					<Col sm={8} xs={24}>
-						<Form.Item
-							validateStatus={this.props.errors.toolProcess ? "error" : ""}
-							help={this.props.errors.toolProcess}
-							hasFeedback={true}
-							label="Tool / Process"
-						>
-							{getFieldDecorator("toolProcess", {
-								initialValue: surveyFormToUpdate
-									? surveyFormToUpdate.toolProcess.toolProcessId
-									: ""
-							})(
-								<Select placeholder="Select Tool / Process" size="large">
-									{this.props.toolProcessList.map(
-										(toolProcess: ToolProcess) => (
-											<Select.Option
-												key={toolProcess.toolProcessId}
-												value={toolProcess.toolProcessId}
+			<Spin
+				spinning={
+					((this.props.match.params as IRouteParams).formId ? true : false) &&
+					!this.props.surveyFormToUpdate
+				}
+			>
+				<Form onSubmit={this.handleSubmit} style={{ padding: "2vw 5vw 0 5vw" }}>
+					<Row>
+						<Col span={24}>
+							<Typography.Title style={{ textAlign: "center" }}>
+								{this.props.surveyFormToUpdate
+									? "Updating Evaluation Form"
+									: "New Evaluation Form"}
+							</Typography.Title>
+							<hr />
+						</Col>
+					</Row>
+					<Row gutter={16}>
+						<Col sm={8} xs={24}>
+							<Form.Item
+								validateStatus={
+									this.props.errors.surveyFormName ? "error" : ""
+								}
+								help={this.props.errors.surveyFormName}
+								hasFeedback={true}
+								label="Form Name"
+							>
+								{getFieldDecorator("surveyFormName", {
+									initialValue: surveyFormToUpdate
+										? surveyFormToUpdate.surveyFormName
+										: ""
+								})(<Input placeholder="Enter form name" size="large" />)}
+							</Form.Item>
+						</Col>
+						<Col sm={8} xs={24}>
+							<Form.Item
+								validateStatus={
+									this.props.errors.toolProcess ? "error" : ""
+								}
+								help={this.props.errors.toolProcess}
+								hasFeedback={true}
+								label="Tool / Process"
+							>
+								{getFieldDecorator("toolProcess", {
+									initialValue: surveyFormToUpdate
+										? surveyFormToUpdate.toolProcess.toolProcessId
+										: ""
+								})(
+									<Select
+										placeholder="Select Tool / Process"
+										size="large"
+									>
+										{this.props.toolProcessList.map(
+											(toolProcess: ToolProcess) => (
+												<Select.Option
+													key={toolProcess.toolProcessId}
+													value={toolProcess.toolProcessId}
+												>
+													{toolProcess.toolProcessName}
+												</Select.Option>
+											)
+										)}
+									</Select>
+								)}
+							</Form.Item>
+						</Col>
+						<Col sm={8} xs={24}>
+							<Form.Item
+								validateStatus={
+									this.props.errors.skillLevel ? "error" : ""
+								}
+								help={this.props.errors.skillLevel}
+								hasFeedback={true}
+								label="Skill Level"
+							>
+								{getFieldDecorator("skillLevel", {
+									initialValue: surveyFormToUpdate
+										? surveyFormToUpdate.skillLevel
+										: ""
+								})(
+									<Select placeholder="Select Skill Level" size="large">
+										<Select.Option value="L1">L1</Select.Option>
+										<Select.Option value="L2">L2</Select.Option>
+										<Select.Option value="L3">L3</Select.Option>
+									</Select>
+								)}
+							</Form.Item>
+						</Col>
+					</Row>
+					{this.props.errors.categories &&
+					this.state.categories.length === 0 ? (
+						<Alert
+							message={this.props.errors.categories}
+							type="error"
+							showIcon
+						/>
+					) : (
+						""
+					)}
+					<DragDropContext onDragEnd={this.onDragEnd}>
+						<Droppable droppableId="droppableCategories">
+							{(provided, snapshot) => (
+								<div ref={provided.innerRef} {...provided.droppableProps}>
+									{this.state.categories.map((categoryObj, index) => {
+										let categoryId = categoryObj.categoryId;
+										return (
+											<Draggable
+												key={categoryId}
+												draggableId={categoryId.toString()}
+												index={index}
 											>
-												{toolProcess.toolProcessName}
-											</Select.Option>
-										)
-									)}
-								</Select>
+												{(provided, snapshot) => {
+													return (
+														<div
+															ref={provided.innerRef}
+															{...provided.draggableProps}
+															{...provided.dragHandleProps}
+														>
+															<Category
+																categoryId={categoryId}
+																key={categoryId}
+																form={this.props.form}
+																removeCategory={
+																	this.removeCategory
+																}
+																isDragging={
+																	snapshot.isDragging
+																}
+																questions={
+																	categoryObj.questions
+																}
+																addQuestion={
+																	this.addQuestion
+																}
+																removeQuestion={
+																	this.removeQuestion
+																}
+																reorderQuestions={
+																	this.reorderQuestions
+																}
+																index={index}
+																existingCategoryObj={getExistingCategoryByCategoryId(
+																	this.props
+																		.surveyFormToUpdate,
+																	categoryId
+																)}
+															/>
+														</div>
+													);
+												}}
+											</Draggable>
+										);
+									})}
+									{provided.placeholder}
+								</div>
 							)}
-						</Form.Item>
-					</Col>
-					<Col sm={8} xs={24}>
-						<Form.Item
-							validateStatus={this.props.errors.skillLevel ? "error" : ""}
-							help={this.props.errors.skillLevel}
-							hasFeedback={true}
-							label="Skill Level"
-						>
-							{getFieldDecorator("skillLevel", {
-								initialValue: surveyFormToUpdate
-									? surveyFormToUpdate.skillLevel
-									: ""
-							})(
-								<Select placeholder="Select Skill Level" size="large">
-									<Select.Option value="L1">L1</Select.Option>
-									<Select.Option value="L2">L2</Select.Option>
-									<Select.Option value="L3">L3</Select.Option>
-								</Select>
-							)}
-						</Form.Item>
-					</Col>
-				</Row>
-				{this.props.errors.categories && this.state.categories.length === 0 ? (
-					<Alert message={this.props.errors.categories} type="error" showIcon />
-				) : (
-					""
-				)}
-				<DragDropContext onDragEnd={this.onDragEnd}>
-					<Droppable droppableId="droppableCategories">
-						{(provided, snapshot) => (
-							<div ref={provided.innerRef} {...provided.droppableProps}>
-								{this.state.categories.map((categoryObj, index) => {
-									let categoryId = categoryObj.categoryId;
-									return (
-										<Draggable
-											key={categoryId}
-											draggableId={categoryId.toString()}
-											index={index}
-										>
-											{(provided, snapshot) => {
-												return (
-													<div
-														ref={provided.innerRef}
-														{...provided.draggableProps}
-														{...provided.dragHandleProps}
-													>
-														<Category
-															categoryId={categoryId}
-															key={categoryId}
-															form={this.props.form}
-															removeCategory={
-																this.removeCategory
-															}
-															isDragging={
-																snapshot.isDragging
-															}
-															questions={
-																categoryObj.questions
-															}
-															addQuestion={this.addQuestion}
-															removeQuestion={
-																this.removeQuestion
-															}
-															reorderQuestions={
-																this.reorderQuestions
-															}
-															index={index}
-															existingCategoryObj={getExistingCategoryByCategoryId(
-																this.props
-																	.surveyFormToUpdate,
-																categoryId
-															)}
-														/>
-													</div>
-												);
-											}}
-										</Draggable>
-									);
-								})}
-								{provided.placeholder}
-							</div>
-						)}
-					</Droppable>
-				</DragDropContext>
-				<Button type="primary" onClick={this.addCategory}>
-					<Icon type="plus-circle" />
-					Add Category
-				</Button>
-				<Form.Item>
-					<Button type="primary" htmlType="submit" onSubmit={this.handleSubmit}>
-						Submit
+						</Droppable>
+					</DragDropContext>
+					<Button type="primary" onClick={this.addCategory}>
+						<Icon type="plus-circle" />
+						Add Category
 					</Button>
-				</Form.Item>
-			</Form>
+					<Form.Item>
+						<Button
+							type="primary"
+							htmlType="submit"
+							onSubmit={this.handleSubmit}
+						>
+							Submit
+						</Button>
+					</Form.Item>
+				</Form>
+			</Spin>
 		);
 	}
 }
