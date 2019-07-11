@@ -543,7 +543,7 @@ class CreateUpdateSurveyForm extends React.Component<ICreateSurveyFormProps, ICr
 							<Icon type="plus-circle" />
 							Add Category
 						</Button>
-						<Form.Item style={{ textAlign: "right" }}>
+						<Form.Item style={{ textAlign: "right", marginTop: "10px" }}>
 							<Row type="flex" justify="end" gutter={8}>
 								<Col md={6} sm={8} xs={10}>
 									<Affix offsetBottom={10}>

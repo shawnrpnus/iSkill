@@ -71,7 +71,9 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 		if (this.props.surveyFormToPreview) {
 			console.log("PREVIEWING");
 			surveyFormName = this.props.surveyFormToPreview.surveyFormName;
-			toolProcessName = this.props.surveyFormToPreview.toolProcess.toolProcessName;
+			toolProcessName = this.props.surveyFormToPreview.toolProcess
+				? this.props.surveyFormToPreview.toolProcess.toolProcessName
+				: "";
 			skillLevel = this.props.surveyFormToPreview.skillLevel;
 			categories = this.props.surveyFormToPreview.categories;
 		} else if (this.props.surveyFormToViewOrUpdate && this.props.match) {
@@ -84,7 +86,7 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 		let totalScore = 0;
 		let totalMaxScore = 0;
 		return (
-			<div style={this.props.surveyFormToPreview? {} : { padding: "2vw 5vw 0 5vw" }}>
+			<div style={this.props.surveyFormToPreview ? {} : { padding: "2vw 5vw 0 5vw" }}>
 				{this.props.surveyFormToPreview ? (
 					""
 				) : (
