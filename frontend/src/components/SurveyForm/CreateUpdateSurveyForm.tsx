@@ -1,4 +1,4 @@
-import { Alert, Button, Col, Form, Icon, Input, Row, Select, Spin, Typography, Card } from "antd";
+import { Alert, Button, Col, Form, Icon, Input, Row, Select, Spin, Typography, Card, Affix } from "antd";
 import { FormComponentProps } from "antd/lib/form";
 import * as React from "react";
 import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
@@ -371,7 +371,7 @@ class CreateUpdateSurveyForm extends React.Component<ICreateSurveyFormProps, ICr
 												size="large"
 												style={{
 													textAlign: "center",
-													width: "70%",
+													width: "90%",
 													height: "64px",
 													fontSize: "48px"
 												}}
@@ -379,7 +379,7 @@ class CreateUpdateSurveyForm extends React.Component<ICreateSurveyFormProps, ICr
 										)}
 									</Form.Item>
 								</Col>
-								<Col span={6} style={{ textAlign: "center" }}>
+								<Col sm={6} xs={10} style={{ textAlign: "center" }}>
 									<Form.Item
 										validateStatus={this.props.errors.toolProcess ? "error" : ""}
 										help={this.props.errors.toolProcess}
@@ -406,7 +406,7 @@ class CreateUpdateSurveyForm extends React.Component<ICreateSurveyFormProps, ICr
 										)}
 									</Form.Item>
 								</Col>
-								<Col span={6} style={{ textAlign: "center" }}>
+								<Col sm={6} xs={10} style={{ textAlign: "center" }}>
 									<Form.Item
 										validateStatus={this.props.errors.skillLevel ? "error" : ""}
 										help={this.props.errors.skillLevel}
@@ -484,10 +484,18 @@ class CreateUpdateSurveyForm extends React.Component<ICreateSurveyFormProps, ICr
 							<Icon type="plus-circle" />
 							Add Category
 						</Button>
-						<Form.Item>
-							<Button type="primary" htmlType="submit" onSubmit={this.handleSubmit}>
-								Submit
-							</Button>
+						<Form.Item style={{ textAlign: "right" }}>
+							<Affix offsetBottom={10}>
+								<Button
+									type="primary"
+									htmlType="submit"
+									size="large"
+									onSubmit={this.handleSubmit}
+								>
+									<Icon type="save" />
+									Submit
+								</Button>
+							</Affix>
 						</Form.Item>
 					</Card>
 				</Form>

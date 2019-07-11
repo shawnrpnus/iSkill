@@ -67,17 +67,13 @@ class Category extends React.Component<ICategoryProps, ICategoryState> {
 		return (
 			<Card
 				bordered={true}
+				headStyle={{ backgroundColor: "#e8e8e8" }}
 				style={{
 					backgroundColor: this.props.isDragging ? "#fdffe3" : "white"
 				}}
 				title={
 					<Row type="flex" justify="space-between">
-						<Col md={1} xs={2} style={{ textAlign: "center" }}>
-							<Form.Item style={{ marginBottom: 0, verticalAlign: "middle" }}>
-								<Icon className="menu-icon" type="menu" />
-							</Form.Item>
-						</Col>
-						<Col md={22} xs={18}>
+						<Col md={20} xs={18}>
 							<Form.Item
 								validateStatus={
 									this.props.errors[`categories[${this.props.index}].categoryName`]
@@ -102,7 +98,7 @@ class Category extends React.Component<ICategoryProps, ICategoryState> {
 								)}
 							</Form.Item>
 						</Col>
-						<Col md={1} xs={2} style={{ textAlign: "center" }}>
+						<Col md={4} xs={6} style={{ textAlign: "center" }}>
 							<Form.Item style={{ marginBottom: "0" }}>
 								<Popconfirm
 									title="Are you sure you want to delete this category?"
@@ -118,6 +114,19 @@ class Category extends React.Component<ICategoryProps, ICategoryState> {
 					</Row>
 				}
 			>
+				<Row style={{ fontWeight: "bold", padding: "5px" }} type="flex" justify="space-between">
+					<Col span={10}>Task Name</Col>
+					<Col span={4} className="colCentered">
+						Min Score
+					</Col>
+					<Col span={4} className="colCentered">
+						Max Score
+					</Col>
+					<Col span={4} className="colCentered">
+						Delete
+					</Col>
+				</Row>
+				<hr />
 				<DragDropContext onDragEnd={this.onDragEnd}>
 					<Droppable droppableId="droppableQuestions">
 						{(provided, snapshot) => (
@@ -160,7 +169,7 @@ class Category extends React.Component<ICategoryProps, ICategoryState> {
 															)}
 														/>
 														<Col
-															sm={1}
+															sm={4}
 															xs={2}
 															style={{
 																textAlign: "center"

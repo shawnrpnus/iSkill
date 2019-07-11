@@ -23,6 +23,11 @@ export interface IQuestionState {
 	currentRadioOption: number;
 }
 
+const COL_ONE_SIZE = 10;
+const COL_TWO_SIZE = 4;
+const COL_THREE_SIZE = 4;
+const COL_FOUR_SIZE = 4;
+
 class Question extends React.Component<IQuestionProps, IQuestionState> {
 	constructor(props: IQuestionProps) {
 		super(props);
@@ -83,12 +88,6 @@ class Question extends React.Component<IQuestionProps, IQuestionState> {
 		});
 	}
 
-	// onRadioChange(event: RadioChangeEvent) {
-	// 	this.setState((prevState, props) => ({
-	// 		currentRadioOption: +event.target.value
-	// 	}));
-	// }
-
 	onTaskNameChange() {
 		// TODO: Redux
 	}
@@ -113,12 +112,7 @@ class Question extends React.Component<IQuestionProps, IQuestionState> {
 		let existingQuestionObj = this.props.existingQuestionObj;
 		return (
 			<React.Fragment key={this.props.questionId}>
-				<Col sm={1} xs={2}>
-					<Form.Item>
-						<Icon type="menu" className="question-menu-icon" />
-					</Form.Item>
-				</Col>
-				<Col sm={8} xs={14}>
+				<Col span={COL_ONE_SIZE}>
 					<Form.Item
 						key={this.props.questionId}
 						validateStatus={
@@ -144,7 +138,7 @@ class Question extends React.Component<IQuestionProps, IQuestionState> {
 						})(<Input.TextArea autosize placeholder="Enter task name" />)}
 					</Form.Item>
 				</Col>
-				<Col sm={2} xs={4}>
+				<Col span={COL_TWO_SIZE}>
 					<Form.Item key={this.props.questionId}>
 						{getFieldDecorator(`lowerBound-${this.props.categoryId}-${this.props.questionId}`, {
 							initialValue:
@@ -169,7 +163,7 @@ class Question extends React.Component<IQuestionProps, IQuestionState> {
 						)}
 					</Form.Item>
 				</Col>
-				<Col sm={2} xs={4}>
+				<Col span={COL_THREE_SIZE}>
 					<Form.Item key={this.props.questionId}>
 						{getFieldDecorator(`upperBound-${this.props.categoryId}-${this.props.questionId}`, {
 							initialValue:
@@ -192,28 +186,6 @@ class Question extends React.Component<IQuestionProps, IQuestionState> {
 								})}
 							</Select>
 						)}
-					</Form.Item>
-				</Col>
-				<Col sm={10} xs={22} style={{ paddingLeft: "1vw" }}>
-					<Form.Item>
-						<Radio.Group
-							// value={this.state.currentRadioOption}
-							buttonStyle="solid"
-							// onChange={this.onRadioChange}
-						>
-							{this.loadRadioOptions().map(option => {
-								return (
-									<Radio
-										key={`radio-${option}-${this.props.categoryId}-${
-											this.props.questionId
-										}`}
-										value={option}
-									>
-										{option}
-									</Radio>
-								);
-							})}
-						</Radio.Group>
 					</Form.Item>
 				</Col>
 			</React.Fragment>
