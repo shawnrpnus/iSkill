@@ -1,6 +1,6 @@
 import SurveyForm from "../models/SurveyForm";
 import axios from "axios";
-import { GET_ERRORS, CLEAR_ERRORS, CREATE_NEW_FORM_SUCCESS, UPDATE_FORM_SUCCESS, GET_SURVEY_FORM, CLEAR_UPDATING_FORM } from "./types";
+import { GET_ERRORS, CLEAR_ERRORS, CREATE_NEW_FORM_SUCCESS, UPDATE_FORM_SUCCESS, GET_SURVEY_FORM, CLEAR_UPDATING_FORM, PREVIEW_SURVEY_FORM, CLEAR_PREVIEW_FORM } from "./types";
 
 
 export const clearStateErrors = () => ({
@@ -98,3 +98,12 @@ export const clearUpdatingForm = () => ({
 	type: CLEAR_UPDATING_FORM
 })
 
+export const previewSurveyForm = (surveyForm: SurveyForm) => ({
+	type: PREVIEW_SURVEY_FORM,
+	surveyFormToPreview: surveyForm
+
+})
+
+export const clearPreviewForm = () => ({
+	type: CLEAR_PREVIEW_FORM
+})

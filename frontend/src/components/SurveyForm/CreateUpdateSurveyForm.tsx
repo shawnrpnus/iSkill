@@ -1,4 +1,18 @@
-import { Alert, Button, Col, Form, Icon, Input, Row, Select, Spin, Typography, Card, Affix } from "antd";
+import {
+	Alert,
+	Button,
+	Col,
+	Form,
+	Icon,
+	Input,
+	Row,
+	Select,
+	Spin,
+	Typography,
+	Card,
+	Affix,
+	Modal
+} from "antd";
 import { FormComponentProps } from "antd/lib/form";
 import * as React from "react";
 import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
@@ -9,7 +23,9 @@ import {
 	clearUpdatingForm,
 	createSurveyForm,
 	getSurveyForm,
-	updateSurveyForm
+	updateSurveyForm,
+	previewSurveyForm,
+	clearPreviewForm
 } from "../../actions/surveyFormActions";
 import { getAllToolProcess } from "../../actions/toolProcessActions";
 import CategoryModel from "../../models/Category";
@@ -28,6 +44,7 @@ import {
 } from "../../utils/SurveyFormUtils";
 import Category from "./Category/Category";
 import "./CreateUpdateSurveyForm.css";
+import ViewSurveyForm from "./ViewSurveyForm";
 
 export interface ICreateSurveyFormProps extends FormComponentProps, RouteComponentProps<any> {
 	errors: any;
@@ -37,6 +54,8 @@ export interface ICreateSurveyFormProps extends FormComponentProps, RouteCompone
 	getSurveyForm: typeof getSurveyForm;
 	updateSurveyForm: typeof updateSurveyForm;
 	clearUpdatingForm: typeof clearUpdatingForm;
+	previewSurveyForm: typeof previewSurveyForm;
+	clearPreviewForm: typeof clearPreviewForm;
 	toolProcessList: Array<ToolProcess>;
 	surveyFormToViewOrUpdate?: SurveyFormModel;
 }
@@ -45,6 +64,7 @@ export interface ICreateSurveyFormState {
 	categories: Array<ICategory>;
 	categoryId: number;
 	updating: boolean;
+	previewVisible: boolean;
 }
 
 interface ICategory {
@@ -66,7 +86,8 @@ class CreateUpdateSurveyForm extends React.Component<ICreateSurveyFormProps, ICr
 		this.state = {
 			categories: [], //array of category objects (new/non-persisted categories will have temp IDs)
 			categoryId: 0,
-			updating: false
+			updating: false,
+			previewVisible: false
 		};
 
 		this.handleSubmit = this.handleSubmit.bind(this);
@@ -77,6 +98,8 @@ class CreateUpdateSurveyForm extends React.Component<ICreateSurveyFormProps, ICr
 		this.removeQuestion = this.removeQuestion.bind(this);
 		this.reorderQuestions = this.reorderQuestions.bind(this);
 		this.generateSurveyModel = this.generateSurveyModel.bind(this);
+		this.preview = this.preview.bind(this);
+		this.previewClose = this.previewClose.bind(this);
 	}
 
 	componentWillMount() {
@@ -97,6 +120,7 @@ class CreateUpdateSurveyForm extends React.Component<ICreateSurveyFormProps, ICr
 			categories: [],
 			categoryId: 0
 		});
+		Modal.destroyAll();
 	}
 
 	componentDidUpdate() {
@@ -237,7 +261,7 @@ class CreateUpdateSurveyForm extends React.Component<ICreateSurveyFormProps, ICr
 
 	handleSubmit(e: React.FormEvent<EventTarget>) {
 		e.preventDefault();
-		let surveyFormModel = this.generateSurveyModel();
+		let surveyFormModel = this.generateSurveyModel(false);
 		let employeeId = 1;
 
 		if (this.props.surveyFormToViewOrUpdate) {
@@ -250,7 +274,23 @@ class CreateUpdateSurveyForm extends React.Component<ICreateSurveyFormProps, ICr
 		}
 	}
 
-	generateSurveyModel() {
+	preview() {
+		let previewSurveyFormModel = this.generateSurveyModel(true);
+		this.props.previewSurveyForm(previewSurveyFormModel);
+		this.setState({
+			previewVisible: true
+		});
+	}
+
+	previewClose() {
+		this.props.clearPreviewForm();
+		this.setState({
+			previewVisible: false
+		});
+		Modal.destroyAll();
+	}
+
+	generateSurveyModel(isPreview: boolean) {
 		let categoryModelList = [];
 		let stateCategories = this.state.categories;
 		for (let i = 0; i < stateCategories.length; i++) {
@@ -284,7 +324,7 @@ class CreateUpdateSurveyForm extends React.Component<ICreateSurveyFormProps, ICr
 					upperBound
 				);
 
-				//-----------FOR UPDATING----------
+				//-----------FOR UPDATING / PREVIEW----------
 				let originalQuestionModel = getExistingQuestionByQuestionId(
 					originalCategoryModel,
 					categoryQuestions[j]
@@ -292,6 +332,10 @@ class CreateUpdateSurveyForm extends React.Component<ICreateSurveyFormProps, ICr
 				if (originalQuestionModel) {
 					//if updating a question that already exists in db
 					questionModel.questionId = originalQuestionModel.questionId;
+				} else if (isPreview) {
+					//new question, only set for preview
+					console.log("ISPREVIEWW");
+					questionModel.questionId = categoryQuestions[j];
 				}
 				//---------------------------------
 
@@ -307,6 +351,8 @@ class CreateUpdateSurveyForm extends React.Component<ICreateSurveyFormProps, ICr
 			if (originalCategoryModel) {
 				//if updating a category that already existed in db
 				categoryModel.categoryId = originalCategoryModel.categoryId;
+			} else if (isPreview) {
+				categoryModel.categoryId = stateCategories[i].categoryId;
 			}
 			//------------------------------
 
@@ -340,6 +386,16 @@ class CreateUpdateSurveyForm extends React.Component<ICreateSurveyFormProps, ICr
 					!this.props.surveyFormToViewOrUpdate
 				}
 			>
+				<Modal
+					title="Previewing Evaluation Form"
+					visible={this.state.previewVisible}
+					onOk={this.previewClose}
+					onCancel={this.previewClose}
+					width="100%"
+					className="previewModal"
+				>
+					<ViewSurveyForm />
+				</Modal>
 				<Form onSubmit={this.handleSubmit} style={{ padding: "2vw 5vw 0 5vw" }}>
 					<Row>
 						<Col span={24}>
@@ -485,17 +541,30 @@ class CreateUpdateSurveyForm extends React.Component<ICreateSurveyFormProps, ICr
 							Add Category
 						</Button>
 						<Form.Item style={{ textAlign: "right" }}>
-							<Affix offsetBottom={10}>
-								<Button
-									type="primary"
-									htmlType="submit"
-									size="large"
-									onSubmit={this.handleSubmit}
-								>
-									<Icon type="save" />
-									Submit
-								</Button>
-							</Affix>
+							<Row type="flex" justify="end" gutter={8}>
+								<Col md={6} sm={8} xs={10}>
+									<Affix offsetBottom={10}>
+										<Button type="primary" size="large" block onClick={this.preview}>
+											<Icon type="save" />
+											Preview
+										</Button>
+									</Affix>
+								</Col>
+								<Col md={6} sm={8} xs={10}>
+									<Affix offsetBottom={10}>
+										<Button
+											type="primary"
+											htmlType="submit"
+											size="large"
+											block
+											onSubmit={this.handleSubmit}
+										>
+											<Icon type="save" />
+											Save
+										</Button>
+									</Affix>
+								</Col>
+							</Row>
 						</Form.Item>
 					</Card>
 				</Form>
@@ -519,7 +588,9 @@ const mapDispatchToProps = {
 	getAllToolProcess,
 	getSurveyForm,
 	updateSurveyForm,
-	clearUpdatingForm
+	clearUpdatingForm,
+	previewSurveyForm,
+	clearPreviewForm
 };
 export default connect(
 	mapStateToProps,

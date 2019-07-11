@@ -22,6 +22,7 @@ import "./ViewSurveyForm.css";
 export interface IViewSurveyFormProps extends FormComponentProps, RouteComponentProps {
 	getSurveyForm: typeof getSurveyForm;
 	surveyFormToViewOrUpdate?: SurveyFormModel;
+	surveyFormToPreview?: SurveyFormModel;
 }
 
 export interface IViewSurveyFormState {}
@@ -40,9 +41,11 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 	}
 
 	componentWillMount() {
-		let params: IRouteParams = this.props.match.params;
-		if (params.formId && this.props.getSurveyForm) {
-			this.props.getSurveyForm(params.formId);
+		if (this.props.match) {
+			let params: IRouteParams = this.props.match.params;
+			if (params.formId && this.props.getSurveyForm) {
+				this.props.getSurveyForm(params.formId);
+			}
 		}
 	}
 
@@ -65,7 +68,13 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 		let toolProcessName = "";
 		let skillLevel = "";
 		let categories: Array<CategoryModel> = [];
-		if (this.props.surveyFormToViewOrUpdate) {
+		if (this.props.surveyFormToPreview) {
+			console.log("PREVIEWING");
+			surveyFormName = this.props.surveyFormToPreview.surveyFormName;
+			toolProcessName = this.props.surveyFormToPreview.toolProcess.toolProcessName;
+			skillLevel = this.props.surveyFormToPreview.skillLevel;
+			categories = this.props.surveyFormToPreview.categories;
+		} else if (this.props.surveyFormToViewOrUpdate && this.props.match) {
 			surveyFormName = this.props.surveyFormToViewOrUpdate.surveyFormName;
 			toolProcessName = this.props.surveyFormToViewOrUpdate.toolProcess.toolProcessName;
 			skillLevel = this.props.surveyFormToViewOrUpdate.skillLevel;
@@ -116,11 +125,12 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 						let percentageScore = ((catScore / catTotalScore) * 100).toFixed(2);
 						totalScore += catScore;
 						totalMaxScore += catTotalScore;
+						console.log(sortedQuestions);
 						return (
 							<React.Fragment key={category.categoryId}>
 								<Row
 									gutter={24}
-									style={{ backgroundColor: "#8cb8ff", padding: "5px", fontWeight: "bold" }}
+									style={{ backgroundColor: "#e8e8e8", padding: "5px", fontWeight: "bold" }}
 								>
 									<Col span={COL_ONE_SIZE + COL_TWO_SIZE + COL_THREE_SIZE}>
 										{category.categoryName}
@@ -139,8 +149,9 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 										question.hasOwnProperty("questionId")
 									) {
 										numericQn = question as NumericChoiceQuestion;
+										console.log(numericQn);
 									}
-									return numericQn && numericQn.questionId ? (
+									return numericQn && numericQn.questionId !== undefined ? (
 										<Row
 											style={{ padding: "5px" }}
 											key={`${category.categoryId}-${question.questionId}`}
@@ -171,7 +182,7 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 					})}
 					<Row
 						gutter={24}
-						style={{ backgroundColor: "#8cb8ff", padding: "5px", fontWeight: "bold" }}
+						style={{ backgroundColor: "#e8e8e8", padding: "5px", fontWeight: "bold" }}
 					>
 						<Col span={20}>Total</Col>
 						<Col span={4} className="colCentered">
@@ -189,7 +200,8 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 const wrappedViewSurveyForm = Form.create({ name: "view_survey_form" })(ViewSurveyForm);
 
 const mapStateToProps = (state: any) => ({
-	surveyFormToViewOrUpdate: state.surveyForm.surveyFormToViewOrUpdate
+	surveyFormToViewOrUpdate: state.surveyForm.surveyFormToViewOrUpdate,
+	surveyFormToPreview: state.surveyForm.surveyFormToPreview
 });
 
 const mapDispatchToProps = {
@@ -219,10 +231,8 @@ const RadioButtons: React.FunctionComponent<IRadioButtonsProps> = props => {
 			{getFieldDecorator(`radio-${props.questionId}`, { initialValue: props.lowerBound })(
 				<Radio.Group>
 					{radioOptions.map((option, index) => (
-						<React.Fragment>
-							<Radio key={`radio-${option}-${props.questionId}`} value={option}>
-								{option}
-							</Radio>
+						<React.Fragment key={`radio-${option}-${props.questionId}`}>
+							<Radio value={option}>{option}</Radio>
 							{index === 4 ? <br /> : ""}
 						</React.Fragment>
 					))}
