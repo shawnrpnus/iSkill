@@ -48,7 +48,6 @@ export const getSurveyForm = (
 		axios
 			.get(url)
 			.then(response => {
-				console.log(response.data);
 				dispatch(getSurveyFormSuccess(response.data));
 			})
 			.catch(err => {

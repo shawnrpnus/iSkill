@@ -4,7 +4,6 @@ import axios from "axios";
 export const getAllToolProcess = () => {
 	return (dispatch: any) => {
 		axios.get("/api/toolProcess").then(response => {
-			console.log(response.data);
 			dispatch(getToolProcess(response.data))
 		}).catch(err => {
 			console.log(err);

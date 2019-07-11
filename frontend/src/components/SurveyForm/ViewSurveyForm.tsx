@@ -70,7 +70,6 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 		let skillLevel = "";
 		let categories: Array<CategoryModel> = [];
 		if (this.props.surveyFormToPreview) {
-			console.log("PREVIEWING");
 			surveyFormName = this.props.surveyFormToPreview.surveyFormName;
 			toolProcessName = this.props.surveyFormToPreview.toolProcess
 				? this.props.surveyFormToPreview.toolProcess.toolProcessName
@@ -133,7 +132,6 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 						let percentageScore = ((catScore / catTotalScore) * 100).toFixed(2);
 						totalScore += catScore;
 						totalMaxScore += catTotalScore;
-						console.log(sortedQuestions);
 						return (
 							<React.Fragment key={category.categoryId}>
 								<Row
@@ -157,7 +155,6 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 										question.hasOwnProperty("questionId")
 									) {
 										numericQn = question as NumericChoiceQuestion;
-										console.log(numericQn);
 									}
 									return numericQn && numericQn.questionId !== undefined ? (
 										<Row
