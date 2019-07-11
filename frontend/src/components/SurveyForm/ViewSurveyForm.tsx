@@ -84,16 +84,21 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 		let totalScore = 0;
 		let totalMaxScore = 0;
 		return (
-			<div style={{ padding: "2vw 5vw 0 5vw" }}>
-				<Row>
-					<Col span={24}>
-						<Typography.Title style={{ textAlign: "center" }}>
-							Viewing Evaluation Form
-						</Typography.Title>
-						<hr />
-					</Col>
-				</Row>
+			<div style={this.props.surveyFormToPreview? {} : { padding: "2vw 5vw 0 5vw" }}>
+				{this.props.surveyFormToPreview ? (
+					""
+				) : (
+					<Row>
+						<Col span={24}>
+							<Typography.Title style={{ textAlign: "center" }}>
+								Viewing Evaluation Form
+							</Typography.Title>
+							<hr />
+						</Col>
+					</Row>
+				)}
 				<Card
+					bordered={true}
 					title={
 						<Row gutter={24}>
 							<Col span={24} style={{ fontSize: "48px", textAlign: "center" }}>

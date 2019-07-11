@@ -393,6 +393,9 @@ class CreateUpdateSurveyForm extends React.Component<ICreateSurveyFormProps, ICr
 					onCancel={this.previewClose}
 					width="100%"
 					className="previewModal"
+					style={{ top: 10 }}
+					bodyStyle={{ backgroundColor: "#424242", padding: "5px" }}
+					footer={null}
 				>
 					<ViewSurveyForm />
 				</Modal>
