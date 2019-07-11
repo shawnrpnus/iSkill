@@ -2,6 +2,11 @@ import SurveyFormModel from "../models/SurveyForm";
 import CategoryModel from "../models/Category";
 import QuestionModel from "../models/Question";
 
+export const COL_ONE_SIZE = 8;
+export const COL_TWO_SIZE = 8;
+export const COL_THREE_SIZE = 4;
+export const COL_FOUR_SIZE = 4;
+
 export const getExistingCategoryByCategoryId = (surveyForm: SurveyFormModel | undefined, categoryId: number) => {
     return surveyForm
         ? surveyForm.categories.find(category => category.categoryId === categoryId)
@@ -35,3 +40,4 @@ export const sortQuestionsByQuestionSequence = (questionList: Array<QuestionMode
 export const getCategoryTotalMaxScore = (questionList: Array<any>) => {
     return questionList.reduce((sum: number, currentQuestion) => sum + parseInt(currentQuestion.upperBound), 0)
 }
+

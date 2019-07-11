@@ -11,7 +11,11 @@ import SurveyFormModel from "../../models/SurveyForm";
 import {
 	getCategoryTotalMaxScore,
 	sortCategoriesByCategorySequence,
-	sortQuestionsByQuestionSequence
+	sortQuestionsByQuestionSequence,
+	COL_FOUR_SIZE,
+	COL_THREE_SIZE,
+	COL_TWO_SIZE,
+	COL_ONE_SIZE
 } from "../../utils/SurveyFormUtils";
 import "./ViewSurveyForm.css";
 
@@ -25,11 +29,6 @@ export interface IViewSurveyFormState {}
 interface IRouteParams {
 	formId?: number;
 }
-
-const COL_ONE_SIZE = 8;
-const COL_TWO_SIZE = 8;
-const COL_THREE_SIZE = 4;
-const COL_FOUR_SIZE = 4;
 
 class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFormState> {
 	constructor(props: IViewSurveyFormProps) {
@@ -124,7 +123,7 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 									style={{ backgroundColor: "#8cb8ff", padding: "5px", fontWeight: "bold" }}
 								>
 									<Col span={COL_ONE_SIZE + COL_TWO_SIZE + COL_THREE_SIZE}>
-										<Input value={category.categoryName} />
+										{category.categoryName}
 									</Col>
 									<Col
 										span={COL_FOUR_SIZE}
