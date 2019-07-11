@@ -4,12 +4,12 @@ export default class Category {
 	categoryId?: number;
 
 	categorySequence: number;
-	categoryName: String;
+	categoryName: string;
 
 	questions: Question[];
 
 	constructor(
-		$categoryName: String,
+		$categoryName: string,
 		$categorySequence: number,
 		$questions: Question[]
 	) {

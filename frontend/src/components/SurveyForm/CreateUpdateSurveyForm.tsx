@@ -1,4 +1,4 @@
-import { Alert, Button, Col, Form, Icon, Input, Row, Select, Spin, Typography, Modal } from "antd";
+import { Alert, Button, Col, Form, Icon, Input, Row, Select, Spin, Typography } from "antd";
 import { FormComponentProps } from "antd/lib/form";
 import * as React from "react";
 import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
@@ -41,7 +41,6 @@ export interface ICreateSurveyFormState {
 	categories: Array<ICategory>;
 	categoryId: number;
 	updating: boolean;
-	visible: boolean;
 }
 
 interface ICategory {
@@ -63,8 +62,7 @@ class CreateUpdateSurveyForm extends React.Component<ICreateSurveyFormProps, ICr
 		this.state = {
 			categories: [], //array of category objects (new/non-persisted categories will have temp IDs)
 			categoryId: 0,
-			updating: false,
-			visible: false
+			updating: false
 		};
 
 		this.handleSubmit = this.handleSubmit.bind(this);
@@ -328,18 +326,6 @@ class CreateUpdateSurveyForm extends React.Component<ICreateSurveyFormProps, ICr
 		return surveyFormModel;
 	}
 
-	showModal = () => {
-		this.setState({
-			visible: true
-		});
-	};
-
-	handleCancel = (event: any) => {
-		this.setState({
-			visible: false
-		});
-	};
-
 	public render() {
 		const { getFieldDecorator } = this.props.form;
 		let surveyFormToViewOrUpdate = this.props.surveyFormToViewOrUpdate;
@@ -350,12 +336,6 @@ class CreateUpdateSurveyForm extends React.Component<ICreateSurveyFormProps, ICr
 					!this.props.surveyFormToViewOrUpdate
 				}
 			>
-				<Button type="primary" onClick={this.showModal}>
-					Open Modal
-				</Button>
-				<Modal title="Basic Modal" visible={this.state.visible} onCancel={this.handleCancel}>
-					{/* <ViewSurveyForm surveyFormToViewOrUpdate={this.handleSubmit(null, true)} /> */}
-				</Modal>
 				<Form onSubmit={this.handleSubmit} style={{ padding: "2vw 5vw 0 5vw" }}>
 					<Row>
 						<Col span={24}>

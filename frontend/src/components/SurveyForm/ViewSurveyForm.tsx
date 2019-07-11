@@ -1,4 +1,4 @@
-import { Card, Col, Form, Radio, Row, Typography } from "antd";
+import { Card, Col, Form, Radio, Row, Typography, Input } from "antd";
 import { FormComponentProps, WrappedFormUtils } from "antd/lib/form/Form";
 import * as React from "react";
 import { connect } from "react-redux";
@@ -124,7 +124,7 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 									style={{ backgroundColor: "#8cb8ff", padding: "5px", fontWeight: "bold" }}
 								>
 									<Col span={COL_ONE_SIZE + COL_TWO_SIZE + COL_THREE_SIZE}>
-										{category.categoryName}
+										<Input value={category.categoryName} />
 									</Col>
 									<Col
 										span={COL_FOUR_SIZE}

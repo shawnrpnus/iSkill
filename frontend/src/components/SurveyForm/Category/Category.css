@@ -16,15 +16,6 @@
     opacity: 0.5;
 }
 
-.ant-card-head {
-    padding: 0 1vw 0 1vw;
-}
-
-.ant-card-body {
-    padding-right: 1vw;
-    padding-left: 2vw;
-}
-
 .menu-icon {
     font-size: 20px;
 }
