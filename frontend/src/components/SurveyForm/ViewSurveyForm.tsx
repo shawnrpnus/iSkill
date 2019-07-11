@@ -1,4 +1,4 @@
-import { Card, Col, Form, Radio, Row, Typography, Input } from "antd";
+import { Card, Col, Form, Radio, Row, Typography } from "antd";
 import { FormComponentProps, WrappedFormUtils } from "antd/lib/form/Form";
 import * as React from "react";
 import { connect } from "react-redux";
@@ -11,13 +11,14 @@ import SurveyFormModel from "../../models/SurveyForm";
 import {
 	getCategoryTotalMaxScore,
 	sortCategoriesByCategorySequence,
-	sortQuestionsByQuestionSequence,
-	COL_FOUR_SIZE,
-	COL_THREE_SIZE,
-	COL_TWO_SIZE,
-	COL_ONE_SIZE
+	sortQuestionsByQuestionSequence
 } from "../../utils/SurveyFormUtils";
 import "./ViewSurveyForm.css";
+
+const COL_ONE_SIZE = 8;
+const COL_TWO_SIZE = 8;
+const COL_THREE_SIZE = 4;
+const COL_FOUR_SIZE = 4;
 
 export interface IViewSurveyFormProps extends FormComponentProps, RouteComponentProps {
 	getSurveyForm: typeof getSurveyForm;

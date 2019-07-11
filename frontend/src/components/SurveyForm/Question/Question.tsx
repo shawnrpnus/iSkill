@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Col, Input, Select, Radio, Icon } from "antd";
+import { Col, Input, Select } from "antd";
 import Form, { WrappedFormUtils } from "antd/lib/form/Form";
 import { connect } from "react-redux";
 import "./Question.css";
@@ -26,7 +26,6 @@ export interface IQuestionState {
 const COL_ONE_SIZE = 10;
 const COL_TWO_SIZE = 4;
 const COL_THREE_SIZE = 4;
-const COL_FOUR_SIZE = 4;
 
 class Question extends React.Component<IQuestionProps, IQuestionState> {
 	constructor(props: IQuestionProps) {

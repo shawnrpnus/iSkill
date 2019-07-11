@@ -36,11 +36,7 @@ import {
 	getExistingCategoryByCategoryId,
 	getExistingQuestionByQuestionId,
 	sortCategoriesByCategorySequence,
-	sortQuestionsByQuestionSequence,
-	COL_FOUR_SIZE,
-	COL_THREE_SIZE,
-	COL_TWO_SIZE,
-	COL_ONE_SIZE
+	sortQuestionsByQuestionSequence
 } from "../../utils/SurveyFormUtils";
 import Category from "./Category/Category";
 import "./CreateUpdateSurveyForm.css";
@@ -548,7 +544,7 @@ class CreateUpdateSurveyForm extends React.Component<ICreateSurveyFormProps, ICr
 								<Col md={6} sm={8} xs={10}>
 									<Affix offsetBottom={10}>
 										<Button type="primary" size="large" block onClick={this.preview}>
-											<Icon type="save" />
+											<Icon type="eye" />
 											Preview
 										</Button>
 									</Affix>
