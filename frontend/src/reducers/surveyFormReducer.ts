@@ -4,13 +4,13 @@ import SurveyForm from "../models/SurveyForm";
 const initialState = {
 	//initialState of the surveyForm attribute in the global redux store (defined in RootReducer.ts)
 	surveyForms: [],
-	surveyFormToUpdate: undefined
+	surveyFormToViewOrUpdate: undefined,
 };
 
 interface Action {
 	type: string;
 	surveyForms: SurveyForm[];
-	surveyFormToUpdate: SurveyForm;
+	surveyFormToViewOrUpdate: SurveyForm;
 	surveyFormId: number;
 }
 
@@ -32,12 +32,12 @@ export default function (state = initialState, action: Action | any) {
 		case GET_SURVEY_FORM:
 			return {
 				...state,
-				surveyFormToUpdate: action.surveyFormToUpdate
+				surveyFormToViewOrUpdate: action.surveyFormToViewOrUpdate
 			}
 		case CLEAR_UPDATING_FORM:
 			return {
 				...state,
-				surveyFormToUpdate: undefined
+				surveyFormToViewOrUpdate: undefined
 			}
 		default:
 			return state;

@@ -73,40 +73,27 @@ class Category extends React.Component<ICategoryProps, ICategoryState> {
 				title={
 					<Row type="flex" justify="space-between">
 						<Col md={1} xs={2} style={{ textAlign: "center" }}>
-							<Form.Item
-								style={{ marginBottom: 0, verticalAlign: "middle" }}
-							>
+							<Form.Item style={{ marginBottom: 0, verticalAlign: "middle" }}>
 								<Icon className="menu-icon" type="menu" />
 							</Form.Item>
 						</Col>
 						<Col md={22} xs={18}>
 							<Form.Item
 								validateStatus={
-									this.props.errors[
-										`categories[${this.props.index}].categoryName`
-									]
+									this.props.errors[`categories[${this.props.index}].categoryName`]
 										? "error"
 										: ""
 								}
-								help={
-									this.props.errors[
-										`categories[${this.props.index}].categoryName`
-									]
-								}
+								help={this.props.errors[`categories[${this.props.index}].categoryName`]}
 								hasFeedback={true}
 								style={{
 									marginBottom: "0",
 									fontWeight: "normal"
 								}}
 							>
-								{getFieldDecorator(
-									`categoryName-${this.props.categoryId}`,
-									{
-										initialValue: existingCategoryObj
-											? existingCategoryObj.categoryName
-											: ""
-									}
-								)(
+								{getFieldDecorator(`categoryName-${this.props.categoryId}`, {
+									initialValue: existingCategoryObj ? existingCategoryObj.categoryName : ""
+								})(
 									<Input
 										placeholder="Enter category name"
 										size="large"
@@ -124,10 +111,7 @@ class Category extends React.Component<ICategoryProps, ICategoryState> {
 									cancelText="No"
 									placement="topRight"
 								>
-									<Icon
-										className="dynamic-delete-button"
-										type="minus-circle"
-									/>
+									<Icon className="dynamic-delete-button" type="minus-circle" />
 								</Popconfirm>
 							</Form.Item>
 						</Col>
@@ -158,8 +142,7 @@ class Category extends React.Component<ICategoryProps, ICategoryState> {
 														align="middle"
 														style={{
 															backgroundColor:
-																snapshot.isDragging ||
-																this.props.isDragging
+																snapshot.isDragging || this.props.isDragging
 																	? "#fdffe3"
 																	: "white"
 														}}
@@ -167,17 +150,12 @@ class Category extends React.Component<ICategoryProps, ICategoryState> {
 														<Question
 															key={questionId}
 															form={this.props.form}
-															categoryId={
-																this.props.categoryId
-															}
+															categoryId={this.props.categoryId}
 															questionId={questionId}
 															index={index}
-															parentCategoryIndex={
-																this.props.index
-															}
+															parentCategoryIndex={this.props.index}
 															existingQuestionObj={getExistingQuestionByQuestionId(
-																this.props
-																	.existingCategoryObj,
+																this.props.existingCategoryObj,
 																questionId
 															)}
 														/>
@@ -193,8 +171,7 @@ class Category extends React.Component<ICategoryProps, ICategoryState> {
 																	title="Are you sure you want to delete this task?"
 																	onConfirm={() =>
 																		this.props.removeQuestion(
-																			this.props
-																				.categoryId,
+																			this.props.categoryId,
 																			questionId
 																		)
 																	}
@@ -231,13 +208,8 @@ class Category extends React.Component<ICategoryProps, ICategoryState> {
 	}
 }
 
-const getExistingQuestionByQuestionId = (
-	category: CategoryModel | undefined,
-	questionId: number
-) => {
-	return category
-		? category.questions.find(question => question.questionId === questionId)
-		: undefined;
+const getExistingQuestionByQuestionId = (category: CategoryModel | undefined, questionId: number) => {
+	return category ? category.questions.find(question => question.questionId === questionId) : undefined;
 };
 
 const mapStateToProps = (state: any) => ({

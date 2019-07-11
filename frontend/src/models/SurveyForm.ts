@@ -4,11 +4,11 @@ import Evaluation from "./Evaluation";
 import Employee from "./Employee";
 
 export default class SurveyForm {
-	surveyFormId?: Number;
-	surveyFormName: String;
-	totalScore?: Number;
-	actualScore?: Number;
-	skillLevel: String;
+	surveyFormId?: number;
+	surveyFormName: string;
+	totalScore?: number;
+	actualScore?: number;
+	skillLevel: string;
 
 	creator?: Employee;
 
@@ -18,7 +18,7 @@ export default class SurveyForm {
 
 	evaluations?: Evaluation[];
 
-	constructor($formName: String, $skillLevel: String, $categories: Category[], $toolProcess: ToolProcess) {
+	constructor($formName: string, $skillLevel: string, $categories: Category[], $toolProcess: ToolProcess) {
 		this.surveyFormName = $formName;
 		this.skillLevel = $skillLevel;
 		this.categories = $categories;

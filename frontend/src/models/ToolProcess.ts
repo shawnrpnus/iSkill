@@ -2,9 +2,9 @@ import SurveyForm from "./SurveyForm";
 
 export default class ToolProcess {
 	toolProcessId?: number;
-	toolProcessName: String;
+	toolProcessName: string;
 
-	constructor($toolProcessName: String) {
+	constructor($toolProcessName: string) {
 		this.toolProcessName = $toolProcessName;
 	}
 

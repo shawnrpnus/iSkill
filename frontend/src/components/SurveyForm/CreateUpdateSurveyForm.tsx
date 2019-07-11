@@ -1,39 +1,31 @@
-import * as React from "react";
-import { connect } from "react-redux";
-import {
-	Form,
-	Input,
-	Select,
-	Row,
-	Col,
-	Button,
-	Icon,
-	Typography,
-	Alert,
-	Spin
-} from "antd";
+import { Alert, Button, Col, Form, Icon, Input, Row, Select, Spin, Typography, Modal } from "antd";
 import { FormComponentProps } from "antd/lib/form";
-import "./CreateUpdateSurveyForm.css";
-import CategoryModel from "../../models/Category";
-import QuestionModel from "../../models/Question";
-import SurveyFormModel from "../../models/SurveyForm";
-import Category from "./Category/Category";
-import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
-import NumericChoiceQuestion from "../../models/NumericChoiceQuestion";
+import * as React from "react";
+import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
+import { connect } from "react-redux";
+import { RouteComponentProps } from "react-router";
 import {
-	createSurveyForm,
 	clearStateErrors,
+	clearUpdatingForm,
+	createSurveyForm,
 	getSurveyForm,
-	updateSurveyForm,
-	clearUpdatingForm
+	updateSurveyForm
 } from "../../actions/surveyFormActions";
 import { getAllToolProcess } from "../../actions/toolProcessActions";
+import CategoryModel from "../../models/Category";
+import NumericChoiceQuestion from "../../models/NumericChoiceQuestion";
+import SurveyFormModel from "../../models/SurveyForm";
 import ToolProcess from "../../models/ToolProcess";
-import { RouteComponentProps } from "react-router";
+import {
+	getExistingCategoryByCategoryId,
+	getExistingQuestionByQuestionId,
+	sortCategoriesByCategorySequence,
+	sortQuestionsByQuestionSequence
+} from "../../utils/SurveyFormUtils";
+import Category from "./Category/Category";
+import "./CreateUpdateSurveyForm.css";
 
-export interface ICreateSurveyFormProps
-	extends FormComponentProps,
-		RouteComponentProps<any> {
+export interface ICreateSurveyFormProps extends FormComponentProps, RouteComponentProps<any> {
 	errors: any;
 	createSurveyForm: typeof createSurveyForm;
 	clearStateErrors: typeof clearStateErrors;
@@ -42,13 +34,14 @@ export interface ICreateSurveyFormProps
 	updateSurveyForm: typeof updateSurveyForm;
 	clearUpdatingForm: typeof clearUpdatingForm;
 	toolProcessList: Array<ToolProcess>;
-	surveyFormToUpdate?: SurveyFormModel;
+	surveyFormToViewOrUpdate?: SurveyFormModel;
 }
 
 export interface ICreateSurveyFormState {
 	categories: Array<ICategory>;
 	categoryId: number;
 	updating: boolean;
+	visible: boolean;
 }
 
 interface ICategory {
@@ -63,17 +56,15 @@ interface IRouteParams {
 	formId?: number;
 }
 
-class CreateUpdateSurveyForm extends React.Component<
-	ICreateSurveyFormProps,
-	ICreateSurveyFormState
-> {
+class CreateUpdateSurveyForm extends React.Component<ICreateSurveyFormProps, ICreateSurveyFormState> {
 	constructor(props: ICreateSurveyFormProps) {
 		super(props);
 
 		this.state = {
 			categories: [], //array of category objects (new/non-persisted categories will have temp IDs)
 			categoryId: 0,
-			updating: false
+			updating: false,
+			visible: false
 		};
 
 		this.handleSubmit = this.handleSubmit.bind(this);
@@ -83,6 +74,7 @@ class CreateUpdateSurveyForm extends React.Component<
 		this.addQuestion = this.addQuestion.bind(this);
 		this.removeQuestion = this.removeQuestion.bind(this);
 		this.reorderQuestions = this.reorderQuestions.bind(this);
+		this.generateSurveyModel = this.generateSurveyModel.bind(this);
 	}
 
 	componentWillMount() {
@@ -108,19 +100,17 @@ class CreateUpdateSurveyForm extends React.Component<
 	componentDidUpdate() {
 		if (
 			(this.props.match.params as IRouteParams).formId &&
-			this.props.surveyFormToUpdate &&
+			this.props.surveyFormToViewOrUpdate &&
 			this.state.categories.length === 0 &&
 			!this.state.updating
 		) {
 			//initial load only for updating form
 			let existingCategories = sortCategoriesByCategorySequence(
-				this.props.surveyFormToUpdate.categories
+				this.props.surveyFormToViewOrUpdate.categories
 			);
 			let categoriesToPutIntoState: Array<ICategory> = [];
 			existingCategories.forEach(currCategory => {
-				let existingQuestions = sortQuestionsByQuestionSequence(
-					currCategory.questions
-				);
+				let existingQuestions = sortQuestionsByQuestionSequence(currCategory.questions);
 
 				let questionsToPutIntoCategoryState: Array<number> = [];
 				existingQuestions.forEach(currQuestion => {
@@ -181,16 +171,12 @@ class CreateUpdateSurveyForm extends React.Component<
 
 	removeCategory(categoryId: number) {
 		this.setState((prevState, props) => ({
-			categories: prevState.categories.filter(
-				category => category.categoryId !== categoryId
-			)
+			categories: prevState.categories.filter(category => category.categoryId !== categoryId)
 		}));
 	}
 
 	addQuestion(categoryId: number, questionId: number) {
-		let categories: Array<ICategory> = JSON.parse(
-			JSON.stringify(this.state.categories)
-		); //deep copy
+		let categories: Array<ICategory> = JSON.parse(JSON.stringify(this.state.categories)); //deep copy
 		let category = categories.find(category => category.categoryId === categoryId);
 		if (category != null) {
 			category.questions.push(questionId);
@@ -201,9 +187,7 @@ class CreateUpdateSurveyForm extends React.Component<
 	}
 
 	removeQuestion(categoryId: number, questionId: number) {
-		let categories: Array<ICategory> = JSON.parse(
-			JSON.stringify(this.state.categories)
-		); //deep copy
+		let categories: Array<ICategory> = JSON.parse(JSON.stringify(this.state.categories)); //deep copy
 		let category = categories.find(category => category.categoryId === categoryId);
 		if (category != null) {
 			category.questions = category.questions.filter(
@@ -219,9 +203,7 @@ class CreateUpdateSurveyForm extends React.Component<
 		if (!result.destination) {
 			return;
 		}
-		let categories: Array<ICategory> = JSON.parse(
-			JSON.stringify(this.state.categories)
-		); //deep copy
+		let categories: Array<ICategory> = JSON.parse(JSON.stringify(this.state.categories)); //deep copy
 		let category = categories.find(category => category.categoryId === categoryId);
 		if (category != null) {
 			category.questions = this.reorder(
@@ -253,19 +235,31 @@ class CreateUpdateSurveyForm extends React.Component<
 
 	handleSubmit(e: React.FormEvent<EventTarget>) {
 		e.preventDefault();
+		let surveyFormModel = this.generateSurveyModel();
+		let employeeId = 1;
+
+		if (this.props.surveyFormToViewOrUpdate) {
+			//update
+			surveyFormModel.surveyFormId = this.props.surveyFormToViewOrUpdate.surveyFormId;
+			this.props.updateSurveyForm(surveyFormModel);
+		} else {
+			//create
+			this.props.createSurveyForm(surveyFormModel, employeeId);
+		}
+	}
+
+	generateSurveyModel() {
 		let categoryModelList = [];
 		let stateCategories = this.state.categories;
 		for (let i = 0; i < stateCategories.length; i++) {
-			let categoryName = this.props.form.getFieldValue(
-				`categoryName-${stateCategories[i].categoryId}`
-			);
+			let categoryName = this.props.form.getFieldValue(`categoryName-${stateCategories[i].categoryId}`);
 			let categorySequence = i + 1;
 			let categoryQuestions = stateCategories[i].questions; //array of front-end IDs
 			let questionModelList: Array<NumericChoiceQuestion> = [];
 
 			//------FOR UPDATING------
 			let originalCategoryModel = getExistingCategoryByCategoryId(
-				this.props.surveyFormToUpdate,
+				this.props.surveyFormToViewOrUpdate,
 				stateCategories[i].categoryId
 			);
 			//------------------------
@@ -273,9 +267,7 @@ class CreateUpdateSurveyForm extends React.Component<
 			for (let j = 0; j < categoryQuestions.length; j++) {
 				let qnSequence = j + 1;
 				let qnText = this.props.form.getFieldValue(
-					`questionText-${stateCategories[i].categoryId}-${
-						categoryQuestions[j]
-					}`
+					`questionText-${stateCategories[i].categoryId}-${categoryQuestions[j]}`
 				);
 				let lowerBound = this.props.form.getFieldValue(
 					`lowerBound-${stateCategories[i].categoryId}-${categoryQuestions[j]}`
@@ -323,8 +315,7 @@ class CreateUpdateSurveyForm extends React.Component<
 		let skillLevel = this.props.form.getFieldValue("skillLevel");
 
 		let toolProcess = this.props.toolProcessList.filter(
-			toolProcess =>
-				toolProcess.toolProcessId === this.props.form.getFieldValue("toolProcess")
+			toolProcess => toolProcess.toolProcessId === this.props.form.getFieldValue("toolProcess")
 		);
 
 		let surveyFormModel = new SurveyFormModel(
@@ -334,33 +325,42 @@ class CreateUpdateSurveyForm extends React.Component<
 			toolProcess[0]
 		);
 
-		let employeeId = 1;
-
-		if (this.props.surveyFormToUpdate) {
-			//update
-			surveyFormModel.surveyFormId = this.props.surveyFormToUpdate.surveyFormId;
-			this.props.updateSurveyForm(surveyFormModel);
-		} else {
-			//create
-			this.props.createSurveyForm(surveyFormModel, employeeId);
-		}
+		return surveyFormModel;
 	}
+
+	showModal = () => {
+		this.setState({
+			visible: true
+		});
+	};
+
+	handleCancel = (event: any) => {
+		this.setState({
+			visible: false
+		});
+	};
 
 	public render() {
 		const { getFieldDecorator } = this.props.form;
-		let surveyFormToUpdate = this.props.surveyFormToUpdate;
+		let surveyFormToViewOrUpdate = this.props.surveyFormToViewOrUpdate;
 		return (
 			<Spin
 				spinning={
 					((this.props.match.params as IRouteParams).formId ? true : false) &&
-					!this.props.surveyFormToUpdate
+					!this.props.surveyFormToViewOrUpdate
 				}
 			>
+				<Button type="primary" onClick={this.showModal}>
+					Open Modal
+				</Button>
+				<Modal title="Basic Modal" visible={this.state.visible} onCancel={this.handleCancel}>
+					{/* <ViewSurveyForm surveyFormToViewOrUpdate={this.handleSubmit(null, true)} /> */}
+				</Modal>
 				<Form onSubmit={this.handleSubmit} style={{ padding: "2vw 5vw 0 5vw" }}>
 					<Row>
 						<Col span={24}>
 							<Typography.Title style={{ textAlign: "center" }}>
-								{this.props.surveyFormToUpdate
+								{this.props.surveyFormToViewOrUpdate
 									? "Updating Evaluation Form"
 									: "New Evaluation Form"}
 							</Typography.Title>
@@ -370,64 +370,53 @@ class CreateUpdateSurveyForm extends React.Component<
 					<Row gutter={16}>
 						<Col sm={8} xs={24}>
 							<Form.Item
-								validateStatus={
-									this.props.errors.surveyFormName ? "error" : ""
-								}
+								validateStatus={this.props.errors.surveyFormName ? "error" : ""}
 								help={this.props.errors.surveyFormName}
 								hasFeedback={true}
 								label="Form Name"
 							>
 								{getFieldDecorator("surveyFormName", {
-									initialValue: surveyFormToUpdate
-										? surveyFormToUpdate.surveyFormName
+									initialValue: surveyFormToViewOrUpdate
+										? surveyFormToViewOrUpdate.surveyFormName
 										: ""
 								})(<Input placeholder="Enter form name" size="large" />)}
 							</Form.Item>
 						</Col>
 						<Col sm={8} xs={24}>
 							<Form.Item
-								validateStatus={
-									this.props.errors.toolProcess ? "error" : ""
-								}
+								validateStatus={this.props.errors.toolProcess ? "error" : ""}
 								help={this.props.errors.toolProcess}
 								hasFeedback={true}
 								label="Tool / Process"
 							>
 								{getFieldDecorator("toolProcess", {
-									initialValue: surveyFormToUpdate
-										? surveyFormToUpdate.toolProcess.toolProcessId
+									initialValue: surveyFormToViewOrUpdate
+										? surveyFormToViewOrUpdate.toolProcess.toolProcessId
 										: ""
 								})(
-									<Select
-										placeholder="Select Tool / Process"
-										size="large"
-									>
-										{this.props.toolProcessList.map(
-											(toolProcess: ToolProcess) => (
-												<Select.Option
-													key={toolProcess.toolProcessId}
-													value={toolProcess.toolProcessId}
-												>
-													{toolProcess.toolProcessName}
-												</Select.Option>
-											)
-										)}
+									<Select placeholder="Select Tool / Process" size="large">
+										{this.props.toolProcessList.map((toolProcess: ToolProcess) => (
+											<Select.Option
+												key={toolProcess.toolProcessId}
+												value={toolProcess.toolProcessId}
+											>
+												{toolProcess.toolProcessName}
+											</Select.Option>
+										))}
 									</Select>
 								)}
 							</Form.Item>
 						</Col>
 						<Col sm={8} xs={24}>
 							<Form.Item
-								validateStatus={
-									this.props.errors.skillLevel ? "error" : ""
-								}
+								validateStatus={this.props.errors.skillLevel ? "error" : ""}
 								help={this.props.errors.skillLevel}
 								hasFeedback={true}
 								label="Skill Level"
 							>
 								{getFieldDecorator("skillLevel", {
-									initialValue: surveyFormToUpdate
-										? surveyFormToUpdate.skillLevel
+									initialValue: surveyFormToViewOrUpdate
+										? surveyFormToViewOrUpdate.skillLevel
 										: ""
 								})(
 									<Select placeholder="Select Skill Level" size="large">
@@ -439,13 +428,8 @@ class CreateUpdateSurveyForm extends React.Component<
 							</Form.Item>
 						</Col>
 					</Row>
-					{this.props.errors.categories &&
-					this.state.categories.length === 0 ? (
-						<Alert
-							message={this.props.errors.categories}
-							type="error"
-							showIcon
-						/>
+					{this.props.errors.categories && this.state.categories.length === 0 ? (
+						<Alert message={this.props.errors.categories} type="error" showIcon />
 					) : (
 						""
 					)}
@@ -472,28 +456,15 @@ class CreateUpdateSurveyForm extends React.Component<
 																categoryId={categoryId}
 																key={categoryId}
 																form={this.props.form}
-																removeCategory={
-																	this.removeCategory
-																}
-																isDragging={
-																	snapshot.isDragging
-																}
-																questions={
-																	categoryObj.questions
-																}
-																addQuestion={
-																	this.addQuestion
-																}
-																removeQuestion={
-																	this.removeQuestion
-																}
-																reorderQuestions={
-																	this.reorderQuestions
-																}
+																removeCategory={this.removeCategory}
+																isDragging={snapshot.isDragging}
+																questions={categoryObj.questions}
+																addQuestion={this.addQuestion}
+																removeQuestion={this.removeQuestion}
+																reorderQuestions={this.reorderQuestions}
 																index={index}
 																existingCategoryObj={getExistingCategoryByCategoryId(
-																	this.props
-																		.surveyFormToUpdate,
+																	this.props.surveyFormToViewOrUpdate,
 																	categoryId
 																)}
 															/>
@@ -513,11 +484,7 @@ class CreateUpdateSurveyForm extends React.Component<
 						Add Category
 					</Button>
 					<Form.Item>
-						<Button
-							type="primary"
-							htmlType="submit"
-							onSubmit={this.handleSubmit}
-						>
+						<Button type="primary" htmlType="submit" onSubmit={this.handleSubmit}>
 							Submit
 						</Button>
 					</Form.Item>
@@ -527,17 +494,15 @@ class CreateUpdateSurveyForm extends React.Component<
 	}
 }
 
-const wrappedCreateSurveyForm = Form.create({ name: "create_survey_form" })(
-	CreateUpdateSurveyForm
-);
+const wrappedCreateSurveyForm = Form.create({ name: "create_survey_form" })(CreateUpdateSurveyForm);
 const mapStateToProps = (state: any) => {
 	return {
 		errors: state.errors,
 		toolProcessList: state.toolProcess.toolProcessList,
-		surveyFormToUpdate: state.surveyForm.surveyFormToUpdate
+		surveyFormToViewOrUpdate: state.surveyForm.surveyFormToViewOrUpdate
 	};
 };
-
+//action creators
 const mapDispatchToProps = {
 	createSurveyForm,
 	clearStateErrors,
@@ -550,42 +515,3 @@ export default connect(
 	mapStateToProps,
 	mapDispatchToProps
 )(wrappedCreateSurveyForm);
-
-//utility functions
-const getExistingCategoryByCategoryId = (
-	surveyForm: SurveyFormModel | undefined,
-	categoryId: number
-) => {
-	return surveyForm
-		? surveyForm.categories.find(category => category.categoryId === categoryId)
-		: undefined;
-};
-
-const getExistingQuestionByQuestionId = (
-	category: CategoryModel | undefined,
-	questionId: number
-) => {
-	return category
-		? category.questions.find(question => question.questionId === questionId)
-		: undefined;
-};
-
-const sortCategoriesByCategorySequence = (categoryList: Array<CategoryModel>) => {
-	return categoryList.sort((a, b) => {
-		if (a.categorySequence && b.categorySequence) {
-			return a.categorySequence - b.categorySequence;
-		} else {
-			return 0;
-		}
-	});
-};
-
-const sortQuestionsByQuestionSequence = (categoryList: Array<QuestionModel>) => {
-	return categoryList.sort((a, b) => {
-		if (a.questionSequence && b.questionSequence) {
-			return a.questionSequence - b.questionSequence;
-		} else {
-			return 0;
-		}
-	});
-};

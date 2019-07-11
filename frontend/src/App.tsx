@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import Header from "./components/Layout/Header";
 import CreateUpdateSurveyForm from "./components/SurveyForm/CreateUpdateSurveyForm";
+import ViewSurveyForm from "./components/SurveyForm/ViewSurveyForm";
 
 const App: React.FC = () => {
 	return (
@@ -38,6 +39,12 @@ const App: React.FC = () => {
 										key="update"
 										path="/updateForm/:formId"
 										component={CreateUpdateSurveyForm}
+									/>
+									<Route
+										exact
+										key="view"
+										path="/viewForm/:formId"
+										component={ViewSurveyForm}
 									/>
 								</Switch>
 							</Layout.Content>

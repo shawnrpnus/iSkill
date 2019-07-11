@@ -63,7 +63,7 @@ export const getSurveyForm = (
 
 const getSurveyFormSuccess = (surveyForm: SurveyForm) => ({
 	type: GET_SURVEY_FORM,
-	surveyFormToUpdate: surveyForm
+	surveyFormToViewOrUpdate: surveyForm
 });
 
 
