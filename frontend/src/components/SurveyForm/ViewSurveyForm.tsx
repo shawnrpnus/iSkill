@@ -170,6 +170,7 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 													lowerBound={numericQn.lowerBound}
 													upperBound={numericQn.upperBound}
 													questionId={numericQn.questionId}
+													categoryId={category.categoryId}
 													form={this.props.form}
 												/>
 											</Col>
@@ -222,6 +223,7 @@ interface IRadioButtonsProps {
 	lowerBound: number;
 	upperBound: number;
 	questionId: number;
+	categoryId?: number;
 	form: WrappedFormUtils<any>;
 }
 
@@ -233,10 +235,12 @@ const RadioButtons: React.FunctionComponent<IRadioButtonsProps> = props => {
 	const { getFieldDecorator } = props.form;
 	return (
 		<React.Fragment>
-			{getFieldDecorator(`radio-${props.questionId}`, { initialValue: props.lowerBound })(
+			{getFieldDecorator(`radio-${props.categoryId}-${props.questionId}`, {
+				initialValue: props.lowerBound
+			})(
 				<Radio.Group>
 					{radioOptions.map((option, index) => (
-						<React.Fragment key={`radio-${option}-${props.questionId}`}>
+						<React.Fragment key={`radio-${option}-${props.categoryId}-${props.questionId}`}>
 							<Radio value={option}>{option}</Radio>
 							{index === 4 ? <br /> : ""}
 						</React.Fragment>
