@@ -1,6 +1,6 @@
 package com.iskill.backend.services;
 
-import com.iskill.backend.exceptions.Category.CategoryNotFound.CategoryNotFoundException;
+import com.iskill.backend.exceptions.Evaluation.EvaluationNotFound.EvaluationNotFoundException;
 import com.iskill.backend.exceptions.Question.QuestionCannotDelete.QuestionCannotDeleteException;
 import com.iskill.backend.models.Category;
 import com.iskill.backend.models.Question;
@@ -32,7 +32,7 @@ public class CategoryService {
 
     public Category getCategory(Long categoryId){
         return categoryRepository.findById(categoryId).orElseThrow(
-                () -> new CategoryNotFoundException(String.format("Category with id '%s' Not Found", categoryId))
+                () -> new EvaluationNotFoundException(String.format("Category with id '%s' Not Found", categoryId))
         );
     }
     public void deleteCategory(Long categoryId){

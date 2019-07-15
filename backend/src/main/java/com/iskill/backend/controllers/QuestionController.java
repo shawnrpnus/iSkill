@@ -23,18 +23,4 @@ public class QuestionController {
         this.validationService = validationService;
     }
 
-//    @PostMapping("/createQuestion")
-//    public ResponseEntity<?> createNewQuestion(@Valid @RequestBody Question question,
-//                                               BindingResult result,
-//                                               @RequestParam("surveyFormId") Long surveyFormId,
-//                                               @RequestParam("categoryName") String categoryName){
-//        ResponseEntity<Map<String, String>> errorMapRsp = validationService.generateErrorMapResponse(result);
-//        if (errorMapRsp != null) {
-//            return errorMapRsp;
-//        }
-//
-//
-//
-//    }
-
 }

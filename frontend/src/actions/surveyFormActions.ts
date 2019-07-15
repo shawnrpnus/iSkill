@@ -100,7 +100,6 @@ export const clearUpdatingForm = () => ({
 export const previewSurveyForm = (surveyForm: SurveyForm) => ({
 	type: PREVIEW_SURVEY_FORM,
 	surveyFormToPreview: surveyForm
-
 })
 
 export const clearPreviewForm = () => ({

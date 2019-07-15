@@ -1,6 +1,7 @@
 package com.iskill.backend.request;
 
 
+import com.iskill.backend.models.Evaluation;
 import com.iskill.backend.models.Question;
 import com.iskill.backend.models.SurveyForm;
 import lombok.AllArgsConstructor;
@@ -14,11 +15,14 @@ import java.util.List;
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateSurveyFormRequest {
+public class CreateEvaluationRequest {
 
     @Valid
-    private SurveyForm surveyForm; //should contain surveyFormName, totalScore, actualScore, skillLevel
-    //dont update creator, toolprocess and evaluations
-    @Valid
-    private List<Question> questions;
+    private Evaluation evaluation;
+
+    private Long evaluatorEmployeeId;
+
+    private Long evaluateeEmployeeId;
+
+    private Long surveyFormId;
 }

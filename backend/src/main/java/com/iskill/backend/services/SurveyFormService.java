@@ -1,8 +1,7 @@
 package com.iskill.backend.services;
 
-import com.iskill.backend.exceptions.Category.CategoryNotFound.CategoryNotFoundException;
+import com.iskill.backend.exceptions.Evaluation.EvaluationNotFound.EvaluationNotFoundException;
 import com.iskill.backend.exceptions.Employee.EmployeeNotFound.EmployeeNotFoundException;
-import com.iskill.backend.exceptions.Question.QuestionCannotDelete.QuestionCannotDeleteException;
 import com.iskill.backend.exceptions.Question.QuestionNotFound.QuestionNotFoundException;
 import com.iskill.backend.exceptions.SurveyForm.CreateSurveyForm.CreateNewSurveyFormException;
 import com.iskill.backend.exceptions.SurveyForm.DeleteSurveyForm.SurveyFormCannotDeleteException;
@@ -69,7 +68,6 @@ public class SurveyFormService {
                 question.setCategory(category);
             }
         }
-        System.out.println(surveyForm.getCategories().size());
         return surveyFormRepository.save(surveyForm);
 
     }
@@ -170,7 +168,7 @@ public class SurveyFormService {
                     }
                 }
             } else {
-                throw new CategoryNotFoundException(
+                throw new EvaluationNotFoundException(
                         String.format("Category with id '%s' was not found in this form. " +
                                 "New categories should not have a id field.", receivedCategory.getCategoryId()));
             }

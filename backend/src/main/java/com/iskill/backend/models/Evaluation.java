@@ -1,9 +1,11 @@
 package com.iskill.backend.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,14 +28,17 @@ public class Evaluation {
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
+    @JsonIgnore
     private Employee evaluator;
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
+    @JsonIgnore
     private Employee evaluatee;
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
+    @JsonIgnore
     private SurveyForm surveyForm;
 
     @OneToMany
