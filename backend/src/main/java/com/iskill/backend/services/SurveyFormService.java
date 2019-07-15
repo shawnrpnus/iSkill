@@ -5,7 +5,7 @@ import com.iskill.backend.exceptions.Employee.EmployeeNotFound.EmployeeNotFoundE
 import com.iskill.backend.exceptions.Question.QuestionNotFound.QuestionNotFoundException;
 import com.iskill.backend.exceptions.SurveyForm.CreateSurveyForm.CreateNewSurveyFormException;
 import com.iskill.backend.exceptions.SurveyForm.DeleteSurveyForm.SurveyFormCannotDeleteException;
-import com.iskill.backend.exceptions.SurveyForm.SurveyFormCannotUpdate.SurveyFormCannotUpdatexception;
+import com.iskill.backend.exceptions.SurveyForm.SurveyFormCannotUpdate.SurveyFormCannotUpdateException;
 import com.iskill.backend.exceptions.SurveyForm.SurveyFormNotFound.SurveyFormNotFoundException;
 import com.iskill.backend.exceptions.ToolProcess.ToolProcessNotFound.ToolProcessNotFoundException;
 import com.iskill.backend.models.*;
@@ -88,7 +88,7 @@ public class SurveyFormService {
         //check if survey form has been used for evaluations
         SurveyForm surveyFormToUpdate = getSurveyForm(receivedSurveyForm.getSurveyFormId());
         if (surveyFormToUpdate.getEvaluations() != null && surveyFormToUpdate.getEvaluations().size() > 0) {
-            throw new SurveyFormCannotUpdatexception("Survey Form has been used for evaluations and cannot be updated!");
+            throw new SurveyFormCannotUpdateException("Survey Form has been used for evaluations and cannot be updated!");
         }
 
         //if the name has changed, check whether its a duplicate
