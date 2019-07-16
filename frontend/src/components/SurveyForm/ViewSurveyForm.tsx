@@ -55,10 +55,12 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 		this.props.clearUpdatingForm();
 	}
 
-	calcCategoryScore(questionList: Array<QuestionModel>): number {
+	calcCategoryScore(questionList: Array<QuestionModel>, categoryId: number | undefined): number {
 		let sum = 0;
 		for (let i = 0; i < questionList.length; i++) {
-			let fieldVal: number = this.props.form.getFieldValue(`radio-${questionList[i].questionId}`);
+			let fieldVal: number = this.props.form.getFieldValue(
+				`radio-${categoryId}-${questionList[i].questionId}`
+			);
 			if (typeof fieldVal === "number") {
 				sum += fieldVal;
 			} else if (questionList[i].hasOwnProperty("lowerBound")) {
@@ -132,7 +134,7 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 					<hr />
 					{categories.map(category => {
 						let sortedQuestions = sortQuestionsByQuestionSequence(category.questions);
-						let catScore = this.calcCategoryScore(sortedQuestions);
+						let catScore = this.calcCategoryScore(sortedQuestions, category.categoryId);
 						let catTotalScore = getCategoryTotalMaxScore(sortedQuestions);
 						let percentageScore = ((catScore / catTotalScore) * 100).toFixed(2);
 						totalScore += catScore;
