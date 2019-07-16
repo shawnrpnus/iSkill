@@ -3,7 +3,7 @@ import { FormComponentProps, WrappedFormUtils } from "antd/lib/form/Form";
 import * as React from "react";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router";
-import { getSurveyForm } from "../../actions/surveyFormActions";
+import { getSurveyForm, clearUpdatingForm } from "../../actions/surveyFormActions";
 import CategoryModel from "../../models/Category";
 import NumericChoiceQuestion from "../../models/NumericChoiceQuestion";
 import QuestionModel from "../../models/Question";
@@ -24,6 +24,7 @@ export interface IViewSurveyFormProps extends FormComponentProps, RouteComponent
 	getSurveyForm: typeof getSurveyForm;
 	surveyFormToViewOrUpdate?: SurveyFormModel;
 	surveyFormToPreview?: SurveyFormModel;
+	clearUpdatingForm: typeof clearUpdatingForm;
 }
 
 export interface IViewSurveyFormState {}
@@ -48,6 +49,10 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 				this.props.getSurveyForm(params.formId);
 			}
 		}
+	}
+
+	componentWillUnmount() {
+		this.props.clearUpdatingForm();
 	}
 
 	calcCategoryScore(questionList: Array<QuestionModel>): number {
@@ -211,7 +216,8 @@ const mapStateToProps = (state: any) => ({
 });
 
 const mapDispatchToProps = {
-	getSurveyForm
+	getSurveyForm,
+	clearUpdatingForm
 };
 
 export default connect(
