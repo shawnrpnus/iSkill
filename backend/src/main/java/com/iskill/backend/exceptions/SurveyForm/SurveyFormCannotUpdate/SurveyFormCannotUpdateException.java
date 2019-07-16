@@ -5,9 +5,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 
-public class SurveyFormCannotUpdatexception extends RuntimeException{
+public class SurveyFormCannotUpdateException extends RuntimeException{
 
-    public SurveyFormCannotUpdatexception(String message){
+    public SurveyFormCannotUpdateException(String message){
         super(message);
     }
 }

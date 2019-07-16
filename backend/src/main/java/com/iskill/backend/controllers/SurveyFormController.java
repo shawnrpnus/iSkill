@@ -1,7 +1,6 @@
 package com.iskill.backend.controllers;
 
 import com.iskill.backend.models.SurveyForm;
-import com.iskill.backend.request.UpdateSurveyFormRequest;
 import com.iskill.backend.services.EmployeeService;
 import com.iskill.backend.services.SurveyFormService;
 import com.iskill.backend.services.ValidationService;
@@ -11,7 +10,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,14 +19,11 @@ import java.util.Map;
 public class SurveyFormController {
 
     private final SurveyFormService surveyFormService;
-    private final EmployeeService employeeService;
     private final ValidationService validationService;
 
     public SurveyFormController(SurveyFormService surveyFormService,
-                                EmployeeService employeeService,
                                 ValidationService validationService) {
         this.surveyFormService = surveyFormService;
-        this.employeeService = employeeService;
         this.validationService = validationService;
     }
 

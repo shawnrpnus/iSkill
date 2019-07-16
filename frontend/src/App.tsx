@@ -26,7 +26,6 @@ const App: React.FC = () => {
 									</Menu.Item>
 								</Menu>
 							</Layout.Sider>
-
 							<Layout.Content>
 								<Switch>
 									<Route

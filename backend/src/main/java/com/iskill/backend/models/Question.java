@@ -38,6 +38,7 @@ public class Question {
     protected String questionText;
 
     @OneToMany(mappedBy = "question")
+    @JsonIgnore
     protected List<Answer> answers = new ArrayList<>();
 
     @ManyToOne(optional = false)

@@ -406,6 +406,16 @@ class CreateUpdateSurveyForm extends React.Component<ICreateSurveyFormProps, ICr
 							<hr />
 						</Col>
 					</Row>
+					{this.props.errors.surveyFormCannotBeUpdated ? (
+						<Alert
+							showIcon
+							message={`Error: ${this.props.errors.surveyFormCannotBeUpdated}`}
+							type="error"
+							style={{ fontWeight: "bold", fontSize: "16px", textAlign: "center" }}
+						/>
+					) : (
+						""
+					)}
 					<Card
 						title={
 							<Row gutter={24} type="flex" justify="center">

@@ -8,6 +8,6 @@ import lombok.Setter;
 @Getter @Setter
 public class QuestionCannotDeleteExceptionResponse {
 
-    private String QuestionNotFound;
+    private String QuestionCannotDelete;
 
 }
