@@ -1,4 +1,4 @@
-import { CREATE_SURVEY_FORM, CREATE_NEW_FORM_SUCCESS, GET_SURVEY_FORM, UPDATE_FORM_SUCCESS, CLEAR_UPDATING_FORM, PREVIEW_SURVEY_FORM, CLEAR_PREVIEW_FORM } from "../actions/types";
+import { CREATE_SURVEY_FORM, CREATE_NEW_FORM_SUCCESS, GET_SURVEY_FORM, UPDATE_FORM_SUCCESS, CLEAR_UPDATING_FORM, PREVIEW_SURVEY_FORM, CLEAR_PREVIEW_FORM, GET_ALL_SURVEY_FORM } from "../actions/types";
 import SurveyForm from "../models/SurveyForm";
 
 const initialState = {
@@ -34,6 +34,11 @@ export default function (state = initialState, action: Action | any) {
 			return {
 				...state,
 				surveyFormToViewOrUpdate: action.surveyFormToViewOrUpdate
+			}
+		case GET_ALL_SURVEY_FORM:
+			return {
+				...state,
+				surveyForms: action.surveyForms
 			}
 		case PREVIEW_SURVEY_FORM:
 			return {

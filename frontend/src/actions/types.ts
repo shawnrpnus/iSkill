@@ -8,6 +8,7 @@ export const GET_ALL_TOOL_PROCESS = "GET_ALL_TOOL_PROCESS";
 
 //View / Update Survey Form
 export const GET_SURVEY_FORM = "GET_SURVEY_FORM";
+export const GET_ALL_SURVEY_FORM = "GET_ALL_SURVEY_FORM";
 export const UPDATE_FORM_SUCCESS = "UPDATE_FORM_SUCCESS";
 export const CLEAR_UPDATING_FORM = "CLEAR_UPDATING_FORM";
 

@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import Header from "./components/Layout/Header";
 import CreateUpdateSurveyForm from "./components/SurveyForm/CreateUpdateSurveyForm";
 import ViewSurveyForm from "./components/SurveyForm/ViewSurveyForm";
+import ViewAllSurveyForm from "./components/SurveyForm/ViewAllSurveyForm";
 
 const App: React.FC = () => {
 	return (
@@ -45,6 +46,12 @@ const App: React.FC = () => {
 										key="view"
 										path="/viewForm/:formId"
 										component={ViewSurveyForm}
+									/>
+									<Route
+										exact
+										key="view"
+										path="/viewAllForms"
+										component={ViewAllSurveyForm}
 									/>
 								</Switch>
 							</Layout.Content>

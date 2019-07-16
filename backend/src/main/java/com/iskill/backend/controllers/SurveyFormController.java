@@ -52,7 +52,7 @@ public class SurveyFormController {
         return new ResponseEntity<>(surveyForm, HttpStatus.OK);
     }
 
-    @GetMapping("/")
+    @GetMapping("/all")
     public ResponseEntity<?> getAllSurveyForms(){
         return new ResponseEntity<>(surveyFormService.getAllSurveyForms(), HttpStatus.OK);
     }

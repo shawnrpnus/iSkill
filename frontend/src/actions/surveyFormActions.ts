@@ -1,6 +1,6 @@
 import SurveyForm from "../models/SurveyForm";
 import axios from "axios";
-import { GET_ERRORS, CLEAR_ERRORS, CREATE_NEW_FORM_SUCCESS, UPDATE_FORM_SUCCESS, GET_SURVEY_FORM, CLEAR_UPDATING_FORM, PREVIEW_SURVEY_FORM, CLEAR_PREVIEW_FORM } from "./types";
+import { GET_ERRORS, CLEAR_ERRORS, CREATE_NEW_FORM_SUCCESS, UPDATE_FORM_SUCCESS, GET_SURVEY_FORM, CLEAR_UPDATING_FORM, PREVIEW_SURVEY_FORM, CLEAR_PREVIEW_FORM, GET_ALL_SURVEY_FORM } from "./types";
 
 
 export const clearStateErrors = () => ({
@@ -105,4 +105,22 @@ export const previewSurveyForm = (surveyForm: SurveyForm) => ({
 
 export const clearPreviewForm = () => ({
 	type: CLEAR_PREVIEW_FORM
+})
+
+export const getAllSurveyForms = () => {
+	return (dispatch: any) => {
+		axios.get("/api/surveyForm/all").then(response => {
+			dispatch(getAllSurveyFormSuccess(response.data))
+			console.log(response.data);
+		}).catch(err => {
+			console.log(err);
+			alert("Error fetching all survey forms");
+			console.log(err.response);
+		})
+	}
+}
+
+const getAllSurveyFormSuccess = (surveyForms: any) => ({
+	type: GET_ALL_SURVEY_FORM,
+	surveyForms: surveyForms
 })
