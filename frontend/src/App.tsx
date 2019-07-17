@@ -11,6 +11,14 @@ import ViewAllSurveyForm from "./components/SurveyForm/ViewAllSurveyForm";
 import SubMenu from "antd/lib/menu/SubMenu";
 
 const App: React.FC = () => {
+	let viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+	let siderProps = {};
+	if (viewportWidth <= 768) {
+		siderProps = {
+			collapsedWidth: "0"
+		};
+	}
+	console.log(viewportWidth);
 	return (
 		<Provider store={store}>
 			<Router>
@@ -20,13 +28,13 @@ const App: React.FC = () => {
 							<Header />
 						</Layout.Header>
 						<Layout style={{ minHeight: "100vh" }}>
-							<Layout.Sider breakpoint="md" collapsedWidth="0" theme="dark">
+							<Layout.Sider collapsible breakpoint="md" {...siderProps} theme="dark">
 								<Menu theme="dark" mode="inline" defaultOpenKeys={["Forms", "Eval"]}>
 									<SubMenu
 										title={
 											<span>
 												<Icon type="form" />
-												Forms
+												<span>Forms</span>
 											</span>
 										}
 										key="Forms"
@@ -42,7 +50,7 @@ const App: React.FC = () => {
 										title={
 											<span>
 												<Icon type="solution" />
-												Evaluations
+												<span>Evaluations</span>
 											</span>
 										}
 										key="Eval"
