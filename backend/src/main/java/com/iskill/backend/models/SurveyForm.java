@@ -1,6 +1,7 @@
 package com.iskill.backend.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
@@ -38,6 +39,7 @@ public class SurveyForm {
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
+    @JsonIgnore
     private Employee creator;
 
     @OneToMany(mappedBy = "surveyForm", cascade = {CascadeType.PERSIST, CascadeType.MERGE})

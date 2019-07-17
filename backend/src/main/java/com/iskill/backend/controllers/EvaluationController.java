@@ -35,10 +35,11 @@ public class EvaluationController {
             return errorMapRsp;
         }
         Evaluation newEvaluation = createEvaluationRequest.getEvaluation();
+        Long creatorEmployeeId = createEvaluationRequest.getCreatorEmployeeId();
         Long evaluatorEmployeeId = createEvaluationRequest.getEvaluatorEmployeeId();
         Long evaluateeEmployeeId = createEvaluationRequest.getEvaluateeEmployeeId();
         Long surveyFormId = createEvaluationRequest.getSurveyFormId();
-        Evaluation createdEvaluation = evaluationService.createNewEvaluation(newEvaluation, evaluatorEmployeeId,
+        Evaluation createdEvaluation = evaluationService.createNewEvaluation(newEvaluation, creatorEmployeeId, evaluatorEmployeeId,
                 evaluateeEmployeeId, surveyFormId);
         return new ResponseEntity<>(createdEvaluation, HttpStatus.CREATED);
     }
@@ -58,6 +59,12 @@ public class EvaluationController {
     @GetMapping("/getReceivedEvaluations")
     public ResponseEntity<?> getReceivedEvaluationsForEmployee(@RequestParam Long employeeId){
         List<Evaluation> evalList = evaluationService.getEmployeeReceivedEvaluations(employeeId);
+        return new ResponseEntity<>(evalList, HttpStatus.OK);
+    }
+
+    @GetMapping("/getCreatedEvaluations")
+    public ResponseEntity<?> getCreatedEvaluationsForEmployee(@RequestParam Long employeeId){
+        List<Evaluation> evalList = evaluationService.getEmployeeCreatedEvaluations(employeeId);
         return new ResponseEntity<>(evalList, HttpStatus.OK);
     }
 

@@ -14,4 +14,6 @@ public interface EvaluationRepository extends CrudRepository<Evaluation, Long> {
     List<Evaluation> findEvaluationByEvaluatorEmployeeId(Long employeeId);
 
     List<Evaluation> findEvaluationByEvaluateeEmployeeId(Long employeeId);
+
+    List<Evaluation> findEvaluationByCreatorEmployeeId(Long employeeId);
 }

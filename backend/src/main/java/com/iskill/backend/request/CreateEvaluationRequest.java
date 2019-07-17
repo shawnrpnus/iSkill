@@ -20,6 +20,8 @@ public class CreateEvaluationRequest {
     @Valid
     private Evaluation evaluation;
 
+    private Long creatorEmployeeId;
+
     private Long evaluatorEmployeeId;
 
     private Long evaluateeEmployeeId;

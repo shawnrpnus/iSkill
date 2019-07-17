@@ -29,13 +29,16 @@ public class EvaluationService {
         this.surveyFormService = surveyFormService;
     }
 
-    public Evaluation createNewEvaluation(Evaluation evaluation, Long evaluatorEmployeeId,
+    public Evaluation createNewEvaluation(Evaluation evaluation, Long creatorEmployeeId, Long evaluatorEmployeeId,
                                           Long evaluateeEmployeeId, Long surveyFormId){
         Employee evaluatorEmployee = employeeService.getEmployeeById(evaluatorEmployeeId);
-
+        Employee creatorEmployee = employeeService.getEmployeeById(creatorEmployeeId);
         Employee evaluateeEmployee = employeeService.getEmployeeById(evaluateeEmployeeId);
 
         SurveyForm surveyForm = surveyFormService.getSurveyForm(surveyFormId);
+
+        evaluation.setCreator(creatorEmployee);
+        creatorEmployee.getCreatedEvaluations().add(evaluation);
 
         evaluation.setEvaluator(evaluatorEmployee);
         evaluatorEmployee.getGivenEvaluations().add(evaluation);
@@ -61,6 +64,10 @@ public class EvaluationService {
         return evaluationRepository.findById(evaluationId).orElseThrow(
                 () -> new EvaluationNotFoundException(String.format("Evaluation with id: '%s' not found!", evaluationId))
         );
+    }
+
+    public List<Evaluation> getEmployeeCreatedEvaluations(Long creatorEmployeeId){
+        return evaluationRepository.findEvaluationByCreatorEmployeeId(creatorEmployeeId);
     }
 
     public List<Evaluation> getEmployeeGivenEvaluations(Long evaluatorEmployeeId){
@@ -114,6 +121,8 @@ public class EvaluationService {
     public void deleteEvaluation(Long evaluationId){
         Evaluation evaluationToDelete = getEvaluationById(evaluationId);
 
+        evaluationToDelete.getCreator().getCreatedEvaluations().remove(evaluationToDelete);
+        evaluationToDelete.setCreator(null);
         evaluationToDelete.getEvaluatee().getReceivedEvaluations().remove(evaluationToDelete);
         evaluationToDelete.setEvaluatee(null);
         evaluationToDelete.getEvaluator().getGivenEvaluations().remove(evaluationToDelete);
