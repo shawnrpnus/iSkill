@@ -142,7 +142,7 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 								</Button>
 							</Link>
 							<Popconfirm
-								title="Are you sure you want to delete this category?"
+								title="Are you sure you want to delete this form?"
 								onConfirm={() => this.deleteSelf()}
 								okText="Yes"
 								cancelText="No"

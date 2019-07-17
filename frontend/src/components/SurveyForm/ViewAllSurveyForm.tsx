@@ -1,17 +1,18 @@
+import { Button, Card, Col, Form, Icon, Input, notification, Popconfirm, Row, Table, Typography } from "antd";
+import { FormComponentProps } from "antd/lib/form/Form";
 import * as React from "react";
-import { Form, Select, Table, Divider, Tag, Card, Input, Button, Icon, Typography, Col, Row } from "antd";
-import { connect } from "react-redux";
-import { FormComponentProps, WrappedFormUtils } from "antd/lib/form/Form";
-import { RouteComponentProps } from "react-router";
-import { getAllSurveyForms } from "../../actions/surveyFormActions";
-import SurveyForm from "../../models/SurveyForm";
-import ReactDOM from "react-dom";
-import { Link } from "react-router-dom";
 import Highlighter from "react-highlight-words";
+import { connect } from "react-redux";
+import { RouteComponentProps } from "react-router";
+import { Link } from "react-router-dom";
+import { deleteSurveyForm, getAllSurveyForms } from "../../actions/surveyFormActions";
+import SurveyForm from "../../models/SurveyForm";
 
 export interface IViewAllSurveyFormProps extends FormComponentProps, RouteComponentProps<any> {
 	getAllSurveyForms: typeof getAllSurveyForms;
+	deleteSurveyForm: typeof deleteSurveyForm;
 	surveyForms: typeof SurveyForm[];
+	errors: any;
 }
 
 export interface IViewAllSurveyFormState {
@@ -119,9 +120,18 @@ class ViewAllSurveyForm extends React.Component<IViewAllSurveyFormProps, IViewAl
 		});
 	};
 
+	deleteForm(surveyFormId: any) {
+		this.props.deleteSurveyForm(surveyFormId, this.props.history);
+	}
+
+	openNotification = () => {
+		notification.error({
+			message: "An Error Occured While Deleting",
+			description: this.props.errors.surveyFormCannotDelete
+		});
+	};
+
 	public render() {
-		let filteredInfo: any = this.state;
-		// let list = this.props.surveyForms.map(surveyFormItem => <li>{surveyFormItem}</li>)
 		const dataSource = this.props.surveyForms;
 		const columns = [
 			{
@@ -155,17 +165,32 @@ class ViewAllSurveyForm extends React.Component<IViewAllSurveyFormProps, IViewAl
 				dataIndex: "evaluations.length"
 			},
 			{
-				title: "Link",
+				title: "Actions",
 				dataIndex: "surveyFormId",
-				key: "link",
-				render: (text: any) => (
-					<Link to={"viewForm/" + text}>
-						<Button type="primary" shape="circle" icon="search" />
-					</Link>
+				key: "actions",
+				render: (surveyFormId: any) => (
+					<React.Fragment>
+						<Link to={"viewForm/" + surveyFormId}>
+							<Button type="primary" shape="circle" icon="search" />
+						</Link>
+						&nbsp;
+						<Popconfirm
+							title="Are you sure you want to delete this form?"
+							onConfirm={() => this.deleteForm(surveyFormId)}
+							okText="Yes"
+							cancelText="No"
+							placement="topRight"
+						>
+							<Button type="danger" shape="circle" icon="delete" />
+						</Popconfirm>
+					</React.Fragment>
 				)
 			}
 		];
 
+		if (this.props.errors.surveyFormCannotDelete) {
+			this.openNotification();
+		}
 		return (
 			<div style={{ padding: "2vw 5vw 0 5vw" }}>
 				<Row>
@@ -173,6 +198,18 @@ class ViewAllSurveyForm extends React.Component<IViewAllSurveyFormProps, IViewAl
 						<Typography.Title style={{ textAlign: "center" }}>View All Forms</Typography.Title>
 						<hr />
 					</Col>
+					{/* <Col span={24}>
+						{this.props.errors.surveyFormCannotDelete ? (
+							<Alert
+								type="error"
+								message="An Error Occurred While Deleting"
+								description={this.props.errors.surveyFormCannotDelete}
+								showIcon
+							/>
+						) : (
+							""
+						)}
+					</Col> */}
 				</Row>
 				<Card>
 					<Table
@@ -190,12 +227,14 @@ class ViewAllSurveyForm extends React.Component<IViewAllSurveyFormProps, IViewAl
 const wrappedViewAllSurveyForm = Form.create({ name: "view_all_survey_form" })(ViewAllSurveyForm);
 
 const mapStateToProps = (state: any) => ({
-	surveyForms: state.surveyForm.surveyForms
+	surveyForms: state.surveyForm.surveyForms,
+	errors: state.errors
 });
 
 //action creators
 const mapDispatchToProps = {
-	getAllSurveyForms
+	getAllSurveyForms,
+	deleteSurveyForm
 };
 
 export default connect(
