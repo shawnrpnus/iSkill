@@ -3,7 +3,12 @@ import { FormComponentProps, WrappedFormUtils } from "antd/lib/form/Form";
 import * as React from "react";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router";
-import { getSurveyForm, clearUpdatingForm, deleteSurveyForm } from "../../actions/surveyFormActions";
+import {
+	getSurveyForm,
+	clearUpdatingForm,
+	deleteSurveyForm,
+	clearStateErrors
+} from "../../actions/surveyFormActions";
 import CategoryModel from "../../models/Category";
 import NumericChoiceQuestion from "../../models/NumericChoiceQuestion";
 import QuestionModel from "../../models/Question";
@@ -27,6 +32,7 @@ export interface IViewSurveyFormProps extends FormComponentProps, RouteComponent
 	surveyFormToPreview?: SurveyFormModel;
 	clearUpdatingForm: typeof clearUpdatingForm;
 	deleteSurveyForm: typeof deleteSurveyForm;
+	clearStateErrors: typeof clearStateErrors;
 	errors: any;
 }
 
@@ -56,6 +62,7 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 
 	componentWillUnmount() {
 		this.props.clearUpdatingForm();
+		this.props.clearStateErrors();
 	}
 
 	calcCategoryScore(questionList: Array<QuestionModel>, categoryId: number | undefined): number {
@@ -154,8 +161,6 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 									message="An Error Occurred While Deleting"
 									description={this.props.errors.surveyFormCannotDelete}
 									showIcon
-									banner
-									closable={true}
 								/>
 							) : (
 								""
@@ -278,7 +283,8 @@ const mapStateToProps = (state: any) => ({
 const mapDispatchToProps = {
 	getSurveyForm,
 	clearUpdatingForm,
-	deleteSurveyForm
+	deleteSurveyForm,
+	clearStateErrors
 };
 
 export default connect(
