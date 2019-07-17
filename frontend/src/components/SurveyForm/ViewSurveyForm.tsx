@@ -1,9 +1,9 @@
-import { Card, Col, Form, Radio, Row, Typography, Button, Icon } from "antd";
+import { Card, Col, Form, Radio, Row, Typography, Button, Icon, Popconfirm, Alert } from "antd";
 import { FormComponentProps, WrappedFormUtils } from "antd/lib/form/Form";
 import * as React from "react";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router";
-import { getSurveyForm, clearUpdatingForm } from "../../actions/surveyFormActions";
+import { getSurveyForm, clearUpdatingForm, deleteSurveyForm } from "../../actions/surveyFormActions";
 import CategoryModel from "../../models/Category";
 import NumericChoiceQuestion from "../../models/NumericChoiceQuestion";
 import QuestionModel from "../../models/Question";
@@ -26,6 +26,8 @@ export interface IViewSurveyFormProps extends FormComponentProps, RouteComponent
 	surveyFormToViewOrUpdate?: SurveyFormModel;
 	surveyFormToPreview?: SurveyFormModel;
 	clearUpdatingForm: typeof clearUpdatingForm;
+	deleteSurveyForm: typeof deleteSurveyForm;
+	errors: any;
 }
 
 export interface IViewSurveyFormState {}
@@ -72,6 +74,24 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 		return sum;
 	}
 
+	deleteSelf() {
+		if (this.props.surveyFormToViewOrUpdate && this.props.match) {
+			let surveyFormId = this.props.surveyFormToViewOrUpdate.surveyFormId;
+			let params: IRouteParams = this.props.match.params;
+			if (surveyFormId && params.formId && surveyFormId === +params.formId) {
+				this.props.deleteSurveyForm(surveyFormId, this.props.history);
+			} else {
+				alert(
+					`ERROR: route id does not match survey form id. SurveyFormId: ${surveyFormId}, ParamFormId: ${
+						params.formId
+					}`
+				);
+			}
+		} else {
+			alert("ERROR: Survey form or route not defined");
+		}
+	}
+
 	public render() {
 		let surveyFormName = "";
 		let toolProcessName = "";
@@ -109,11 +129,37 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 						</Col>
 						<Col span={24}>
 							<Link to={`/updateForm/${surveyFormId}`}>
-								<Button type="primary">
+								<Button type="primary" size="large">
 									<Icon type="edit" />
 									Edit Form
 								</Button>
 							</Link>
+							<Popconfirm
+								title="Are you sure you want to delete this category?"
+								onConfirm={() => this.deleteSelf()}
+								okText="Yes"
+								cancelText="No"
+								placement="topRight"
+							>
+								<Button type="danger" size="large">
+									<Icon type="delete" />
+									Delete Form
+								</Button>
+							</Popconfirm>
+						</Col>
+						<Col span={24}>
+							{this.props.errors.surveyFormCannotDelete ? (
+								<Alert
+									type="error"
+									message="An Error Occurred While Deleting"
+									description={this.props.errors.surveyFormCannotDelete}
+									showIcon
+									banner
+									closable={true}
+								/>
+							) : (
+								""
+							)}
 						</Col>
 					</Row>
 				)}
@@ -225,12 +271,14 @@ const wrappedViewSurveyForm = Form.create({ name: "view_survey_form" })(ViewSurv
 
 const mapStateToProps = (state: any) => ({
 	surveyFormToViewOrUpdate: state.surveyForm.surveyFormToViewOrUpdate,
-	surveyFormToPreview: state.surveyForm.surveyFormToPreview
+	surveyFormToPreview: state.surveyForm.surveyFormToPreview,
+	errors: state.errors
 });
 
 const mapDispatchToProps = {
 	getSurveyForm,
-	clearUpdatingForm
+	clearUpdatingForm,
+	deleteSurveyForm
 };
 
 export default connect(
