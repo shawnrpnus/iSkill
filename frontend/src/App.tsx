@@ -24,6 +24,9 @@ const App: React.FC = () => {
 									<Menu.Item>
 										<Link to="/createForm">Create New Form</Link>
 									</Menu.Item>
+									<Menu.Item>
+										<Link to="/viewAllForms">My Forms</Link>
+									</Menu.Item>
 								</Menu>
 							</Layout.Sider>
 							<Layout.Content>

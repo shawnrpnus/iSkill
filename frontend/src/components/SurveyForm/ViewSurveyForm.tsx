@@ -1,4 +1,4 @@
-import { Card, Col, Form, Radio, Row, Typography } from "antd";
+import { Card, Col, Form, Radio, Row, Typography, Button, Icon } from "antd";
 import { FormComponentProps, WrappedFormUtils } from "antd/lib/form/Form";
 import * as React from "react";
 import { connect } from "react-redux";
@@ -14,6 +14,7 @@ import {
 	sortQuestionsByQuestionSequence
 } from "../../utils/SurveyFormUtils";
 import "./ViewSurveyForm.css";
+import { Link } from "react-router-dom";
 
 const COL_ONE_SIZE = 8;
 const COL_TWO_SIZE = 8;
@@ -76,6 +77,7 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 		let toolProcessName = "";
 		let skillLevel = "";
 		let categories: Array<CategoryModel> = [];
+		let surveyFormId = null;
 		if (this.props.surveyFormToPreview) {
 			surveyFormName = this.props.surveyFormToPreview.surveyFormName;
 			toolProcessName = this.props.surveyFormToPreview.toolProcess
@@ -88,6 +90,7 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 			toolProcessName = this.props.surveyFormToViewOrUpdate.toolProcess.toolProcessName;
 			skillLevel = this.props.surveyFormToViewOrUpdate.skillLevel;
 			categories = this.props.surveyFormToViewOrUpdate.categories;
+			surveyFormId = this.props.surveyFormToViewOrUpdate.surveyFormId;
 		}
 		categories = sortCategoriesByCategorySequence(categories);
 		let totalScore = 0;
@@ -103,6 +106,14 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 								Viewing Evaluation Form
 							</Typography.Title>
 							<hr />
+						</Col>
+						<Col span={24}>
+							<Link to={`/updateForm/${surveyFormId}`}>
+								<Button type="primary">
+									<Icon type="edit" />
+									Edit Form
+								</Button>
+							</Link>
 						</Col>
 					</Row>
 				)}
