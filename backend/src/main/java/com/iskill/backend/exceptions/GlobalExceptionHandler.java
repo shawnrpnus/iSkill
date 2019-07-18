@@ -12,6 +12,8 @@ import com.iskill.backend.exceptions.Question.QuestionNotFound.QuestionNotFoundE
 import com.iskill.backend.exceptions.Question.QuestionNotFound.QuestionNotFoundExceptionResponse;
 import com.iskill.backend.exceptions.SurveyForm.CreateSurveyForm.CreateNewSurveyFormException;
 import com.iskill.backend.exceptions.SurveyForm.CreateSurveyForm.CreateNewSurveyFormExceptionResponse;
+import com.iskill.backend.exceptions.SurveyForm.DeleteSurveyForm.SurveyFormCannotDeleteException;
+import com.iskill.backend.exceptions.SurveyForm.DeleteSurveyForm.SurveyFormCannotDeleteExceptionResponse;
 import com.iskill.backend.exceptions.SurveyForm.SurveyFormCannotUpdate.SurveyFormCannotUpdateException;
 import com.iskill.backend.exceptions.SurveyForm.SurveyFormCannotUpdate.SurveyFormCannotUpdateExceptionResponse;
 import com.iskill.backend.exceptions.SurveyForm.SurveyFormNotFound.SurveyFormNotFoundException;
@@ -69,6 +71,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler
     public final ResponseEntity<Object> handleSurveyFormCannotUpdateException(SurveyFormCannotUpdateException ex, WebRequest req){
         SurveyFormCannotUpdateExceptionResponse expRsp = new SurveyFormCannotUpdateExceptionResponse(ex.getMessage()); //format to json response
+        return new ResponseEntity<>(expRsp, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public final ResponseEntity<Object> handleSurveyFormCannotDeleteException(SurveyFormCannotDeleteException ex, WebRequest req){
+        SurveyFormCannotDeleteExceptionResponse expRsp = new SurveyFormCannotDeleteExceptionResponse(ex.getMessage()); //format to json response
         return new ResponseEntity<>(expRsp, HttpStatus.BAD_REQUEST);
     }
 

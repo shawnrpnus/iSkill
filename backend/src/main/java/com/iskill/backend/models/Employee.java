@@ -41,7 +41,6 @@ public class Employee {
     private Role role;
 
     @OneToMany(mappedBy = "creator")
-    @JsonIgnore
     private List<SurveyForm> createdSurveyForms = new ArrayList<>();
 
     @OneToMany(mappedBy = "evaluator")
@@ -49,6 +48,10 @@ public class Employee {
 
     @OneToMany(mappedBy = "evaluatee")
     private List<Evaluation> givenEvaluations = new ArrayList<>();
+
+    @OneToMany(mappedBy = "creator")
+    private List<Evaluation> createdEvaluations = new ArrayList<>();
+
 
     public Employee(@NotBlank(message = "Name is required") String name,
                     @NotBlank(message = "Username is required") @Size(max = 12, min = 4, message = "Please use 4 to 12 characters") String username,

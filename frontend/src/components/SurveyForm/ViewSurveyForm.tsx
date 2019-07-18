@@ -1,9 +1,14 @@
-import { Card, Col, Form, Radio, Row, Typography } from "antd";
+import { Card, Col, Form, Radio, Row, Typography, Button, Icon, Popconfirm, Alert } from "antd";
 import { FormComponentProps, WrappedFormUtils } from "antd/lib/form/Form";
 import * as React from "react";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router";
-import { getSurveyForm } from "../../actions/surveyFormActions";
+import {
+	getSurveyForm,
+	clearUpdatingForm,
+	deleteSurveyForm,
+	clearStateErrors
+} from "../../actions/surveyFormActions";
 import CategoryModel from "../../models/Category";
 import NumericChoiceQuestion from "../../models/NumericChoiceQuestion";
 import QuestionModel from "../../models/Question";
@@ -14,6 +19,7 @@ import {
 	sortQuestionsByQuestionSequence
 } from "../../utils/SurveyFormUtils";
 import "./ViewSurveyForm.css";
+import { Link } from "react-router-dom";
 
 const COL_ONE_SIZE = 8;
 const COL_TWO_SIZE = 8;
@@ -24,6 +30,10 @@ export interface IViewSurveyFormProps extends FormComponentProps, RouteComponent
 	getSurveyForm: typeof getSurveyForm;
 	surveyFormToViewOrUpdate?: SurveyFormModel;
 	surveyFormToPreview?: SurveyFormModel;
+	clearUpdatingForm: typeof clearUpdatingForm;
+	deleteSurveyForm: typeof deleteSurveyForm;
+	clearStateErrors: typeof clearStateErrors;
+	errors: any;
 }
 
 export interface IViewSurveyFormState {}
@@ -50,10 +60,17 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 		}
 	}
 
-	calcCategoryScore(questionList: Array<QuestionModel>): number {
+	componentWillUnmount() {
+		this.props.clearUpdatingForm();
+		this.props.clearStateErrors();
+	}
+
+	calcCategoryScore(questionList: Array<QuestionModel>, categoryId: number | undefined): number {
 		let sum = 0;
 		for (let i = 0; i < questionList.length; i++) {
-			let fieldVal: number = this.props.form.getFieldValue(`radio-${questionList[i].questionId}`);
+			let fieldVal: number = this.props.form.getFieldValue(
+				`radio-${categoryId}-${questionList[i].questionId}`
+			);
 			if (typeof fieldVal === "number") {
 				sum += fieldVal;
 			} else if (questionList[i].hasOwnProperty("lowerBound")) {
@@ -64,11 +81,30 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 		return sum;
 	}
 
+	deleteSelf() {
+		if (this.props.surveyFormToViewOrUpdate && this.props.match) {
+			let surveyFormId = this.props.surveyFormToViewOrUpdate.surveyFormId;
+			let params: IRouteParams = this.props.match.params;
+			if (surveyFormId && params.formId && surveyFormId === +params.formId) {
+				this.props.deleteSurveyForm(surveyFormId, this.props.history);
+			} else {
+				alert(
+					`ERROR: route id does not match survey form id. SurveyFormId: ${surveyFormId}, ParamFormId: ${
+						params.formId
+					}`
+				);
+			}
+		} else {
+			alert("ERROR: Survey form or route not defined");
+		}
+	}
+
 	public render() {
 		let surveyFormName = "";
 		let toolProcessName = "";
 		let skillLevel = "";
 		let categories: Array<CategoryModel> = [];
+		let surveyFormId = null;
 		if (this.props.surveyFormToPreview) {
 			surveyFormName = this.props.surveyFormToPreview.surveyFormName;
 			toolProcessName = this.props.surveyFormToPreview.toolProcess
@@ -81,6 +117,7 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 			toolProcessName = this.props.surveyFormToViewOrUpdate.toolProcess.toolProcessName;
 			skillLevel = this.props.surveyFormToViewOrUpdate.skillLevel;
 			categories = this.props.surveyFormToViewOrUpdate.categories;
+			surveyFormId = this.props.surveyFormToViewOrUpdate.surveyFormId;
 		}
 		categories = sortCategoriesByCategorySequence(categories);
 		let totalScore = 0;
@@ -96,6 +133,38 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 								Viewing Evaluation Form
 							</Typography.Title>
 							<hr />
+						</Col>
+						<Col span={24}>
+							<Link to={`/updateForm/${surveyFormId}`}>
+								<Button type="primary" size="large">
+									<Icon type="edit" />
+									Edit Form
+								</Button>
+							</Link>
+							<Popconfirm
+								title="Are you sure you want to delete this form?"
+								onConfirm={() => this.deleteSelf()}
+								okText="Yes"
+								cancelText="No"
+								placement="topRight"
+							>
+								<Button type="danger" size="large">
+									<Icon type="delete" />
+									Delete Form
+								</Button>
+							</Popconfirm>
+						</Col>
+						<Col span={24}>
+							{this.props.errors.surveyFormCannotDelete ? (
+								<Alert
+									type="error"
+									message="An Error Occurred While Deleting"
+									description={this.props.errors.surveyFormCannotDelete}
+									showIcon
+								/>
+							) : (
+								""
+							)}
 						</Col>
 					</Row>
 				)}
@@ -127,7 +196,7 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 					<hr />
 					{categories.map(category => {
 						let sortedQuestions = sortQuestionsByQuestionSequence(category.questions);
-						let catScore = this.calcCategoryScore(sortedQuestions);
+						let catScore = this.calcCategoryScore(sortedQuestions, category.categoryId);
 						let catTotalScore = getCategoryTotalMaxScore(sortedQuestions);
 						let percentageScore = ((catScore / catTotalScore) * 100).toFixed(2);
 						totalScore += catScore;
@@ -207,11 +276,15 @@ const wrappedViewSurveyForm = Form.create({ name: "view_survey_form" })(ViewSurv
 
 const mapStateToProps = (state: any) => ({
 	surveyFormToViewOrUpdate: state.surveyForm.surveyFormToViewOrUpdate,
-	surveyFormToPreview: state.surveyForm.surveyFormToPreview
+	surveyFormToPreview: state.surveyForm.surveyFormToPreview,
+	errors: state.errors
 });
 
 const mapDispatchToProps = {
-	getSurveyForm
+	getSurveyForm,
+	clearUpdatingForm,
+	deleteSurveyForm,
+	clearStateErrors
 };
 
 export default connect(

@@ -195,8 +195,8 @@ public class SurveyFormService {
         SurveyForm surveyForm = getSurveyForm(surveyFormId);
 
         if (surveyForm.getEvaluations() != null && surveyForm.getEvaluations().size() > 0){ //has evaluations
-            throw new SurveyFormCannotDeleteException("Survey form cannot be deleted: There are evaluations " +
-                    surveyForm.getEvaluations().size() + "done using this survey form");
+            throw new SurveyFormCannotDeleteException("Survey form cannot be deleted as there are " +
+                    surveyForm.getEvaluations().size() + " evaluations already done using this survey form");
         }
         //clear associations - toolProcess, creator, categories
         surveyForm.getCreator().getCreatedSurveyForms().remove(surveyForm);

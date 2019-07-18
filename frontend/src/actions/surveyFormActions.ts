@@ -1,6 +1,7 @@
 import SurveyForm from "../models/SurveyForm";
 import axios from "axios";
-import { GET_ERRORS, CLEAR_ERRORS, CREATE_NEW_FORM_SUCCESS, UPDATE_FORM_SUCCESS, GET_SURVEY_FORM, CLEAR_UPDATING_FORM, PREVIEW_SURVEY_FORM, CLEAR_PREVIEW_FORM, GET_ALL_SURVEY_FORM } from "./types";
+import { GET_ERRORS, CLEAR_ERRORS, CREATE_NEW_FORM_SUCCESS, UPDATE_FORM_SUCCESS, GET_SURVEY_FORM, CLEAR_UPDATING_FORM, PREVIEW_SURVEY_FORM, CLEAR_PREVIEW_FORM, GET_ALL_SURVEY_FORM, DELETE_SURVEY_FORM } from "./types";
+import { History } from "history";
 
 
 export const clearStateErrors = () => ({
@@ -122,4 +123,21 @@ export const getAllSurveyForms = () => {
 const getAllSurveyFormSuccess = (surveyForms: any) => ({
 	type: GET_ALL_SURVEY_FORM,
 	surveyForms: surveyForms
+})
+
+export const deleteSurveyForm = (surveyFormId: number, history: History) => {
+	return (dispatch: any) => {
+		axios.delete(`/api/surveyForm/deleteSurveyForm?surveyFormId=${surveyFormId}`).then(response => {
+			dispatch(deleteSurveyFormSuccess(response.data))
+			alert("Form deleted!");
+			history.push("/viewAllForms");
+		}).catch(err => {
+			dispatch(getErrors(err.response.data));
+		})
+	}
+}
+
+const deleteSurveyFormSuccess = (surveyFormId: number) => ({
+	type: DELETE_SURVEY_FORM,
+	surveyFormId: surveyFormId
 })

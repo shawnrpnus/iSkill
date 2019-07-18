@@ -29,6 +29,11 @@ public class Evaluation {
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
     @JsonIgnore
+    private Employee creator;
+
+    @ManyToOne
+    @JoinColumn(nullable = false, updatable = false)
+    @JsonIgnore
     private Employee evaluator;
 
     @ManyToOne

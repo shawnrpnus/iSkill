@@ -8,6 +8,6 @@ import lombok.Setter;
 @Getter @Setter
 public class SurveyFormCannotDeleteExceptionResponse {
 
-    private String SurveyFormCannotDelete;
+    private String surveyFormCannotDelete;
 
 }
