@@ -52,6 +52,11 @@ public class SurveyFormController {
         return new ResponseEntity<>(surveyFormService.getAllSurveyForms(), HttpStatus.OK);
     }
 
+    @GetMapping("/all/{employeeId}")
+    public ResponseEntity<?> getAllSurveyFormsByEmployeeId(@PathVariable Long employeeId){
+        return new ResponseEntity<>(surveyFormService.getAllSurveyFormsByEmployeeId(employeeId), HttpStatus.OK);
+    }
+
     @PostMapping("/updateSurveyForm")
     public ResponseEntity<?> updateSurveyForm(@Valid @RequestBody SurveyForm surveyForm,
                                               BindingResult result) {

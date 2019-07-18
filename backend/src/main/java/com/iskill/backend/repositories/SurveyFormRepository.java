@@ -14,4 +14,6 @@ public interface SurveyFormRepository extends CrudRepository<SurveyForm, Long> {
     List<SurveyForm> findAll();
 
     Optional<SurveyForm> findBySurveyFormNameIgnoreCase(String formName);
+
+    List<SurveyForm> findSurveyFormByCreatorEmployeeId(Long employeeId);
 }

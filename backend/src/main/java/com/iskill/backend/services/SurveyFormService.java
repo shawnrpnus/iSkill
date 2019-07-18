@@ -82,6 +82,10 @@ public class SurveyFormService {
         return surveyFormRepository.findAll();
     }
 
+    public List<SurveyForm> getAllSurveyFormsByEmployeeId(Long employeeId) {
+        return surveyFormRepository.findSurveyFormByCreatorEmployeeId(employeeId);
+    }
+
     //update categories & questions, toolProcess & own attributes
     public SurveyForm updateSurveyForm(SurveyForm receivedSurveyForm) {
 
