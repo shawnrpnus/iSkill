@@ -1,7 +1,7 @@
 import Employee from "./Employee";
 
 export default class Role {
-	roleId?: Number;
+	roleId?: number;
 
 	name: String;
 

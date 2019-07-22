@@ -9,6 +9,8 @@ export default class Employee {
 
 	username: String;
 
+	password: String;
+
 	costCenter: String;
 
 	shift: String;
@@ -24,12 +26,14 @@ export default class Employee {
 	constructor(
 		$name: String,
 		$username: String,
+		$password: String,
 		$costCenter: String,
 		$shift: String,
 		$role: Role
 	) {
 		this.name = $name;
 		this.username = $username;
+		this.password = $password;
 		this.costCenter = $costCenter;
 		this.shift = $shift;
 		this.role = $role;

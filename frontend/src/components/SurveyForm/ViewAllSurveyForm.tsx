@@ -33,7 +33,6 @@ class ViewAllSurveyForm extends React.Component<IViewAllSurveyFormProps, IViewAl
 	componentWillMount() {
 		this.props.getAllSurveyForms();
 		console.log(this.props);
-
 		if (this.props.match) {
 		}
 	}
