@@ -14,12 +14,12 @@ interface Action {
 export default function (state = initialState, action: Action | any) {
 	switch (action.type) {
         case GET_LOGIN_DETAILS:
-            alert("Create success!");
+            // alert("Create success!");
             // return state;
-            window.location.reload();
+            // window.location.reload();
             return {
                 ...state,
-                employeeLoggedIn: action.employeeLoggedIn
+                employeeLoggedIn: action.payload
             }
         case REGISTER_NEW_EMPLOYEE:
             return {

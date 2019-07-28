@@ -12,7 +12,7 @@ import Employee from '../../models/Employee';
 export interface ILoginEmployeeProps extends FormComponentProps, RouteComponentProps<any> {
   getLoginDetails: typeof getLoginDetails;
   errors: any;
-  employeeToCreate: Employee;
+  // employeeToCreate: Employee;
   employeeLoggedIn: Employee;
 }
 

@@ -2,6 +2,7 @@ import axios from "axios";
 import { GET_ERRORS, GET_LOGIN_DETAILS, REGISTER_NEW_EMPLOYEE } from "./types";
 import Employee from "../models/Employee";
 import Role from "../models/Role";
+import setAuthorizationToken from "../utils/setAuthorizationToken";
 
 const getErrors = (errorData: any) => ({
 	type: GET_ERRORS,
@@ -25,7 +26,11 @@ export const getLoginDetails = (
 			  })
 			.then(response => {
 				console.log(response);
+				const token = response.data.token;
+				localStorage.setItem('jwtToken',response.data);
+				setAuthorizationToken(token);
 				dispatch(getLoginDetailsSuccess(response.data));
+				
 				console.log("dispatched");
 			})
 			.catch(err => {
