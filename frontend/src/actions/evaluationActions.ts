@@ -1,6 +1,7 @@
-import { CreateEvaluationRequest } from "../models/CreateEvaluationRequest";
+import { CreateEvaluationRequest } from "../models/CreateUpdateEvaluationRequest";
 import axios from "axios";
-import { GET_ERRORS, CREATE_EVALUATION_SUCCESS } from "./types";
+import { GET_ERRORS, CREATE_EVALUATION_SUCCESS, GET_EVALUATION_SUCCESS } from "./types";
+import Evaluation from "../models/Evaluation";
 
 const getErrors = (errorData: any) => ({
     type: GET_ERRORS,
@@ -32,4 +33,32 @@ const createEvaluationSuccess = (newEvaluation: any) => ({
     type: CREATE_EVALUATION_SUCCESS,
     newEvaluation: newEvaluation
 })
+
+
+export const getEvaluation = (
+    evaluationId: number
+) => {
+    let url = `/api/evaluation/${evaluationId}`;
+    return (dispatch: any) => {
+        axios
+            .get(url)
+            .then(response => {
+                dispatch(getEvaluationSuccess(response.data));
+            })
+            .catch(err => {
+                dispatch(getErrors(err));
+                // if (err.response.status === 500) {
+                // 	alert("Internal server error has occured. Please contact the system administrator.");
+                // 	console.log(err.response)
+                // }
+            });
+    };
+};
+
+const getEvaluationSuccess = (evaluation: Evaluation) => ({
+    type: GET_EVALUATION_SUCCESS,
+    evaluation: evaluation
+})
+
+
 

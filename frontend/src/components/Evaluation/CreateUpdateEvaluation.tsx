@@ -3,31 +3,40 @@ import { FormComponentProps } from "antd/lib/form";
 import * as React from "react";
 import { connect } from "react-redux";
 import { getEmployeesForManager } from "../../actions/employeeAction";
-import { createEvaluation } from "../../actions/evaluationActions";
+import { createEvaluation, getEvaluation } from "../../actions/evaluationActions";
 import { getAllSurveyForms, clearStateErrors } from "../../actions/surveyFormActions";
 import Category from "../../models/Category";
 import {
 	CreateEvaluationRequest,
 	EvaluationReqObject,
 	NumericChoiceAnswerReqObject,
-	NumericChoiceQuestionReqObject
-} from "../../models/CreateEvaluationRequest";
+	NumericChoiceQuestionReqObject,
+	UpdateEvaluationRequest
+} from "../../models/CreateUpdateEvaluationRequest";
 import Employee from "../../models/Employee";
 import SurveyForm from "../../models/SurveyForm";
 import { sortCategoriesByCategorySequence } from "../../utils/SurveyFormUtils";
 import SurveyFormTemplate from "../SurveyForm/SurveyFormTemplate";
+import { RouteComponentProps } from "react-router-dom";
+import Evaluation from "../../models/Evaluation";
 
-export interface ICreateEvaluationProps extends FormComponentProps {
+export interface ICreateEvaluationProps extends FormComponentProps, RouteComponentProps {
 	errors: any;
 	employees: Array<Employee>;
 	surveyForms: Array<SurveyForm>;
+	evaluationToUpdate?: Evaluation;
 	getEmployeesForManager: typeof getEmployeesForManager;
 	getAllSurveyForms: typeof getAllSurveyForms;
 	createEvaluation: typeof createEvaluation;
 	clearStateErrors: typeof clearStateErrors;
+	getEvaluation: typeof getEvaluation;
 }
 
 export interface ICreateEvaluationState {}
+
+interface IRouteParams {
+	evaluationId?: number;
+}
 
 class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEvaluationState> {
 	constructor(props: ICreateEvaluationProps) {
@@ -36,11 +45,33 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 		this.state = {};
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.getCategoriesFromSurveyForm = this.getCategoriesFromSurveyForm.bind(this);
+		this.generateCreateEvaluationRequest = this.generateCreateEvaluationRequest.bind(this);
+		this.generateUpdateEvaluationRequest = this.generateUpdateEvaluationRequest.bind(this);
+		this.handleSaveAsDraft = this.handleSaveAsDraft.bind(this);
+		this.generateAnswerArray = this.generateAnswerArray.bind(this);
 	}
 
 	componentWillMount() {
 		this.props.getEmployeesForManager(1); // TODO: Use dynamic id based on who is logged in
 		this.props.getAllSurveyForms();
+		let params: IRouteParams = this.props.match.params;
+		if (params.evaluationId) {
+			//viewing or updating
+			this.props.getEvaluation(params.evaluationId); //sets this.props.evaluationToUpdate
+		}
+	}
+
+	getSurveyFormIdForEvaluation(evaluationId: number) {
+		for (let i = 0; i < this.props.surveyForms.length; i++) {
+			let surveyForm = this.props.surveyForms[i];
+			if (surveyForm.evaluations) {
+				for (let j = 0; j < surveyForm.evaluations.length; j++) {
+					if (surveyForm.evaluations[j].evaluationId === evaluationId) {
+						return surveyForm.surveyFormId;
+					}
+				}
+			}
+		}
 	}
 
 	componentWillUnmount() {
@@ -52,8 +83,19 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 		if (Object.keys(this.props.errors).length !== 0) this.props.clearStateErrors();
 	}
 
+	handleSaveAsDraft(e: React.FormEvent<EventTarget>) {
+		e.preventDefault();
+	}
+
 	handleSubmit(e: React.FormEvent<EventTarget>) {
 		e.preventDefault();
+
+		if (!this.props.evaluationToUpdate) {
+			this.props.createEvaluation(this.generateCreateEvaluationRequest());
+		}
+	}
+
+	generateCreateEvaluationRequest() {
 		let creatorEmployeeId = 1;
 		let evaluatorEmployeeId = 1;
 		let evaluateeEmployeeId = this.props.form.getFieldValue("evaluatee");
@@ -68,6 +110,30 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 			surveyFormId,
 			evaluationReqObject
 		);
+
+		createEvaluationRequest.evaluation.answers = this.generateAnswerArray();
+		return createEvaluationRequest;
+	}
+
+	generateUpdateEvaluationRequest() {
+		let evaluatorEmployeeId = 1;
+		let evaluateeEmployeeId = this.props.form.getFieldValue("evaluatee");
+		let surveyFormId = this.props.form.getFieldValue("surveyForm");
+		let status = "ONGOING";
+		let remarks = this.props.form.getFieldValue("remarks");
+		let evaluationReqObject = new EvaluationReqObject(status, remarks);
+		let updateEvaluationRequest = new UpdateEvaluationRequest(
+			evaluatorEmployeeId,
+			evaluateeEmployeeId,
+			surveyFormId,
+			evaluationReqObject
+		);
+
+		updateEvaluationRequest.evaluation.answers = this.generateAnswerArray();
+		return updateEvaluationRequest;
+	}
+
+	generateAnswerArray() {
 		let answerArray: Array<NumericChoiceAnswerReqObject> = [];
 		let surveyFormCategories = this.getCategoriesFromSurveyForm();
 		for (let i = 0; i < surveyFormCategories.length; i++) {
@@ -84,9 +150,7 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 				}
 			}
 		}
-		createEvaluationRequest.evaluation.answers = answerArray;
-		this.props.createEvaluation(createEvaluationRequest);
-		// console.log(JSON.stringify(createEvaluationRequest));
+		return answerArray;
 	}
 
 	getCategoriesFromSurveyForm() {
@@ -103,8 +167,12 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 	}
 
 	public render() {
+		console.log(this.props.evaluationToUpdate);
 		const { getFieldDecorator } = this.props.form;
 		let surveyFormId = this.props.form.getFieldValue("surveyForm");
+		if (!surveyFormId && this.props.evaluationToUpdate && this.props.evaluationToUpdate.evaluationId) {
+			surveyFormId = this.getSurveyFormIdForEvaluation(this.props.evaluationToUpdate.evaluationId);
+		}
 		let surveyFormName = "";
 		let toolProcessName = "";
 		let skillLevel = "";
@@ -125,7 +193,7 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 				<Row>
 					<Col span={24}>
 						<Typography.Title style={{ textAlign: "center" }}>
-							Creating Evaluation
+							{this.props.evaluationToUpdate ? "Updating Evaluation" : "Creating Evaluation"}
 						</Typography.Title>
 						<hr />
 					</Col>
@@ -140,7 +208,11 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 									hasFeedback={true}
 									label="Select an employee to evaluate:"
 								>
-									{getFieldDecorator("evaluatee", {})(
+									{getFieldDecorator("evaluatee", {
+										initialValue: this.props.evaluationToUpdate
+											? this.props.evaluationToUpdate.evaluatee.employeeId
+											: undefined
+									})(
 										<Select
 											placeholder="Select Employee"
 											size="large"
@@ -165,7 +237,15 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 									hasFeedback={true}
 									label="Select an evaluation form:"
 								>
-									{getFieldDecorator("surveyForm", {})(
+									{getFieldDecorator("surveyForm", {
+										initialValue:
+											this.props.evaluationToUpdate &&
+											this.props.evaluationToUpdate.evaluationId
+												? this.getSurveyFormIdForEvaluation(
+														this.props.evaluationToUpdate.evaluationId
+												  )
+												: undefined
+									})(
 										<Select
 											placeholder="Select Form"
 											size="large"
@@ -190,9 +270,11 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 									hasFeedback={true}
 									label="Remarks:"
 								>
-									{getFieldDecorator("remarks", {})(
-										<Input.TextArea autosize={{ minRows: 2 }} />
-									)}
+									{getFieldDecorator("remarks", {
+										initialValue: this.props.evaluationToUpdate
+											? this.props.evaluationToUpdate.remarks
+											: undefined
+									})(<Input.TextArea autosize={{ minRows: 2 }} />)}
 								</Form.Item>
 							</Col>
 						</Row>
@@ -205,6 +287,11 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 							skillLevel={skillLevel}
 							categories={categories}
 							form={this.props.form}
+							answers={
+								this.props.evaluationToUpdate
+									? this.props.evaluationToUpdate.answers
+									: undefined
+							}
 						/>
 					) : (
 						""
@@ -213,7 +300,12 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 						<Row type="flex" justify="end" gutter={8}>
 							<Col md={6} sm={8} xs={10}>
 								<Affix offsetBottom={10}>
-									<Button type="primary" size="large" block>
+									<Button
+										type="primary"
+										size="large"
+										block
+										onClick={this.handleSaveAsDraft}
+									>
 										<Icon type="eye" />
 										Save as Draft
 									</Button>
@@ -246,14 +338,16 @@ const wrappedCreateEval = Form.create({ name: "create_evaluation" })(CreateEvalu
 const mapStateToProps = (state: any) => ({
 	errors: state.errors,
 	employees: state.employee.employeesForManager,
-	surveyForms: state.surveyForm.surveyForms
+	surveyForms: state.surveyForm.surveyForms,
+	evaluationToUpdate: state.evaluation.evaluationToViewOrUpdate
 });
 
 const mapDispatchToProps = {
 	getEmployeesForManager,
 	getAllSurveyForms,
 	createEvaluation,
-	clearStateErrors
+	clearStateErrors,
+	getEvaluation
 };
 
 export default connect(

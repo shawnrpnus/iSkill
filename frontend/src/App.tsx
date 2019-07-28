@@ -11,7 +11,7 @@ import ViewAllSurveyForm from "./components/SurveyForm/ViewAllSurveyForm";
 import SubMenu from "antd/lib/menu/SubMenu";
 import LoginEmployee from "./components/Employee/LoginEmployee";
 import RegisterEmployee from "./components/Employee/RegisterEmployee";
-import CreateEvaluation from "./components/Evaluation/CreateEvaluation";
+import CreateUpdateEvaluation from "./components/Evaluation/CreateUpdateEvaluation";
 
 const App: React.FC = () => {
 	let viewportWidth = window.innerWidth || document.documentElement.clientWidth;
@@ -103,7 +103,13 @@ const App: React.FC = () => {
 										exact
 										key="createEval"
 										path="/createEvaluation"
-										component={CreateEvaluation}
+										component={CreateUpdateEvaluation}
+									/>
+									<Route
+										exact
+										key="createEval"
+										path="/updateEvaluation/:evaluationId"
+										component={CreateUpdateEvaluation}
 									/>
 									<Route exact key="view" path="/login" component={LoginEmployee} />
 									<Route exact key="view" path="/register" component={RegisterEmployee} />
