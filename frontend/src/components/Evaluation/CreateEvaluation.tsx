@@ -4,7 +4,7 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { getEmployeesForManager } from "../../actions/employeeAction";
 import { createEvaluation } from "../../actions/evaluationActions";
-import { getAllSurveyForms } from "../../actions/surveyFormActions";
+import { getAllSurveyForms, clearStateErrors } from "../../actions/surveyFormActions";
 import Category from "../../models/Category";
 import {
 	CreateEvaluationRequest,
@@ -24,6 +24,7 @@ export interface ICreateEvaluationProps extends FormComponentProps {
 	getEmployeesForManager: typeof getEmployeesForManager;
 	getAllSurveyForms: typeof getAllSurveyForms;
 	createEvaluation: typeof createEvaluation;
+	clearStateErrors: typeof clearStateErrors;
 }
 
 export interface ICreateEvaluationState {}
@@ -40,6 +41,15 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 	componentWillMount() {
 		this.props.getEmployeesForManager(1); // TODO: Use dynamic id based on who is logged in
 		this.props.getAllSurveyForms();
+	}
+
+	componentWillUnmount() {
+		//clear errors
+		this.props.clearStateErrors();
+	}
+
+	componentWillUpdate() {
+		if (Object.keys(this.props.errors).length !== 0) this.props.clearStateErrors();
 	}
 
 	handleSubmit(e: React.FormEvent<EventTarget>) {
@@ -242,7 +252,8 @@ const mapStateToProps = (state: any) => ({
 const mapDispatchToProps = {
 	getEmployeesForManager,
 	getAllSurveyForms,
-	createEvaluation
+	createEvaluation,
+	clearStateErrors
 };
 
 export default connect(
