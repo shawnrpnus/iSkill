@@ -67,6 +67,9 @@ const App: React.FC = () => {
 										<Menu.Item>
 											<Link to="/createEvaluation">Create Evaluation</Link>
 										</Menu.Item>
+										<Menu.Item>
+											<Link to="/login">Login</Link>
+										</Menu.Item>
 									</SubMenu>
 								</Menu>
 							</Layout.Sider>

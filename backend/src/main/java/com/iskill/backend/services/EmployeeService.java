@@ -9,6 +9,8 @@ import com.iskill.backend.repositories.EmployeeRepository;
 import com.iskill.backend.repositories.RoleRepository;
 import com.iskill.backend.repositories.SurveyFormRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,12 +22,15 @@ public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
     private final RoleRepository roleRepository;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public EmployeeService(EmployeeRepository employeeRepository, RoleRepository roleRepository) {
+    public EmployeeService(EmployeeRepository employeeRepository, RoleRepository roleRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
 
         this.employeeRepository = employeeRepository;
         this.roleRepository = roleRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     public Employee getEmployeeById (Long employeeId){
@@ -42,11 +47,15 @@ public class EmployeeService {
 
     public Employee createNewEmployee(Employee newEmployee) {
         checkForDuplicateUsername(newEmployee.getUsername());
+        String password = newEmployee.getPassword();
+        String hashedPassword = bCryptPasswordEncoder.encode(password);
+//        System.out.println(hashedPassword);
+        newEmployee.setPassword(hashedPassword);
         return employeeRepository.save(newEmployee);
     }
 
     private void checkForDuplicateUsername(String username) {
-        Optional<Employee> employeeResult = employeeRepository.findByUsername(username);
+        Optional<Employee> employeeResult = Optional.ofNullable(employeeRepository.findByUsername(username));
         employeeResult.ifPresent(employee1 -> {
             throw new CreateNewEmployeeException("Employee Account with username '" + username + "' already exists! " +
                     "Please use a different username");

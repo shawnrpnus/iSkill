@@ -9,10 +9,10 @@ import "./LoginEmployee.css";
 import Employee from "../../models/Employee";
 
 export interface ILoginEmployeeProps extends FormComponentProps, RouteComponentProps<any> {
-	getLoginDetails: typeof getLoginDetails;
-	errors: any;
-	employeeToCreate: Employee;
-	employeeLoggedIn: Employee;
+  getLoginDetails: typeof getLoginDetails;
+  errors: any;
+  // employeeToCreate: Employee;
+  employeeLoggedIn: Employee;
 }
 
 export interface ILoginEmployeeState {}
