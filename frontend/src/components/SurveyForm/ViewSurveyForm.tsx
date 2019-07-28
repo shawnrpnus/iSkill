@@ -190,34 +190,4 @@ export default connect(
 	mapDispatchToProps
 )(wrappedViewSurveyForm);
 
-// interface IRadioButtonsProps {
-// 	lowerBound: number;
-// 	upperBound: number;
-// 	questionId: number;
-// 	categoryId?: number;
-// 	form: WrappedFormUtils<any>;
-// }
 
-// const RadioButtons: React.FunctionComponent<IRadioButtonsProps> = props => {
-// 	let radioOptions: Array<number> = [];
-// 	for (let i = props.lowerBound; i <= props.upperBound; i++) {
-// 		radioOptions.push(i);
-// 	}
-// 	const { getFieldDecorator } = props.form;
-// 	return (
-// 		<React.Fragment>
-// 			{getFieldDecorator(`radio-${props.categoryId}-${props.questionId}`, {
-// 				initialValue: props.lowerBound
-// 			})(
-// 				<Radio.Group>
-// 					{radioOptions.map((option, index) => (
-// 						<React.Fragment key={`radio-${option}-${props.categoryId}-${props.questionId}`}>
-// 							<Radio value={option}>{option}</Radio>
-// 							{index === 4 ? <br /> : ""}
-// 						</React.Fragment>
-// 					))}
-// 				</Radio.Group>
-// 			)}
-// 		</React.Fragment>
-// 	);
-// };

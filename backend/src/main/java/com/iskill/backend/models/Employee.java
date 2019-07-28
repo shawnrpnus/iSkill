@@ -44,15 +44,19 @@ public class Employee implements UserDetails {
     private Role role;
 
     @OneToMany(mappedBy = "creator")
+    @JsonIgnore
     private List<SurveyForm> createdSurveyForms = new ArrayList<>();
 
     @OneToMany(mappedBy = "evaluator")
+    @JsonIgnore
     private List<Evaluation> receivedEvaluations = new ArrayList<>();
 
     @OneToMany(mappedBy = "evaluatee")
+    @JsonIgnore
     private List<Evaluation> givenEvaluations = new ArrayList<>();
 
     @OneToMany(mappedBy = "creator")
+    @JsonIgnore
     private List<Evaluation> createdEvaluations = new ArrayList<>();
 
 

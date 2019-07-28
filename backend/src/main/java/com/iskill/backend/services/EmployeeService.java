@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -37,6 +38,12 @@ public class EmployeeService {
         return employeeRepository.findById(employeeId).orElseThrow(
                 () -> new EmployeeNotFoundException(String.format("Employee with id: '%s' not found!", employeeId))
         );
+    }
+
+    public List<Employee> getEmployeesForManager(Long managerId){
+        Employee manager = getEmployeeById(managerId);
+        String costCenter = manager.getCostCenter();
+        return employeeRepository.findByCostCenter(costCenter);
     }
 
     public Employee getEmployeeByUsernameAndPassword(String username, String password) {

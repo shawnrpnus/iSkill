@@ -444,7 +444,7 @@ class CreateUpdateSurveyForm extends React.Component<ICreateSurveyFormProps, ICr
 										)}
 									</Form.Item>
 								</Col>
-								<Col sm={6} xs={10} style={{ textAlign: "center" }}>
+								<Col span={10} style={{ textAlign: "center" }}>
 									<Form.Item
 										validateStatus={this.props.errors.toolProcess ? "error" : ""}
 										help={this.props.errors.toolProcess}
@@ -454,7 +454,7 @@ class CreateUpdateSurveyForm extends React.Component<ICreateSurveyFormProps, ICr
 										{getFieldDecorator("toolProcess", {
 											initialValue: surveyFormToViewOrUpdate
 												? surveyFormToViewOrUpdate.toolProcess.toolProcessId
-												: ""
+												: undefined
 										})(
 											<Select placeholder="Select Tool / Process" size="large">
 												{this.props.toolProcessList.map(
@@ -471,7 +471,7 @@ class CreateUpdateSurveyForm extends React.Component<ICreateSurveyFormProps, ICr
 										)}
 									</Form.Item>
 								</Col>
-								<Col sm={6} xs={10} style={{ textAlign: "center" }}>
+								<Col span={10} style={{ textAlign: "center" }}>
 									<Form.Item
 										validateStatus={this.props.errors.skillLevel ? "error" : ""}
 										help={this.props.errors.skillLevel}
@@ -481,7 +481,7 @@ class CreateUpdateSurveyForm extends React.Component<ICreateSurveyFormProps, ICr
 										{getFieldDecorator("skillLevel", {
 											initialValue: surveyFormToViewOrUpdate
 												? surveyFormToViewOrUpdate.skillLevel
-												: ""
+												: undefined
 										})(
 											<Select placeholder="Select Skill Level" size="large">
 												<Select.Option value="L1">L1</Select.Option>

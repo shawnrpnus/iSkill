@@ -1,9 +1,12 @@
 import Employee from "../models/Employee";
-import { GET_LOGIN_DETAILS, REGISTER_NEW_EMPLOYEE } from "../actions/types";
+import { GET_LOGIN_DETAILS, REGISTER_NEW_EMPLOYEE, GET_EMPLOYEES_FOR_MANAGER_SUCCESS } from "../actions/types";
 
 const initialState = {
 	//initialState of the surveyForm attribute in the global redux store (defined in RootReducer.ts)
-	employeeLoggedIn: undefined
+    employeeLoggedIn: undefined,
+    newEmployee: undefined,
+    employeesForManager: []
+
 };
 
 interface Action {
@@ -25,6 +28,11 @@ export default function (state = initialState, action: Action | any) {
             return {
                 ...state,
                 newEmployee: action.newEmployee
+            }
+        case GET_EMPLOYEES_FOR_MANAGER_SUCCESS:
+            return {
+                ...state,
+                employeesForManager: action.employees
             }
 		default:
 			return state;

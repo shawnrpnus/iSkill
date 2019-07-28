@@ -105,4 +105,10 @@ public class EmployeeController {
         Employee createdNewEmployee = employeeService.createNewEmployee(newEmployee);
         return new ResponseEntity<>(createdNewEmployee, HttpStatus.CREATED);
     }
+
+    @GetMapping("/getEmployeesForManager/{managerId}")
+    public ResponseEntity<?> getEmployeesForManager(@PathVariable Long managerId){
+        return new ResponseEntity<>(employeeService.getEmployeesForManager(managerId), HttpStatus.OK);
+
+    }
 }

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_ERRORS, GET_LOGIN_DETAILS, REGISTER_NEW_EMPLOYEE } from "./types";
+import { GET_ERRORS, GET_LOGIN_DETAILS, REGISTER_NEW_EMPLOYEE, GET_EMPLOYEES_FOR_MANAGER_SUCCESS } from "./types";
 import Employee from "../models/Employee";
 import Role from "../models/Role";
 import setAuthorizationToken from "../utils/setAuthorizationToken";
@@ -76,3 +76,19 @@ const registerNewEmployeeSuccess = (payload: any) => ({
 	type: REGISTER_NEW_EMPLOYEE,
 	payload: payload
 });
+
+export const getEmployeesForManager = (managerId: number) => {
+	let url = `api/employee/getEmployeesForManager/${managerId}`
+	return (dispatch: any) => {
+		axios.get(url).then(response => {
+			dispatch(getEmployeesForManagerSuccess(response.data))
+		}).catch(err => {
+			dispatch(getErrors(err.response.data))
+		})
+	}
+}
+
+const getEmployeesForManagerSuccess = (employeeList: any) => ({
+	type: GET_EMPLOYEES_FOR_MANAGER_SUCCESS,
+	employees: employeeList
+})

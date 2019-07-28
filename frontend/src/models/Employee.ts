@@ -3,17 +3,17 @@ import Role from "./Role";
 import Evaluation from "./Evaluation";
 
 export default class Employee {
-	employeeId?: Number;
+	employeeId?: number;
 
-	name: String;
+	name: string;
 
-	username: String;
+	username: string;
 
-	password: String;
+	password: string;
 
-	costCenter: String;
+	costCenter: string;
 
-	shift: String;
+	shift: string;
 
 	role: Role;
 
@@ -24,11 +24,11 @@ export default class Employee {
 	givenEvaluations?: Evaluation[];
 
 	constructor(
-		$name: String,
-		$username: String,
-		$password: String,
-		$costCenter: String,
-		$shift: String,
+		$name: string,
+		$username: string,
+		$password: string,
+		$costCenter: string,
+		$shift: string,
 		$role: Role
 	) {
 		this.name = $name;

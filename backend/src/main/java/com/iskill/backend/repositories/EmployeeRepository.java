@@ -4,6 +4,7 @@ import com.iskill.backend.models.Employee;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -14,4 +15,6 @@ public interface EmployeeRepository extends CrudRepository<Employee, Long> {
     Employee getByEmployeeId(Long id);
 
     Optional<Employee> findByUsernameAndPassword(String username, String password);
+
+    List<Employee> findByCostCenter(String costCenter);
 }
