@@ -1,30 +1,22 @@
-import { Card, Col, Form, Radio, Row, Typography, Button, Icon, Popconfirm, Alert } from "antd";
-import { FormComponentProps, WrappedFormUtils } from "antd/lib/form/Form";
+import { Alert, Button, Col, Form, Icon, Popconfirm, Row, Typography } from "antd";
+import { FormComponentProps } from "antd/lib/form/Form";
 import * as React from "react";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router";
+import { Link } from "react-router-dom";
 import {
-	getSurveyForm,
+	clearStateErrors,
 	clearUpdatingForm,
 	deleteSurveyForm,
-	clearStateErrors
+	getSurveyForm
 } from "../../actions/surveyFormActions";
 import CategoryModel from "../../models/Category";
 import NumericChoiceQuestion from "../../models/NumericChoiceQuestion";
 import QuestionModel from "../../models/Question";
 import SurveyFormModel from "../../models/SurveyForm";
-import {
-	getCategoryTotalMaxScore,
-	sortCategoriesByCategorySequence,
-	sortQuestionsByQuestionSequence
-} from "../../utils/SurveyFormUtils";
+import { sortCategoriesByCategorySequence } from "../../utils/SurveyFormUtils";
+import SurveyFormTemplate from "./SurveyFormTemplate";
 import "./ViewSurveyForm.css";
-import { Link } from "react-router-dom";
-
-const COL_ONE_SIZE = 8;
-const COL_TWO_SIZE = 8;
-const COL_THREE_SIZE = 4;
-const COL_FOUR_SIZE = 4;
 
 export interface IViewSurveyFormProps extends FormComponentProps, RouteComponentProps {
 	getSurveyForm: typeof getSurveyForm;
@@ -120,8 +112,6 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 			surveyFormId = this.props.surveyFormToViewOrUpdate.surveyFormId;
 		}
 		categories = sortCategoriesByCategorySequence(categories);
-		let totalScore = 0;
-		let totalMaxScore = 0;
 		return (
 			<div style={this.props.surveyFormToPreview ? {} : { padding: "2vw 5vw 0 5vw" }}>
 				{this.props.surveyFormToPreview ? (
@@ -168,105 +158,13 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 						</Col>
 					</Row>
 				)}
-				<Card
-					bordered={true}
-					title={
-						<Row gutter={24}>
-							<Col span={24} style={{ fontSize: "48px", textAlign: "center" }}>
-								<Typography.Title>{surveyFormName}</Typography.Title>
-							</Col>
-							<Col span={24} style={{ textAlign: "center" }}>
-								Tool / Process:{" "}
-								<span style={{ fontWeight: "normal" }}>{toolProcessName}</span>&nbsp;&nbsp;
-								Skill Level: <span style={{ fontWeight: "normal" }}>{skillLevel}</span>
-							</Col>
-						</Row>
-					}
-				>
-					<Row style={{ fontWeight: "bold", padding: "5px" }} gutter={24}>
-						<Col span={COL_ONE_SIZE}>Checklist</Col>
-						<Col span={COL_TWO_SIZE}>Input</Col>
-						<Col span={COL_THREE_SIZE} className="colCentered">
-							Max Score
-						</Col>
-						<Col span={COL_FOUR_SIZE} className="colCentered">
-							Performance
-						</Col>
-					</Row>
-					<hr />
-					{categories.map(category => {
-						let sortedQuestions = sortQuestionsByQuestionSequence(category.questions);
-						let catScore = this.calcCategoryScore(sortedQuestions, category.categoryId);
-						let catTotalScore = getCategoryTotalMaxScore(sortedQuestions);
-						let percentageScore = ((catScore / catTotalScore) * 100).toFixed(2);
-						totalScore += catScore;
-						totalMaxScore += catTotalScore;
-						return (
-							<React.Fragment key={category.categoryId}>
-								<Row
-									gutter={24}
-									style={{ backgroundColor: "#e8e8e8", padding: "5px", fontWeight: "bold" }}
-								>
-									<Col span={COL_ONE_SIZE + COL_TWO_SIZE + COL_THREE_SIZE}>
-										{category.categoryName}
-									</Col>
-									<Col
-										span={COL_FOUR_SIZE}
-										className="colCentered"
-									>{`${catScore}/${catTotalScore} (${percentageScore}%)`}</Col>
-								</Row>
-
-								{sortedQuestions.map(question => {
-									let numericQn;
-									if (
-										question.hasOwnProperty("lowerBound") &&
-										question.hasOwnProperty("upperBound") &&
-										question.hasOwnProperty("questionId")
-									) {
-										numericQn = question as NumericChoiceQuestion;
-									}
-									return numericQn && numericQn.questionId !== undefined ? (
-										<Row
-											style={{ padding: "5px" }}
-											key={`${category.categoryId}-${question.questionId}`}
-											gutter={24}
-										>
-											<Col span={COL_ONE_SIZE} style={{ wordWrap: "break-word" }}>
-												{question.questionText}
-											</Col>
-											<Col span={COL_TWO_SIZE}>
-												<RadioButtons
-													lowerBound={numericQn.lowerBound}
-													upperBound={numericQn.upperBound}
-													questionId={numericQn.questionId}
-													categoryId={category.categoryId}
-													form={this.props.form}
-												/>
-											</Col>
-											<Col span={COL_THREE_SIZE} className="colCentered">
-												{numericQn.upperBound}
-											</Col>
-											<Col span={COL_FOUR_SIZE}>&nbsp;</Col>
-										</Row>
-									) : (
-										""
-									);
-								})}
-							</React.Fragment>
-						);
-					})}
-					<Row
-						gutter={24}
-						style={{ backgroundColor: "#e8e8e8", padding: "5px", fontWeight: "bold" }}
-					>
-						<Col span={20}>Total</Col>
-						<Col span={4} className="colCentered">
-							{`${totalScore}/${totalMaxScore} (${((totalScore / totalMaxScore) * 100).toFixed(
-								2
-							)}%)`}
-						</Col>
-					</Row>
-				</Card>
+				<SurveyFormTemplate
+					surveyFormName={surveyFormName}
+					toolProcessName={toolProcessName}
+					skillLevel={skillLevel}
+					categories={categories}
+					form={this.props.form}
+				/>
 			</div>
 		);
 	}
@@ -292,34 +190,34 @@ export default connect(
 	mapDispatchToProps
 )(wrappedViewSurveyForm);
 
-interface IRadioButtonsProps {
-	lowerBound: number;
-	upperBound: number;
-	questionId: number;
-	categoryId?: number;
-	form: WrappedFormUtils<any>;
-}
+// interface IRadioButtonsProps {
+// 	lowerBound: number;
+// 	upperBound: number;
+// 	questionId: number;
+// 	categoryId?: number;
+// 	form: WrappedFormUtils<any>;
+// }
 
-const RadioButtons: React.FunctionComponent<IRadioButtonsProps> = props => {
-	let radioOptions: Array<number> = [];
-	for (let i = props.lowerBound; i <= props.upperBound; i++) {
-		radioOptions.push(i);
-	}
-	const { getFieldDecorator } = props.form;
-	return (
-		<React.Fragment>
-			{getFieldDecorator(`radio-${props.categoryId}-${props.questionId}`, {
-				initialValue: props.lowerBound
-			})(
-				<Radio.Group>
-					{radioOptions.map((option, index) => (
-						<React.Fragment key={`radio-${option}-${props.categoryId}-${props.questionId}`}>
-							<Radio value={option}>{option}</Radio>
-							{index === 4 ? <br /> : ""}
-						</React.Fragment>
-					))}
-				</Radio.Group>
-			)}
-		</React.Fragment>
-	);
-};
+// const RadioButtons: React.FunctionComponent<IRadioButtonsProps> = props => {
+// 	let radioOptions: Array<number> = [];
+// 	for (let i = props.lowerBound; i <= props.upperBound; i++) {
+// 		radioOptions.push(i);
+// 	}
+// 	const { getFieldDecorator } = props.form;
+// 	return (
+// 		<React.Fragment>
+// 			{getFieldDecorator(`radio-${props.categoryId}-${props.questionId}`, {
+// 				initialValue: props.lowerBound
+// 			})(
+// 				<Radio.Group>
+// 					{radioOptions.map((option, index) => (
+// 						<React.Fragment key={`radio-${option}-${props.categoryId}-${props.questionId}`}>
+// 							<Radio value={option}>{option}</Radio>
+// 							{index === 4 ? <br /> : ""}
+// 						</React.Fragment>
+// 					))}
+// 				</Radio.Group>
+// 			)}
+// 		</React.Fragment>
+// 	);
+// };

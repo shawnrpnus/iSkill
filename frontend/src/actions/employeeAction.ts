@@ -1,7 +1,6 @@
 import axios from "axios";
 import { GET_ERRORS, GET_LOGIN_DETAILS, REGISTER_NEW_EMPLOYEE } from "./types";
 import Employee from "../models/Employee";
-import Role from "../models/Role";
 
 const getErrors = (errorData: any) => ({
 	type: GET_ERRORS,
@@ -9,8 +8,8 @@ const getErrors = (errorData: any) => ({
 })
 
 export const getLoginDetails = (
-    username: string,
-    password: string
+	username: string,
+	password: string
 ) => {
 	let url = `/api/employee/login`;
 	// let bodyFormData = new FormData();
@@ -19,10 +18,10 @@ export const getLoginDetails = (
 	// console.log(bodyFormData);
 	return (dispatch: any) => {
 		axios
-			.post(url,{
+			.post(url, {
 				username: username,
 				password: password
-			  })
+			})
 			.then(response => {
 				console.log(response);
 				dispatch(getLoginDetailsSuccess(response.data));

@@ -1,4 +1,4 @@
-import { GET_LOGIN_DETAILS, REGISTER_NEW_EMPLOYEE, GET_ALL_ROLES } from "../actions/types";
+import { GET_ALL_ROLES } from "../actions/types";
 import Role from "../models/Role";
 
 const initialState = {
