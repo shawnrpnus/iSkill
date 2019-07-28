@@ -5,9 +5,9 @@ export default class Question {
 
 	questionId?: number;
 
-	questionSequence: number;
+	questionSequence?: number;
 
-	questionText: String;
+	questionText?: String;
 
 	answers?: Answer[];
 

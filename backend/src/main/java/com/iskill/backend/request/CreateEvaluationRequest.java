@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter @Setter
@@ -20,11 +21,15 @@ public class CreateEvaluationRequest {
     @Valid
     private Evaluation evaluation;
 
+    @NotNull(message = "You are not logged in!")
     private Long creatorEmployeeId;
 
+    @NotNull(message = "You are not logged in!")
     private Long evaluatorEmployeeId;
 
+    @NotNull(message = "Employee is required")
     private Long evaluateeEmployeeId;
 
+    @NotNull(message = "Survey Form is required")
     private Long surveyFormId;
 }

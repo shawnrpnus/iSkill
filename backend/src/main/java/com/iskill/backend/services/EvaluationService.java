@@ -1,13 +1,11 @@
 package com.iskill.backend.services;
 
-import com.iskill.backend.exceptions.Evaluation.EvaluationCannotDelete.EvaluationCannotDeleteException;
 import com.iskill.backend.exceptions.Evaluation.EvaluationNotFound.EvaluationNotFoundException;
-import com.iskill.backend.models.Answer;
-import com.iskill.backend.models.Employee;
-import com.iskill.backend.models.Evaluation;
-import com.iskill.backend.models.SurveyForm;
+import com.iskill.backend.exceptions.Question.QuestionNotFound.QuestionNotFoundException;
+import com.iskill.backend.models.*;
 import com.iskill.backend.repositories.AnswerRepository;
 import com.iskill.backend.repositories.EvaluationRepository;
+import com.iskill.backend.repositories.QuestionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,12 +17,14 @@ public class EvaluationService {
 
     private final EvaluationRepository evaluationRepository;
     private final AnswerRepository answerRepository;
+    private final QuestionRepository questionRepository;
     private final EmployeeService employeeService;
     private final SurveyFormService surveyFormService;
 
-    public EvaluationService(EvaluationRepository evaluationRepository, AnswerRepository answerRepository, EmployeeService employeeService, SurveyFormService surveyFormService) {
+    public EvaluationService(EvaluationRepository evaluationRepository, AnswerRepository answerRepository, QuestionRepository questionRepository, EmployeeService employeeService, SurveyFormService surveyFormService) {
         this.evaluationRepository = evaluationRepository;
         this.answerRepository = answerRepository;
+        this.questionRepository = questionRepository;
         this.employeeService = employeeService;
         this.surveyFormService = surveyFormService;
     }
@@ -52,7 +52,10 @@ public class EvaluationService {
         //evaluation already contains answers
         for (Answer answer : evaluation.getAnswers()){
             //each answer already contains question
-            answer.getQuestion().getAnswers().add(answer);
+            Question question = questionRepository.findById(answer.getQuestion().getQuestionId())
+                    .orElseThrow(() -> new QuestionNotFoundException("Question not found!"));
+            question.getAnswers().add(answer);
+            answer.setQuestion(question);
             answerRepository.save(answer);
 
         }
