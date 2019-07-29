@@ -25,6 +25,7 @@ import SurveyFormTemplate from "../SurveyForm/SurveyFormTemplate";
 import { RouteComponentProps } from "react-router-dom";
 import Evaluation from "../../models/Evaluation";
 import PageTitle from "../Layout/PageTitle";
+import AffixedButtons from "../Layout/AffixedButtons";
 
 export interface ICreateEvaluationProps extends FormComponentProps, RouteComponentProps {
 	errors: any;
@@ -315,36 +316,14 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 						""
 					)}
 					<Form.Item style={{ textAlign: "right", marginTop: "10px" }}>
-						<Row type="flex" justify="end" gutter={8}>
-							<Col md={6} sm={8} xs={10}>
-								<Affix offsetBottom={10}>
-									<Button
-										type="primary"
-										size="large"
-										htmlType="button"
-										block
-										onClick={this.handleSaveAsDraft}
-									>
-										<Icon type="save" />
-										Save as Draft
-									</Button>
-								</Affix>
-							</Col>
-							<Col md={6} sm={8} xs={10}>
-								<Affix offsetBottom={10}>
-									<Button
-										type="primary"
-										htmlType="submit"
-										size="large"
-										block
-										onSubmit={this.handleSubmit}
-									>
-										<Icon type="save" />
-										Submit
-									</Button>
-								</Affix>
-							</Col>
-						</Row>
+						<AffixedButtons
+							leftButtonText="Save as Draft"
+							leftButtonOnClickFunction={this.handleSaveAsDraft}
+							leftButtonIconType="save"
+							rightButtonText="Submit"
+							rightButtonOnSubmitFunction={this.handleSubmit}
+							rightButtonIconType="save"
+						/>
 					</Form.Item>
 				</Card>
 			</Form>

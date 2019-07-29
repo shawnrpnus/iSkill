@@ -28,6 +28,7 @@ import PageTitle from "../Layout/PageTitle";
 import Category from "./Category/Category";
 import "./CreateUpdateSurveyForm.css";
 import ViewSurveyForm from "./ViewSurveyForm";
+import AffixedButtons from "../Layout/AffixedButtons";
 
 export interface ICreateSurveyFormProps extends FormComponentProps, RouteComponentProps<any> {
 	errors: any;
@@ -532,30 +533,14 @@ class CreateUpdateSurveyForm extends React.Component<ICreateSurveyFormProps, ICr
 							Add Category
 						</Button>
 						<Form.Item style={{ textAlign: "right", marginTop: "10px" }}>
-							<Row type="flex" justify="end" gutter={8}>
-								<Col md={6} sm={8} xs={10}>
-									<Affix offsetBottom={10}>
-										<Button type="primary" size="large" block onClick={this.preview}>
-											<Icon type="eye" />
-											Preview
-										</Button>
-									</Affix>
-								</Col>
-								<Col md={6} sm={8} xs={10}>
-									<Affix offsetBottom={10}>
-										<Button
-											type="primary"
-											htmlType="submit"
-											size="large"
-											block
-											onSubmit={this.handleSubmit}
-										>
-											<Icon type="save" />
-											Save
-										</Button>
-									</Affix>
-								</Col>
-							</Row>
+							<AffixedButtons
+								leftButtonText="Preview"
+								leftButtonOnClickFunction={this.preview}
+								leftButtonIconType="eye"
+								rightButtonText="Save"
+								rightButtonOnSubmitFunction={this.handleSubmit}
+								rightButtonIconType="save"
+							/>
 						</Form.Item>
 					</Card>
 				</Form>
