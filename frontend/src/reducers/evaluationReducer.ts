@@ -1,4 +1,4 @@
-import { CREATE_EVALUATION_SUCCESS, GET_EVALUATION_SUCCESS } from "../actions/types";
+import { CREATE_EVALUATION_SUCCESS, GET_EVALUATION_SUCCESS, UPDATE_EVALUATION_SUCCESS } from "../actions/types";
 import Evaluation from "../models/Evaluation";
 
 const initialState = {
@@ -18,6 +18,13 @@ export default function (state = initialState, action: Action | any) {
 			window.location.reload();
 			return state;
 		case GET_EVALUATION_SUCCESS:
+			return {
+				...state,
+				evaluationToViewOrUpdate: action.evaluation
+			}
+		case UPDATE_EVALUATION_SUCCESS:
+			alert("Evaluation Updated!");
+			window.location.reload();
 			return {
 				...state,
 				evaluationToViewOrUpdate: action.evaluation

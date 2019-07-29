@@ -3,7 +3,7 @@ import { FormComponentProps } from "antd/lib/form";
 import * as React from "react";
 import { connect } from "react-redux";
 import { getEmployeesForManager } from "../../actions/employeeAction";
-import { createEvaluation, getEvaluation } from "../../actions/evaluationActions";
+import { createEvaluation, getEvaluation, updateEvaluation } from "../../actions/evaluationActions";
 import { getAllSurveyForms, clearStateErrors } from "../../actions/surveyFormActions";
 import Category from "../../models/Category";
 import {
@@ -30,6 +30,7 @@ export interface ICreateEvaluationProps extends FormComponentProps, RouteCompone
 	createEvaluation: typeof createEvaluation;
 	clearStateErrors: typeof clearStateErrors;
 	getEvaluation: typeof getEvaluation;
+	updateEvaluation: typeof updateEvaluation;
 }
 
 export interface ICreateEvaluationState {}
@@ -85,13 +86,23 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 
 	handleSaveAsDraft(e: React.FormEvent<EventTarget>) {
 		e.preventDefault();
+		console.log(this.generateUpdateEvaluationRequest());
+		if (this.props.evaluationToUpdate && this.props.evaluationToUpdate.evaluationId) {
+			let updateEvaluationRequest = this.generateUpdateEvaluationRequest();
+			updateEvaluationRequest.evaluation.evaluationId = this.props.evaluationToUpdate.evaluationId;
+			this.props.updateEvaluation(updateEvaluationRequest);
+		}
 	}
 
 	handleSubmit(e: React.FormEvent<EventTarget>) {
 		e.preventDefault();
-
 		if (!this.props.evaluationToUpdate) {
 			this.props.createEvaluation(this.generateCreateEvaluationRequest());
+		} else if (this.props.evaluationToUpdate && this.props.evaluationToUpdate.evaluationId) {
+			let updateEvaluationRequest = this.generateUpdateEvaluationRequest();
+			updateEvaluationRequest.evaluation.evaluationId = this.props.evaluationToUpdate.evaluationId;
+			updateEvaluationRequest.evaluation.status = "COMPLETED";
+			this.props.updateEvaluation(updateEvaluationRequest);
 		}
 	}
 
@@ -306,7 +317,7 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 										block
 										onClick={this.handleSaveAsDraft}
 									>
-										<Icon type="eye" />
+										<Icon type="save" />
 										Save as Draft
 									</Button>
 								</Affix>
@@ -347,7 +358,8 @@ const mapDispatchToProps = {
 	getAllSurveyForms,
 	createEvaluation,
 	clearStateErrors,
-	getEvaluation
+	getEvaluation,
+	updateEvaluation
 };
 
 export default connect(

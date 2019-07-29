@@ -17,7 +17,6 @@ export class CreateEvaluationRequest {
 }
 
 export class UpdateEvaluationRequest {
-    evaluationId?: number
     newEvaluatorEmployeeId: number;
     newEvaluateeEmployeeId: number;
     newSurveyFormId: number;
@@ -33,6 +32,7 @@ export class UpdateEvaluationRequest {
 }
 
 export class EvaluationReqObject {
+    evaluationId?: number;
     status: string;
     remarks: string;
     answers?: Array<NumericChoiceAnswerReqObject>

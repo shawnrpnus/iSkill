@@ -1,4 +1,4 @@
-import { CreateEvaluationRequest } from "../models/CreateUpdateEvaluationRequest";
+import { CreateEvaluationRequest, UpdateEvaluationRequest } from "../models/CreateUpdateEvaluationRequest";
 import axios from "axios";
 import { GET_ERRORS, CREATE_EVALUATION_SUCCESS, GET_EVALUATION_SUCCESS } from "./types";
 import Evaluation from "../models/Evaluation";
@@ -59,6 +59,34 @@ const getEvaluationSuccess = (evaluation: Evaluation) => ({
     type: GET_EVALUATION_SUCCESS,
     evaluation: evaluation
 })
+
+export const updateEvaluation = (
+    updateEvaluationRequest: UpdateEvaluationRequest
+) => {
+    let url = `/api/evaluation/updateEvaluation`;
+    return (dispatch: any) => {
+        axios
+            .post(url, updateEvaluationRequest)
+            .then(response => {
+                console.log(response);
+                dispatch(updateEvaluationSuccess(response.data));
+            })
+            .catch(err => {
+                dispatch(getErrors(err.response.data));
+                if (err.response.status === 500) {
+                    alert("Internal server error has occured. Please contact the system administrator.");
+                    console.log(err.response)
+                }
+            });
+    };
+};
+
+const updateEvaluationSuccess = (updatedEvaluation: any) => ({
+    type: CREATE_EVALUATION_SUCCESS,
+    evaluation: updatedEvaluation
+})
+
+
 
 
 

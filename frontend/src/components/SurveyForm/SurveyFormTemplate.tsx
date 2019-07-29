@@ -17,7 +17,7 @@ export interface ISurveyFormTemplateProps {
 }
 
 export interface ISurveyFormTemplateState {
-	firstRender: boolean;
+	firstRenderDone: boolean;
 }
 
 const COL_ONE_SIZE = 8;
@@ -33,7 +33,7 @@ export default class SurveyFormTemplate extends React.Component<
 		super(props);
 
 		this.state = {
-			firstRender: false
+			firstRenderDone: false
 		};
 		this.calcCategoryScore = this.calcCategoryScore.bind(this);
 		this.getAnswerForQuestionId = this.getAnswerForQuestionId.bind(this);
@@ -81,12 +81,12 @@ export default class SurveyFormTemplate extends React.Component<
 	}
 
 	componentDidMount() {
-		this.setState({ firstRender: true });
+		this.setState({ firstRenderDone: true });
 	}
 
 	componentDidUpdate() {
-		if (this.props.answers && this.state.firstRender) {
-			this.setState({ firstRender: false });
+		if (this.props.answers && this.state.firstRenderDone) {
+			this.setState({ firstRenderDone: false }); //force initial double render to get correct score values
 		}
 	}
 
