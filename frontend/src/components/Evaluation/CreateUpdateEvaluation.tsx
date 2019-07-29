@@ -3,7 +3,12 @@ import { FormComponentProps } from "antd/lib/form";
 import * as React from "react";
 import { connect } from "react-redux";
 import { getEmployeesForManager } from "../../actions/employeeAction";
-import { createEvaluation, getEvaluation, updateEvaluation } from "../../actions/evaluationActions";
+import {
+	createEvaluation,
+	getEvaluation,
+	updateEvaluation,
+	clearUpdatingEvaluation
+} from "../../actions/evaluationActions";
 import { getAllSurveyForms, clearStateErrors } from "../../actions/surveyFormActions";
 import Category from "../../models/Category";
 import {
@@ -31,6 +36,7 @@ export interface ICreateEvaluationProps extends FormComponentProps, RouteCompone
 	clearStateErrors: typeof clearStateErrors;
 	getEvaluation: typeof getEvaluation;
 	updateEvaluation: typeof updateEvaluation;
+	clearUpdatingEvaluation: typeof clearUpdatingEvaluation;
 }
 
 export interface ICreateEvaluationState {}
@@ -78,6 +84,7 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 	componentWillUnmount() {
 		//clear errors
 		this.props.clearStateErrors();
+		this.props.clearUpdatingEvaluation();
 	}
 
 	componentWillUpdate() {
@@ -364,7 +371,8 @@ const mapDispatchToProps = {
 	createEvaluation,
 	clearStateErrors,
 	getEvaluation,
-	updateEvaluation
+	updateEvaluation,
+	clearUpdatingEvaluation
 };
 
 export default connect(

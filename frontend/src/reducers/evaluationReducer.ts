@@ -1,4 +1,4 @@
-import { CREATE_EVALUATION_SUCCESS, GET_EVALUATION_SUCCESS, UPDATE_EVALUATION_SUCCESS } from "../actions/types";
+import { CREATE_EVALUATION_SUCCESS, GET_EVALUATION_SUCCESS, UPDATE_EVALUATION_SUCCESS, CLEAR_UPDATING_EVALUATION } from "../actions/types";
 import Evaluation from "../models/Evaluation";
 
 const initialState = {
@@ -28,6 +28,11 @@ export default function (state = initialState, action: Action | any) {
 			return {
 				...state,
 				evaluationToViewOrUpdate: action.evaluation
+			}
+		case CLEAR_UPDATING_EVALUATION:
+			return {
+				...state,
+				evaluationToViewOrUpdate: undefined
 			}
 		default:
 			return state;

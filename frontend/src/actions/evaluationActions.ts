@@ -1,6 +1,6 @@
 import { CreateEvaluationRequest, UpdateEvaluationRequest } from "../models/CreateUpdateEvaluationRequest";
 import axios from "axios";
-import { GET_ERRORS, CREATE_EVALUATION_SUCCESS, GET_EVALUATION_SUCCESS, UPDATE_EVALUATION_SUCCESS } from "./types";
+import { GET_ERRORS, CREATE_EVALUATION_SUCCESS, GET_EVALUATION_SUCCESS, UPDATE_EVALUATION_SUCCESS, CLEAR_UPDATING_EVALUATION } from "./types";
 import Evaluation from "../models/Evaluation";
 
 const getErrors = (errorData: any) => ({
@@ -84,6 +84,10 @@ export const updateEvaluation = (
 const updateEvaluationSuccess = (updatedEvaluation: any) => ({
     type: UPDATE_EVALUATION_SUCCESS,
     evaluation: updatedEvaluation
+})
+
+export const clearUpdatingEvaluation = () => ({
+    type: CLEAR_UPDATING_EVALUATION
 })
 
 
