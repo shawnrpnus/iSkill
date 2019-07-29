@@ -41,7 +41,7 @@ public class Evaluation {
     private Employee evaluatee;
 
     @ManyToOne
-    @JoinColumn(nullable = false, updatable = false)
+    @JoinColumn(nullable = false)
     @JsonIgnore
     private SurveyForm surveyForm;
 

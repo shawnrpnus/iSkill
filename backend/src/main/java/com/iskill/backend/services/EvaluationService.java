@@ -1,32 +1,33 @@
 package com.iskill.backend.services;
 
 import com.iskill.backend.exceptions.Evaluation.EvaluationNotFound.EvaluationNotFoundException;
-import com.iskill.backend.exceptions.Question.QuestionNotFound.QuestionNotFoundException;
 import com.iskill.backend.models.*;
 import com.iskill.backend.repositories.AnswerRepository;
 import com.iskill.backend.repositories.EvaluationRepository;
-import com.iskill.backend.repositories.QuestionRepository;
+import com.iskill.backend.repositories.SurveyFormRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@Transactional
 public class EvaluationService {
 
     private final EvaluationRepository evaluationRepository;
     private final AnswerRepository answerRepository;
-    private final QuestionRepository questionRepository;
+    private final SurveyFormRepository surveyFormRepository;
     private final EmployeeService employeeService;
     private final SurveyFormService surveyFormService;
+    private final QuestionService questionService;
 
-    public EvaluationService(EvaluationRepository evaluationRepository, AnswerRepository answerRepository, QuestionRepository questionRepository, EmployeeService employeeService, SurveyFormService surveyFormService) {
+    public EvaluationService(EvaluationRepository evaluationRepository, AnswerRepository answerRepository, SurveyFormRepository surveyFormRepository, EmployeeService employeeService, SurveyFormService surveyFormService, QuestionService questionService) {
         this.evaluationRepository = evaluationRepository;
         this.answerRepository = answerRepository;
-        this.questionRepository = questionRepository;
+        this.surveyFormRepository = surveyFormRepository;
         this.employeeService = employeeService;
         this.surveyFormService = surveyFormService;
+        this.questionService = questionService;
     }
 
     public Evaluation createNewEvaluation(Evaluation evaluation, Long creatorEmployeeId, Long evaluatorEmployeeId,
@@ -52,8 +53,7 @@ public class EvaluationService {
         //evaluation already contains answers
         for (Answer answer : evaluation.getAnswers()){
             //each answer already contains question
-            Question question = questionRepository.findById(answer.getQuestion().getQuestionId())
-                    .orElseThrow(() -> new QuestionNotFoundException("Question not found!"));
+            Question question = questionService.getQuestion(answer.getQuestion().getQuestionId());
             question.getAnswers().add(answer);
             answer.setQuestion(question);
             answerRepository.save(answer);
@@ -87,38 +87,56 @@ public class EvaluationService {
         Employee newEvaluateeEmployee = employeeService.getEmployeeById(newEvaluateeEmployeeId);
         SurveyForm newSurveyForm = surveyFormService.getSurveyForm(newSurveyFormId);
 
-        existingEvaluation.setEvaluatee(newEvaluateeEmployee);
-        existingEvaluation.setEvaluator(newEvaluatorEmployee);
-        existingEvaluation.setSurveyForm(newSurveyForm);
-        existingEvaluation.setRemarks(updatedEvaluation.getRemarks());
-        existingEvaluation.setStatus(updatedEvaluation.getStatus());
-
-        Employee currentEvaluator = existingEvaluation.getEvaluator();
-        if (currentEvaluator != null){
-            currentEvaluator.getGivenEvaluations().remove(existingEvaluation);
-        }
-        Employee currentEvaluatee = existingEvaluation.getEvaluatee();
-        if (currentEvaluatee != null){
-            currentEvaluatee.getReceivedEvaluations().remove(existingEvaluation);
-        }
-        SurveyForm currentSurveyForm = existingEvaluation.getSurveyForm();
-        if (currentSurveyForm != null){
-            currentSurveyForm.getEvaluations().remove(existingEvaluation);
-        }
-
-        for (Answer answer : existingEvaluation.getAnswers()){
+        //remove all current answers
+        List<Answer> previousAnswers = existingEvaluation.getAnswers();
+        existingEvaluation.setAnswers(new ArrayList<>());
+        for (Answer answer: previousAnswers){
             answer.getQuestion().getAnswers().remove(answer);
             answer.setQuestion(null);
             answerRepository.delete(answer);
         }
 
-        existingEvaluation.setAnswers(updatedEvaluation.getAnswers());
-        for (Answer answer: existingEvaluation.getAnswers()){
-            answer.getQuestion().getAnswers().add(answer);
+        for (Answer answer: updatedEvaluation.getAnswers()){
+            Long questionId = answer.getQuestion().getQuestionId();
+            Question question = questionService.getQuestion(questionId);
+            answer.setQuestion(question);
             answerRepository.save(answer);
+            question.getAnswers().add(answer);
+            existingEvaluation.getAnswers().add(answer);
+        }
+        //override remarks and status
+        existingEvaluation.setRemarks(updatedEvaluation.getRemarks());
+        existingEvaluation.setStatus(updatedEvaluation.getStatus());
+
+        //remove evaluation from previous evaluator, replace with new one
+        Employee previousEvaluator = existingEvaluation.getEvaluator();
+        if (previousEvaluator != null){
+            previousEvaluator.getGivenEvaluations().remove(existingEvaluation);
+        }
+        existingEvaluation.setEvaluator(newEvaluatorEmployee);
+
+        //remove evaluation from previous evaluatee, replace with new one
+        Employee previousEvaluatee = existingEvaluation.getEvaluatee();
+        if (previousEvaluatee != null){
+            previousEvaluatee.getReceivedEvaluations().remove(existingEvaluation);
+        }
+        existingEvaluation.setEvaluatee(newEvaluateeEmployee);
+
+        //remove evaluation from previous survey form
+        //remove survey form from existing evaluation
+        SurveyForm previousSurveyForm = surveyFormService.getSurveyForm(existingEvaluation.getSurveyForm().getSurveyFormId());
+        if (previousSurveyForm != null){
+            previousSurveyForm.getEvaluations().remove(existingEvaluation);
+            existingEvaluation.setSurveyForm(null);
         }
 
-        return evaluationRepository.save(existingEvaluation);
+        newSurveyForm.getEvaluations().add(existingEvaluation);
+        existingEvaluation.setSurveyForm(newSurveyForm);
+
+        Evaluation savedEvaluation = evaluationRepository.save(existingEvaluation);
+        System.out.println(savedEvaluation.getSurveyForm().getSurveyFormId());
+        System.out.println(savedEvaluation.getSurveyForm().getEvaluations().get(0).getEvaluationId());
+        return savedEvaluation;
     }
 
     public void deleteEvaluation(Long evaluationId){

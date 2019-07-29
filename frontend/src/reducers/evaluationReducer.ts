@@ -24,7 +24,7 @@ export default function (state = initialState, action: Action | any) {
 			}
 		case UPDATE_EVALUATION_SUCCESS:
 			alert("Evaluation Updated!");
-			window.location.reload();
+			//window.location.reload();
 			return {
 				...state,
 				evaluationToViewOrUpdate: action.evaluation

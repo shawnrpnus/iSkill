@@ -84,17 +84,17 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 		if (Object.keys(this.props.errors).length !== 0) this.props.clearStateErrors();
 	}
 
-	handleSaveAsDraft(e: React.FormEvent<EventTarget>) {
-		e.preventDefault();
-		console.log(this.generateUpdateEvaluationRequest());
+	handleSaveAsDraft() {
 		if (this.props.evaluationToUpdate && this.props.evaluationToUpdate.evaluationId) {
 			let updateEvaluationRequest = this.generateUpdateEvaluationRequest();
 			updateEvaluationRequest.evaluation.evaluationId = this.props.evaluationToUpdate.evaluationId;
+			console.log(updateEvaluationRequest);
 			this.props.updateEvaluation(updateEvaluationRequest);
 		}
 	}
 
 	handleSubmit(e: React.FormEvent<EventTarget>) {
+		console.log("submit");
 		e.preventDefault();
 		if (!this.props.evaluationToUpdate) {
 			this.props.createEvaluation(this.generateCreateEvaluationRequest());
@@ -314,6 +314,7 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 									<Button
 										type="primary"
 										size="large"
+										htmlType="button"
 										block
 										onClick={this.handleSaveAsDraft}
 									>
