@@ -1,17 +1,23 @@
 import Employee from "../models/Employee";
-import { GET_LOGIN_DETAILS, REGISTER_NEW_EMPLOYEE, GET_EMPLOYEES_FOR_MANAGER_SUCCESS } from "../actions/types";
+import { GET_LOGIN_DETAILS, REGISTER_NEW_EMPLOYEE, GET_EMPLOYEES_FOR_MANAGER_SUCCESS, SET_CURRENT_USER } from "../actions/types";
+import isEmpty from "lodash/isEmpty";
 
 const initialState = {
 	//initialState of the surveyForm attribute in the global redux store (defined in RootReducer.ts)
     employeeLoggedIn: undefined,
     newEmployee: undefined,
-    employeesForManager: []
-
+    employeesForManager: [],
+    isAuthenticated: false,
+    user: {}
 };
 
 interface Action {
     type: string;
     employeeLoggedIn : Employee;
+    // newEmployee: Employee;
+    // employeesForManager: Employee[];
+    // user: Employee;
+    // isAuthenticated: boolean;
 }
 
 export default function (state = initialState, action: Action | any) {
@@ -34,6 +40,15 @@ export default function (state = initialState, action: Action | any) {
                 ...state,
                 employeesForManager: action.employees
             }
+        case SET_CURRENT_USER:
+            console.log(action);
+            console.log(isEmpty(action.user));
+            return {
+                // isAuthenticated: (action.user != null || action.user != undefined),
+                ...state,
+                isAuthenticated: !isEmpty(action.user),
+                user: action.user
+            };
 		default:
 			return state;
 	}

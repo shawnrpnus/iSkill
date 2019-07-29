@@ -7,12 +7,14 @@ import { FormComponentProps } from "antd/lib/form";
 import { RouteComponentProps } from "react-router";
 import "./LoginEmployee.css";
 import Employee from "../../models/Employee";
+import { Link } from "react-router-dom";
 
 export interface ILoginEmployeeProps extends FormComponentProps, RouteComponentProps<any> {
   getLoginDetails: typeof getLoginDetails;
   errors: any;
   // employeeToCreate: Employee;
   employeeLoggedIn: Employee;
+  auth: any;
 }
 
 export interface ILoginEmployeeState {}
@@ -41,10 +43,18 @@ class LoginEmployee extends React.Component<ILoginEmployeeProps, ILoginEmployeeS
 
 	render() {
 		const { getFieldDecorator } = this.props.form;
-		return (
-			<div>
-				<div>
-					<Form onSubmit={this.handleSubmit} className="login-form">
+		const { isAuthenticated } = this.props.auth;
+		console.log(isAuthenticated);
+		console.log(this.props.auth.isAuthenticated);
+
+		const userLinks =(
+			<Button>
+				<Link to="/logout">Logout</Link>
+			</Button>
+		);
+
+		const guestLinks = (
+			<Form onSubmit={this.handleSubmit} className="login-form">
 						<Form.Item>
 							{getFieldDecorator("username", {
 								rules: [{ required: true, message: "Please input your username!" }]
@@ -85,6 +95,12 @@ class LoginEmployee extends React.Component<ILoginEmployeeProps, ILoginEmployeeS
 							Or <a href="/">register now!</a>
 						</Form.Item>
 					</Form>
+		);
+
+		return (
+			<div>
+				<div>
+					{isAuthenticated ? userLinks : guestLinks}
 				</div>
 			</div>
 		);
@@ -94,7 +110,8 @@ class LoginEmployee extends React.Component<ILoginEmployeeProps, ILoginEmployeeS
 const wrappedLoginEmployee = Form.create({ name: "login" })(LoginEmployee);
 
 const mapStateToProps = (state: any) => ({
-	errors: state.errors
+	errors: state.errors,
+	auth: state.employee
 });
 
 //action creators
