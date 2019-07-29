@@ -75,11 +75,7 @@ class Category extends React.Component<ICategoryProps, ICategoryState> {
 					<Row type="flex" justify="space-between">
 						<Col md={20} xs={18}>
 							<Form.Item
-								validateStatus={
-									this.props.errors[`categories[${this.props.index}].categoryName`]
-										? "error"
-										: ""
-								}
+								validateStatus={this.props.errors[`categories[${this.props.index}].categoryName`] ? "error" : ""}
 								help={this.props.errors[`categories[${this.props.index}].categoryName`]}
 								hasFeedback={true}
 								style={{
@@ -89,13 +85,7 @@ class Category extends React.Component<ICategoryProps, ICategoryState> {
 							>
 								{getFieldDecorator(`categoryName-${this.props.categoryId}`, {
 									initialValue: existingCategoryObj ? existingCategoryObj.categoryName : ""
-								})(
-									<Input
-										placeholder="Enter category name"
-										size="large"
-										className="categoryName"
-									/>
-								)}
+								})(<Input placeholder="Enter category name" size="large" className="categoryName" />)}
 							</Form.Item>
 						</Col>
 						<Col md={4} xs={6} style={{ textAlign: "center" }}>
@@ -133,27 +123,16 @@ class Category extends React.Component<ICategoryProps, ICategoryState> {
 							<div ref={provided.innerRef} {...provided.droppableProps}>
 								{questions.map((questionId, index) => {
 									return (
-										<Draggable
-											key={questionId}
-											draggableId={questionId.toString()}
-											index={index}
-										>
+										<Draggable key={questionId} draggableId={questionId.toString()} index={index}>
 											{(provided, snapshot) => (
-												<div
-													ref={provided.innerRef}
-													{...provided.draggableProps}
-													{...provided.dragHandleProps}
-												>
+												<div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
 													<Row
 														key={`questionRow-${questionId}`}
 														type="flex"
 														justify="space-between"
 														align="middle"
 														style={{
-															backgroundColor:
-																snapshot.isDragging || this.props.isDragging
-																	? "#fdffe3"
-																	: "white"
+															backgroundColor: snapshot.isDragging || this.props.isDragging ? "#fdffe3" : "white"
 														}}
 													>
 														<Question
@@ -178,21 +157,13 @@ class Category extends React.Component<ICategoryProps, ICategoryState> {
 															<Form.Item>
 																<Popconfirm
 																	title="Are you sure you want to delete this task?"
-																	onConfirm={() =>
-																		this.props.removeQuestion(
-																			this.props.categoryId,
-																			questionId
-																		)
-																	}
+																	onConfirm={() => this.props.removeQuestion(this.props.categoryId, questionId)}
 																	okText="Yes"
 																	cancelText="No"
 																	placement="topRight"
 																>
 																	{/* <Tooltip title="Delete this question"> */}
-																	<Icon
-																		className="dynamic-delete-button"
-																		type="minus-circle-o"
-																	/>
+																	<Icon className="dynamic-delete-button" type="minus-circle-o" />
 																	{/* </Tooltip> */}
 																</Popconfirm>
 															</Form.Item>

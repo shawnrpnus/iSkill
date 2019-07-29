@@ -1,15 +1,11 @@
-import { Affix, Button, Card, Col, Form, Icon, Input, Row, Select, Typography } from "antd";
+import { Card, Col, Form, Input, Row, Select } from "antd";
 import { FormComponentProps } from "antd/lib/form";
 import * as React from "react";
 import { connect } from "react-redux";
+import { RouteComponentProps } from "react-router-dom";
 import { getEmployeesForManager } from "../../actions/employeeAction";
-import {
-	createEvaluation,
-	getEvaluation,
-	updateEvaluation,
-	clearUpdatingEvaluation
-} from "../../actions/evaluationActions";
-import { getAllSurveyForms, clearStateErrors } from "../../actions/surveyFormActions";
+import { clearUpdatingEvaluation, createEvaluation, getEvaluation, updateEvaluation } from "../../actions/evaluationActions";
+import { clearStateErrors, getAllSurveyForms } from "../../actions/surveyFormActions";
 import Category from "../../models/Category";
 import {
 	CreateEvaluationRequest,
@@ -19,13 +15,12 @@ import {
 	UpdateEvaluationRequest
 } from "../../models/CreateUpdateEvaluationRequest";
 import Employee from "../../models/Employee";
+import Evaluation from "../../models/Evaluation";
 import SurveyForm from "../../models/SurveyForm";
 import { sortCategoriesByCategorySequence } from "../../utils/SurveyFormUtils";
-import SurveyFormTemplate from "../SurveyForm/SurveyFormTemplate";
-import { RouteComponentProps } from "react-router-dom";
-import Evaluation from "../../models/Evaluation";
-import PageTitle from "../Layout/PageTitle";
 import AffixedButtons from "../Layout/AffixedButtons";
+import PageTitle from "../Layout/PageTitle";
+import SurveyFormTemplate from "../SurveyForm/SurveyFormTemplate";
 
 export interface ICreateEvaluationProps extends FormComponentProps, RouteComponentProps {
 	errors: any;
@@ -146,12 +141,7 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 		let status = "ONGOING";
 		let remarks = this.props.form.getFieldValue("remarks");
 		let evaluationReqObject = new EvaluationReqObject(status, remarks);
-		let updateEvaluationRequest = new UpdateEvaluationRequest(
-			evaluatorEmployeeId,
-			evaluateeEmployeeId,
-			surveyFormId,
-			evaluationReqObject
-		);
+		let updateEvaluationRequest = new UpdateEvaluationRequest(evaluatorEmployeeId, evaluateeEmployeeId, surveyFormId, evaluationReqObject);
 
 		updateEvaluationRequest.evaluation.answers = this.generateAnswerArray();
 		return updateEvaluationRequest;
@@ -214,9 +204,7 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 		}
 		return (
 			<Form onSubmit={this.handleSubmit} style={{ padding: "2vw 5vw 0 5vw" }}>
-				<PageTitle>
-					{this.props.evaluationToUpdate ? "Updating Evaluation" : "Creating Evaluation"}
-				</PageTitle>
+				<PageTitle>{this.props.evaluationToUpdate ? "Updating Evaluation" : "Creating Evaluation"}</PageTitle>
 				<Card
 					title={
 						<Row gutter={24} type="flex" justify="center">
@@ -228,20 +216,11 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 									label="Select an employee to evaluate:"
 								>
 									{getFieldDecorator("evaluatee", {
-										initialValue: this.props.evaluationToUpdate
-											? this.props.evaluationToUpdate.evaluatee.employeeId
-											: undefined
+										initialValue: this.props.evaluationToUpdate ? this.props.evaluationToUpdate.evaluatee.employeeId : undefined
 									})(
-										<Select
-											placeholder="Select Employee"
-											size="large"
-											style={{ width: "100%" }}
-										>
+										<Select placeholder="Select Employee" size="large" style={{ width: "100%" }}>
 											{this.props.employees.map(employee => (
-												<Select.Option
-													key={employee.username}
-													value={employee.employeeId}
-												>
+												<Select.Option key={employee.username} value={employee.employeeId}>
 													{employee.name}
 												</Select.Option>
 											))}
@@ -258,23 +237,13 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 								>
 									{getFieldDecorator("surveyForm", {
 										initialValue:
-											this.props.evaluationToUpdate &&
-											this.props.evaluationToUpdate.evaluationId
-												? this.getSurveyFormIdForEvaluation(
-														this.props.evaluationToUpdate.evaluationId
-												  )
+											this.props.evaluationToUpdate && this.props.evaluationToUpdate.evaluationId
+												? this.getSurveyFormIdForEvaluation(this.props.evaluationToUpdate.evaluationId)
 												: undefined
 									})(
-										<Select
-											placeholder="Select Form"
-											size="large"
-											style={{ width: "100%" }}
-										>
+										<Select placeholder="Select Form" size="large" style={{ width: "100%" }}>
 											{this.props.surveyForms.map((surveyForm: SurveyForm) => (
-												<Select.Option
-													key={surveyForm.surveyFormName}
-													value={surveyForm.surveyFormId}
-												>
+												<Select.Option key={surveyForm.surveyFormName} value={surveyForm.surveyFormId}>
 													{surveyForm.surveyFormName}
 												</Select.Option>
 											))}
@@ -290,9 +259,7 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 									label="Remarks:"
 								>
 									{getFieldDecorator("remarks", {
-										initialValue: this.props.evaluationToUpdate
-											? this.props.evaluationToUpdate.remarks
-											: undefined
+										initialValue: this.props.evaluationToUpdate ? this.props.evaluationToUpdate.remarks : undefined
 									})(<Input.TextArea autosize={{ minRows: 2 }} />)}
 								</Form.Item>
 							</Col>
@@ -306,11 +273,7 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 							skillLevel={skillLevel}
 							categories={categories}
 							form={this.props.form}
-							answers={
-								this.props.evaluationToUpdate
-									? this.props.evaluationToUpdate.answers
-									: undefined
-							}
+							answers={this.props.evaluationToUpdate ? this.props.evaluationToUpdate.answers : undefined}
 						/>
 					) : (
 						""

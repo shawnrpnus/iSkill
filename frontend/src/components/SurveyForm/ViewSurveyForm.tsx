@@ -1,23 +1,18 @@
-import { Alert, Button, Col, Form, Icon, Popconfirm, Row, Typography } from "antd";
+import { Alert, Button, Col, Form, Icon, Popconfirm, Row } from "antd";
 import { FormComponentProps } from "antd/lib/form/Form";
 import * as React from "react";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
-import {
-	clearStateErrors,
-	clearUpdatingForm,
-	deleteSurveyForm,
-	getSurveyForm
-} from "../../actions/surveyFormActions";
+import { clearStateErrors, clearUpdatingForm, deleteSurveyForm, getSurveyForm } from "../../actions/surveyFormActions";
 import CategoryModel from "../../models/Category";
 import NumericChoiceQuestion from "../../models/NumericChoiceQuestion";
 import QuestionModel from "../../models/Question";
 import SurveyFormModel from "../../models/SurveyForm";
 import { sortCategoriesByCategorySequence } from "../../utils/SurveyFormUtils";
+import PageTitle from "../Layout/PageTitle";
 import SurveyFormTemplate from "./SurveyFormTemplate";
 import "./ViewSurveyForm.css";
-import PageTitle from "../Layout/PageTitle";
 
 export interface IViewSurveyFormProps extends FormComponentProps, RouteComponentProps {
 	getSurveyForm: typeof getSurveyForm;
@@ -61,9 +56,7 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 	calcCategoryScore(questionList: Array<QuestionModel>, categoryId: number | undefined): number {
 		let sum = 0;
 		for (let i = 0; i < questionList.length; i++) {
-			let fieldVal: number = this.props.form.getFieldValue(
-				`radio-${categoryId}-${questionList[i].questionId}`
-			);
+			let fieldVal: number = this.props.form.getFieldValue(`radio-${categoryId}-${questionList[i].questionId}`);
 			if (typeof fieldVal === "number") {
 				sum += fieldVal;
 			} else if (questionList[i].hasOwnProperty("lowerBound")) {
@@ -81,11 +74,7 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 			if (surveyFormId && params.formId && surveyFormId === +params.formId) {
 				this.props.deleteSurveyForm(surveyFormId, this.props.history);
 			} else {
-				alert(
-					`ERROR: route id does not match survey form id. SurveyFormId: ${surveyFormId}, ParamFormId: ${
-						params.formId
-					}`
-				);
+				alert(`ERROR: route id does not match survey form id. SurveyFormId: ${surveyFormId}, ParamFormId: ${params.formId}`);
 			}
 		} else {
 			alert("ERROR: Survey form or route not defined");
@@ -100,9 +89,7 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 		let surveyFormId = null;
 		if (this.props.surveyFormToPreview) {
 			surveyFormName = this.props.surveyFormToPreview.surveyFormName;
-			toolProcessName = this.props.surveyFormToPreview.toolProcess
-				? this.props.surveyFormToPreview.toolProcess.toolProcessName
-				: "";
+			toolProcessName = this.props.surveyFormToPreview.toolProcess ? this.props.surveyFormToPreview.toolProcess.toolProcessName : "";
 			skillLevel = this.props.surveyFormToPreview.skillLevel;
 			categories = this.props.surveyFormToPreview.categories;
 		} else if (this.props.surveyFormToViewOrUpdate && this.props.match) {

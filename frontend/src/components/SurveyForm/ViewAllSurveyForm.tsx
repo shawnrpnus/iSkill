@@ -1,4 +1,4 @@
-import { Button, Card, Col, Form, Icon, Input, notification, Popconfirm, Row, Table, Typography } from "antd";
+import { Button, Card, Form, Icon, Input, notification, Popconfirm, Table } from "antd";
 import { FormComponentProps } from "antd/lib/form/Form";
 import * as React from "react";
 import Highlighter from "react-highlight-words";
@@ -80,9 +80,7 @@ class ViewAllSurveyForm extends React.Component<IViewAllSurveyFormProps, IViewAl
 				</Button>
 			</div>
 		),
-		filterIcon: (filtered: any) => (
-			<Icon type="search" style={{ color: filtered ? "#1890ff" : undefined }} />
-		),
+		filterIcon: (filtered: any) => <Icon type="search" style={{ color: filtered ? "#1890ff" : undefined }} />,
 		onFilter: (value: any, record: any) =>
 			record[dataIndex]
 				.toString()
@@ -195,12 +193,7 @@ class ViewAllSurveyForm extends React.Component<IViewAllSurveyFormProps, IViewAl
 			<div style={{ padding: "2vw 5vw 0 5vw" }}>
 				<PageTitle>View All Forms</PageTitle>
 				<Card>
-					<Table
-						rowKey="surveyFormId"
-						dataSource={dataSource}
-						columns={columns}
-						onChange={this.handleChange}
-					/>
+					<Table rowKey="surveyFormId" dataSource={dataSource} columns={columns} onChange={this.handleChange} />
 				</Card>
 			</div>
 		);
