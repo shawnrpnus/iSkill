@@ -90,6 +90,10 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 			updateEvaluationRequest.evaluation.evaluationId = this.props.evaluationToUpdate.evaluationId;
 			console.log(updateEvaluationRequest);
 			this.props.updateEvaluation(updateEvaluationRequest);
+		} else {
+			let createEvaluationRequest = this.generateCreateEvaluationRequest();
+			createEvaluationRequest.evaluation.status = "ONGOING";
+			this.props.createEvaluation(createEvaluationRequest);
 		}
 	}
 
