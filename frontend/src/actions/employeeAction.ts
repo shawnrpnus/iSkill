@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_ERRORS, GET_LOGIN_DETAILS, REGISTER_NEW_EMPLOYEE, GET_EMPLOYEES_FOR_MANAGER_SUCCESS } from "./types";
+import { GET_ERRORS, GET_LOGIN_DETAILS, REGISTER_NEW_EMPLOYEE, GET_EMPLOYEES_FOR_MANAGER_SUCCESS, SET_CURRENT_USER } from "./types";
 import Employee from "../models/Employee";
 import Role from "../models/Role";
 import setAuthorizationToken from "../utils/setAuthorizationToken";
@@ -8,6 +8,13 @@ const getErrors = (errorData: any) => ({
 	type: GET_ERRORS,
 	errorObj: errorData
 })
+
+export function setCurrentUser(user:any) {
+	return {
+		type: SET_CURRENT_USER,
+		user
+	}
+}
 
 export const getLoginDetails = (
 	username: string,
@@ -26,11 +33,16 @@ export const getLoginDetails = (
 			})
 			.then(response => {
 				console.log(response);
-				const token = response.data.token;
-				localStorage.setItem('jwtToken',response.data);
+				const token:string = response.data.token.substring(7,response.data.token.length);
+				// const token1 = token.substring(7, token.length);
+				localStorage.setItem('jwtToken',token);
 				setAuthorizationToken(token);
-				dispatch(getLoginDetailsSuccess(response.data));
-				
+				let jwt = require('jsonwebtoken');
+				// console.log(jwt);
+				// console.log(token);
+				console.log(jwt.decode(token));
+				// dispatch(getLoginDetailsSuccess(response.data));
+				dispatch(setCurrentUser(jwt.decode(token)));
 				console.log("dispatched");
 			})
 			.catch(err => {

@@ -3,6 +3,15 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import setAuthorizationToken from './utils/setAuthorizationToken';
+import store from './store';
+import { setCurrentUser } from './actions/employeeAction';
+
+if(localStorage.getItem('jwtToken')) {
+    setAuthorizationToken(localStorage.jwtToken);
+    let jwt = require('jsonwebtoken');
+    store.dispatch(setCurrentUser(jwt.decode(localStorage.jwtToken)));
+}
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
