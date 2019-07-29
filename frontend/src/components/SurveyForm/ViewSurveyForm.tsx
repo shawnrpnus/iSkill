@@ -17,6 +17,7 @@ import SurveyFormModel from "../../models/SurveyForm";
 import { sortCategoriesByCategorySequence } from "../../utils/SurveyFormUtils";
 import SurveyFormTemplate from "./SurveyFormTemplate";
 import "./ViewSurveyForm.css";
+import PageTitle from "../Layout/PageTitle";
 
 export interface IViewSurveyFormProps extends FormComponentProps, RouteComponentProps {
 	getSurveyForm: typeof getSurveyForm;
@@ -118,12 +119,7 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 					""
 				) : (
 					<Row>
-						<Col span={24}>
-							<Typography.Title style={{ textAlign: "center" }}>
-								Viewing Evaluation Form
-							</Typography.Title>
-							<hr />
-						</Col>
+						<PageTitle>Viewing Evaluation Form</PageTitle>
 						<Col span={24}>
 							<Link to={`/updateForm/${surveyFormId}`}>
 								<Button type="primary" size="large">
@@ -189,5 +185,3 @@ export default connect(
 	mapStateToProps,
 	mapDispatchToProps
 )(wrappedViewSurveyForm);
-
-

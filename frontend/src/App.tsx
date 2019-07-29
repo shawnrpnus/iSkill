@@ -59,13 +59,16 @@ const App: React.FC = () => {
 										key="Eval"
 									>
 										<Menu.Item>
-											<Link to="/">My Evaluations</Link>
+											<Link to="/">Evaluations To Do</Link>
+										</Menu.Item>
+										<Menu.Item>
+											<Link to="/">Assigned Evaluations</Link>
 										</Menu.Item>
 										<Menu.Item>
 											<Link to="/viewAllForms">Assign Evaluation</Link>
 										</Menu.Item>
 										<Menu.Item>
-											<Link to="/createEvaluation">Create Evaluation</Link>
+											<Link to="/createEvaluation">Do Evaluation</Link>
 										</Menu.Item>
 										<Menu.Item>
 											<Link to="/login">Login</Link>

@@ -24,6 +24,7 @@ import { sortCategoriesByCategorySequence } from "../../utils/SurveyFormUtils";
 import SurveyFormTemplate from "../SurveyForm/SurveyFormTemplate";
 import { RouteComponentProps } from "react-router-dom";
 import Evaluation from "../../models/Evaluation";
+import PageTitle from "../Layout/PageTitle";
 
 export interface ICreateEvaluationProps extends FormComponentProps, RouteComponentProps {
 	errors: any;
@@ -212,14 +213,9 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 		}
 		return (
 			<Form onSubmit={this.handleSubmit} style={{ padding: "2vw 5vw 0 5vw" }}>
-				<Row>
-					<Col span={24}>
-						<Typography.Title style={{ textAlign: "center" }}>
-							{this.props.evaluationToUpdate ? "Updating Evaluation" : "Creating Evaluation"}
-						</Typography.Title>
-						<hr />
-					</Col>
-				</Row>
+				<PageTitle>
+					{this.props.evaluationToUpdate ? "Updating Evaluation" : "Creating Evaluation"}
+				</PageTitle>
 				<Card
 					title={
 						<Row gutter={24} type="flex" justify="center">

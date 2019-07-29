@@ -1,31 +1,17 @@
-import {
-	Alert,
-	Button,
-	Col,
-	Form,
-	Icon,
-	Input,
-	Row,
-	Select,
-	Spin,
-	Typography,
-	Card,
-	Affix,
-	Modal
-} from "antd";
+import { Affix, Alert, Button, Card, Col, Form, Icon, Input, Modal, Row, Select, Spin } from "antd";
 import { FormComponentProps } from "antd/lib/form";
 import * as React from "react";
 import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router";
 import {
+	clearPreviewForm,
 	clearStateErrors,
 	clearUpdatingForm,
 	createSurveyForm,
 	getSurveyForm,
-	updateSurveyForm,
 	previewSurveyForm,
-	clearPreviewForm
+	updateSurveyForm
 } from "../../actions/surveyFormActions";
 import { getAllToolProcess } from "../../actions/toolProcessActions";
 import CategoryModel from "../../models/Category";
@@ -38,6 +24,7 @@ import {
 	sortCategoriesByCategorySequence,
 	sortQuestionsByQuestionSequence
 } from "../../utils/SurveyFormUtils";
+import PageTitle from "../Layout/PageTitle";
 import Category from "./Category/Category";
 import "./CreateUpdateSurveyForm.css";
 import ViewSurveyForm from "./ViewSurveyForm";
@@ -396,16 +383,11 @@ class CreateUpdateSurveyForm extends React.Component<ICreateSurveyFormProps, ICr
 					<ViewSurveyForm />
 				</Modal>
 				<Form onSubmit={this.handleSubmit} style={{ padding: "2vw 5vw 0 5vw" }}>
-					<Row>
-						<Col span={24}>
-							<Typography.Title style={{ textAlign: "center" }}>
-								{this.props.surveyFormToViewOrUpdate
-									? "Updating Evaluation Form"
-									: "New Evaluation Form"}
-							</Typography.Title>
-							<hr />
-						</Col>
-					</Row>
+					<PageTitle>
+						{this.props.surveyFormToViewOrUpdate
+							? "Updating Evaluation Form"
+							: "New Evaluation Form"}
+					</PageTitle>
 					{this.props.errors.surveyFormCannotBeUpdated ? (
 						<Alert
 							showIcon

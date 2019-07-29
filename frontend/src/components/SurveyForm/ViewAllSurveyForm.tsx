@@ -7,6 +7,7 @@ import { RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
 import { deleteSurveyForm, getAllSurveyForms } from "../../actions/surveyFormActions";
 import SurveyForm from "../../models/SurveyForm";
+import PageTitle from "../Layout/PageTitle";
 
 export interface IViewAllSurveyFormProps extends FormComponentProps, RouteComponentProps<any> {
 	getAllSurveyForms: typeof getAllSurveyForms;
@@ -192,24 +193,7 @@ class ViewAllSurveyForm extends React.Component<IViewAllSurveyFormProps, IViewAl
 		}
 		return (
 			<div style={{ padding: "2vw 5vw 0 5vw" }}>
-				<Row>
-					<Col span={24}>
-						<Typography.Title style={{ textAlign: "center" }}>View All Forms</Typography.Title>
-						<hr />
-					</Col>
-					{/* <Col span={24}>
-						{this.props.errors.surveyFormCannotDelete ? (
-							<Alert
-								type="error"
-								message="An Error Occurred While Deleting"
-								description={this.props.errors.surveyFormCannotDelete}
-								showIcon
-							/>
-						) : (
-							""
-						)}
-					</Col> */}
-				</Row>
+				<PageTitle>View All Forms</PageTitle>
 				<Card>
 					<Table
 						rowKey="surveyFormId"
