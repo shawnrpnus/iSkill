@@ -4,9 +4,9 @@ import Answer from "./Answer";
 import EvaluationStatusEnum from "./EvaluationStatusEnum";
 
 export default class Evaluation {
-	evaluationId?: Number;
+	evaluationId?: number;
 
-	remarks?: String;
+	remarks?: string;
 
 	status: EvaluationStatusEnum;
 
@@ -19,7 +19,7 @@ export default class Evaluation {
 	answers?: Answer[];
 
 	constructor(
-		$remarks: String,
+		$remarks: string,
 		$status: EvaluationStatusEnum,
 		$evaluator: Employee,
 		$evaluatee: Employee,

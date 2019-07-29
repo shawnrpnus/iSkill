@@ -1,4 +1,5 @@
 export class CreateEvaluationRequest {
+    evaluationId?: number
     creatorEmployeeId: number;
     evaluatorEmployeeId: number;
     evaluateeEmployeeId: number;
@@ -15,7 +16,23 @@ export class CreateEvaluationRequest {
     }
 }
 
+export class UpdateEvaluationRequest {
+    newEvaluatorEmployeeId: number;
+    newEvaluateeEmployeeId: number;
+    newSurveyFormId: number;
+    evaluation: EvaluationReqObject;
+
+    constructor(evaluatorEmployeeId: number, evaluateeEmployeeId: number,
+        surveyFormId: number, evaluation: EvaluationReqObject) {
+        this.newEvaluateeEmployeeId = evaluateeEmployeeId;
+        this.newEvaluatorEmployeeId = evaluatorEmployeeId;
+        this.newSurveyFormId = surveyFormId;
+        this.evaluation = evaluation
+    }
+}
+
 export class EvaluationReqObject {
+    evaluationId?: number;
     status: string;
     remarks: string;
     answers?: Array<NumericChoiceAnswerReqObject>

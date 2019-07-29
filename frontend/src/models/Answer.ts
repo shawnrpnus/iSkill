@@ -1,13 +1,13 @@
 import Question from "./Question";
 
 export default class Answer {
-	answerId?: Number;
+	answerId?: number;
 
-	numericAnswer?: Number;
+	numericAnswer?: number;
 
-	textAnswer?: String;
+	textAnswer?: string;
 
-	yesNoAnswer?: Boolean;
+	yesNoAnswer?: boolean;
 
 	question: Question;
 

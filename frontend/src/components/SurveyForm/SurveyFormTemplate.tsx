@@ -5,6 +5,7 @@ import Category from "../../models/Category";
 import NumericChoiceQuestion from "../../models/NumericChoiceQuestion";
 import QuestionModel from "../../models/Question";
 import { getCategoryTotalMaxScore, sortQuestionsByQuestionSequence } from "../../utils/SurveyFormUtils";
+import Answer from "../../models/Answer";
 
 export interface ISurveyFormTemplateProps {
 	surveyFormName: string;
@@ -12,9 +13,12 @@ export interface ISurveyFormTemplateProps {
 	skillLevel: string;
 	categories: Category[];
 	form: WrappedFormUtils<any>;
+	answers?: Array<Answer>;
 }
 
-export interface ISurveyFormTemplateState {}
+export interface ISurveyFormTemplateState {
+	firstRenderDone: boolean;
+}
 
 const COL_ONE_SIZE = 8;
 const COL_TWO_SIZE = 8;
@@ -28,8 +32,12 @@ export default class SurveyFormTemplate extends React.Component<
 	constructor(props: ISurveyFormTemplateProps) {
 		super(props);
 
-		this.state = {};
+		this.state = {
+			firstRenderDone: false
+		};
 		this.calcCategoryScore = this.calcCategoryScore.bind(this);
+		this.getAnswerForQuestionId = this.getAnswerForQuestionId.bind(this);
+		this.getExistingAnswerScore = this.getExistingAnswerScore.bind(this);
 	}
 
 	calcCategoryScore(questionList: Array<QuestionModel>, categoryId: number | undefined): number {
@@ -46,6 +54,40 @@ export default class SurveyFormTemplate extends React.Component<
 			}
 		}
 		return sum;
+	}
+
+	getAnswerForQuestionId(questionId: number) {
+		if (this.props.answers) {
+			for (let i = 0; i < this.props.answers.length; i++) {
+				if (this.props.answers[i].question.questionId === questionId) {
+					return this.props.answers[i].numericAnswer;
+				}
+			}
+		}
+		return undefined;
+	}
+
+	getExistingAnswerScore() {
+		let totalExistingAnswerScore = 0;
+		if (this.props.answers) {
+			for (let i = 0; i < this.props.answers.length; i++) {
+				let score = this.props.answers[i].numericAnswer;
+				if (score) {
+					totalExistingAnswerScore += score;
+				}
+			}
+		}
+		return totalExistingAnswerScore;
+	}
+
+	componentDidMount() {
+		this.setState({ firstRenderDone: true });
+	}
+
+	componentDidUpdate() {
+		if (this.props.answers && this.state.firstRenderDone) {
+			this.setState({ firstRenderDone: false }); //force initial double render to get correct score values
+		}
 	}
 
 	public render() {
@@ -91,7 +133,11 @@ export default class SurveyFormTemplate extends React.Component<
 							<React.Fragment key={category.categoryId}>
 								<Row
 									gutter={24}
-									style={{ backgroundColor: "#e8e8e8", padding: "5px", fontWeight: "bold" }}
+									style={{
+										backgroundColor: "#e8e8e8",
+										padding: "5px",
+										fontWeight: "bold"
+									}}
 								>
 									<Col span={COL_ONE_SIZE + COL_TWO_SIZE + COL_THREE_SIZE}>
 										{category.categoryName}
@@ -127,6 +173,13 @@ export default class SurveyFormTemplate extends React.Component<
 													questionId={numericQn.questionId}
 													categoryId={category.categoryId}
 													form={this.props.form}
+													answer={
+														this.props.answers
+															? this.getAnswerForQuestionId(
+																	numericQn.questionId
+															  )
+															: undefined
+													}
 												/>
 											</Col>
 											<Col span={COL_THREE_SIZE} className="colCentered">
@@ -164,6 +217,7 @@ interface IRadioButtonsProps {
 	questionId: number;
 	categoryId?: number;
 	form: WrappedFormUtils<any>;
+	answer?: number;
 }
 
 const RadioButtons: React.FunctionComponent<IRadioButtonsProps> = props => {
@@ -175,7 +229,7 @@ const RadioButtons: React.FunctionComponent<IRadioButtonsProps> = props => {
 	return (
 		<React.Fragment>
 			{getFieldDecorator(`radio-${props.categoryId}-${props.questionId}`, {
-				initialValue: props.lowerBound
+				initialValue: props.answer ? props.answer : props.lowerBound
 			})(
 				<Radio.Group>
 					{radioOptions.map((option, index) => (
