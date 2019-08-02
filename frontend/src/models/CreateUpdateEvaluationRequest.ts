@@ -16,6 +16,22 @@ export class CreateEvaluationRequest {
     }
 }
 
+export class AssignEvaluationRequest {
+    evaluationId?: number
+    creatorEmployeeId: number;
+    evaluatorEmployeeIds: Array<number>;
+    evaluateeEmployeeIds: Array<number>;
+    surveyFormId: number;
+
+    constructor(creatorEmployeeId: number, evaluatorEmployeeIds: Array<number>, evaluateeEmployeeIds: Array<number>,
+        surveyFormId: number) {
+        this.creatorEmployeeId = creatorEmployeeId;
+        this.evaluateeEmployeeIds = evaluateeEmployeeIds;
+        this.evaluatorEmployeeIds = evaluatorEmployeeIds;
+        this.surveyFormId = surveyFormId;
+    }
+}
+
 export class UpdateEvaluationRequest {
     newEvaluatorEmployeeId: number;
     newEvaluateeEmployeeId: number;

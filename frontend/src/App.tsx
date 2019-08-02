@@ -12,6 +12,7 @@ import SubMenu from "antd/lib/menu/SubMenu";
 import LoginEmployee from "./components/Employee/LoginEmployee";
 import RegisterEmployee from "./components/Employee/RegisterEmployee";
 import CreateUpdateEvaluation from "./components/Evaluation/CreateUpdateEvaluation";
+import AssignEvaluation from "./components/Evaluation/AssignEvaluation";
 
 const App: React.FC = () => {
 	let viewportWidth = window.innerWidth || document.documentElement.clientWidth;
@@ -65,7 +66,7 @@ const App: React.FC = () => {
 											<Link to="/">Assigned Evaluations</Link>
 										</Menu.Item>
 										<Menu.Item>
-											<Link to="/viewAllForms">Assign Evaluation</Link>
+											<Link to="/assignEvaluations">Assign Evaluation</Link>
 										</Menu.Item>
 										<Menu.Item>
 											<Link to="/createEvaluation">Do Evaluation</Link>
@@ -113,6 +114,12 @@ const App: React.FC = () => {
 										key="createEval"
 										path="/updateEvaluation/:evaluationId"
 										component={CreateUpdateEvaluation}
+									/>
+									<Route
+										exact
+										key="assignEvaluations"
+										path="/assignEvaluations"
+										component={AssignEvaluation}
 									/>
 									<Route exact key="view" path="/login" component={LoginEmployee} />
 									<Route exact key="view" path="/register" component={RegisterEmployee} />

@@ -2,7 +2,7 @@ import * as React from "react";
 import "antd/dist/antd.css";
 import { Form, Icon, Input, Button, Checkbox } from "antd";
 import { connect } from "react-redux";
-import { getLoginDetails } from "../../actions/employeeAction";
+import { getLoginDetails, logout } from "../../actions/employeeAction";
 import { FormComponentProps } from "antd/lib/form";
 import { RouteComponentProps } from "react-router";
 import "./LoginEmployee.css";
@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 
 export interface ILoginEmployeeProps extends FormComponentProps, RouteComponentProps<any> {
   getLoginDetails: typeof getLoginDetails;
+  logout: typeof logout;
   errors: any;
   // employeeToCreate: Employee;
   employeeLoggedIn: Employee;
@@ -41,6 +42,11 @@ class LoginEmployee extends React.Component<ILoginEmployeeProps, ILoginEmployeeS
 		return Object.keys(fieldsError).some(field => fieldsError[field]);
 	}
 
+	logout(e: any) {
+		e.preventDefault();
+		this.props.logout();
+	}
+
 	render() {
 		const { getFieldDecorator } = this.props.form;
 		const { isAuthenticated } = this.props.auth;
@@ -49,7 +55,7 @@ class LoginEmployee extends React.Component<ILoginEmployeeProps, ILoginEmployeeS
 
 		const userLinks =(
 			<Button>
-				<Link to="/logout">Logout</Link>
+				<a onClick={this.logout.bind(this)}>Logout</a>
 			</Button>
 		);
 
@@ -116,7 +122,8 @@ const mapStateToProps = (state: any) => ({
 
 //action creators
 const mapDispatchToProps = {
-	getLoginDetails
+	getLoginDetails,
+	logout
 };
 
 export default connect(
