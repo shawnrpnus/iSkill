@@ -27,33 +27,33 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     // WebSecurityConfigurerAdapter is a class that implements the web security interface
     // provides default security configurations
 
-    @Autowired
-    private JwtAuthenticationEntryPoint unauthorizedHandler;
+    private final JwtAuthenticationEntryPoint unauthorizedHandler;
 
-    @Autowired
-    private CustomEmployeeService customEmployeeService;
+    private final CustomEmployeeService customEmployeeService;
 
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Bean
+    public SecurityConfig(JwtAuthenticationEntryPoint unauthorizedHandler, CustomEmployeeService customEmployeeService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.unauthorizedHandler = unauthorizedHandler;
+        this.customEmployeeService = customEmployeeService;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
+
+    @Bean //used in below configure method
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
         return new JwtAuthenticationFilter();
     }
 
-//    public SecurityConfig(JwtAuthenticationEntryPoint unauthorizedHandler) {
-//        this.unauthorizedHandler = unauthorizedHandler;
-//    }
+    @Override
+    @Bean(BeanIds.AUTHENTICATION_MANAGER) //bean name of the AuthenticationManager (for dependency injection)
+    protected AuthenticationManager authenticationManager() throws Exception {
+        return super.authenticationManager();
+    }
 
+    // configure the settings that the builder will use to build the AuthenticationManager
     @Override
     protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder.userDetailsService(customEmployeeService).passwordEncoder(bCryptPasswordEncoder);
-    }
-
-    @Override
-    @Bean(BeanIds.AUTHENTICATION_MANAGER)
-    protected AuthenticationManager authenticationManager() throws Exception {
-        return super.authenticationManager();
     }
 
     @Override
