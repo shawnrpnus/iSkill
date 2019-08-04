@@ -14,8 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 public class LoginRequest {
 
-    @NotBlank(message="Username cannot be blank")
+    @NotBlank(message="Username is required")
     private String username;
-    @NotBlank(message="Password cannot be blank")
+    @NotBlank(message="Password is required")
     private String password;
 }

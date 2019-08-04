@@ -23,7 +23,6 @@ public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
     private final RoleRepository roleRepository;
-    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
