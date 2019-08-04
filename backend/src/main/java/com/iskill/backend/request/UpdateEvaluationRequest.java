@@ -23,3 +23,25 @@ public class UpdateEvaluationRequest {
 
     private Long newSurveyFormId;
 }
+
+/* sample JSON
+{
+	"evaluation": {
+		"evaluationId": 1,
+	    "remarks": "TEST21",
+	    "status": "ONGOING",
+	    "answers": [
+	    	{
+				"numericAnswer": 4,
+				"question": {
+					"type": "numericChoice",
+                    "questionId": 2
+				}
+			}
+		]
+	},
+	"newEvaluatorEmployeeId": 1,
+	"newEvaluateeEmployeeId": 1,
+	"newSurveyFormId": 2
+}
+ */
