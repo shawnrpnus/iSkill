@@ -6,7 +6,7 @@ import com.iskill.backend.response.JWTLoginSuccessResponse;
 import com.iskill.backend.security.JwtTokenProvider;
 import com.iskill.backend.services.EmployeeService;
 import com.iskill.backend.services.ValidationService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.iskill.backend.validators.EmployeeValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,12 +33,15 @@ public class EmployeeController {
 
     private final AuthenticationManager authenticationManager;
 
-    public EmployeeController(EmployeeService employeeService, ValidationService validationService, JwtTokenProvider jwtTokenProvider, AuthenticationManager authenticationManager) {
+    private final EmployeeValidator employeeValidator;
+
+    public EmployeeController(EmployeeService employeeService, ValidationService validationService, JwtTokenProvider jwtTokenProvider, AuthenticationManager authenticationManager, EmployeeValidator employeeValidator) {
 
         this.employeeService = employeeService;
         this.validationService = validationService;
         this.jwtTokenProvider = jwtTokenProvider;
         this.authenticationManager = authenticationManager;
+        this.employeeValidator = employeeValidator;
     }
 
     @PostMapping("/login")
@@ -75,6 +78,7 @@ public class EmployeeController {
 
     @PostMapping("/register")
     public ResponseEntity<?> employeeRegister(@Valid @RequestBody Employee newEmployee, BindingResult result) {
+        employeeValidator.validate(newEmployee, result);
         ResponseEntity<Map<String, String>> errorMapRsp = validationService.generateErrorMapResponse(result);
         if (errorMapRsp != null) {
             return errorMapRsp;

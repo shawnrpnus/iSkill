@@ -33,6 +33,9 @@ public class Employee implements UserDetails {
     @NotBlank(message = "Password is required")
     private String password;
 
+    @Transient
+    private String confirmPassword;
+
     @NotBlank(message = "Cost Center is required")
     private String costCenter;
 

@@ -57,6 +57,7 @@ public class EmployeeService {
         String hashedPassword = bCryptPasswordEncoder.encode(password);
 //        System.out.println(hashedPassword);
         newEmployee.setPassword(hashedPassword);
+        newEmployee.setConfirmPassword("");
         return employeeRepository.save(newEmployee);
     }
 

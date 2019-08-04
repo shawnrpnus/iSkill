@@ -20,5 +20,9 @@ public class EmployeeValidator implements Validator {
         if(employee.getPassword().length() < 6) {
             errors.rejectValue("password", "Length", "Password must be at least 6 characters!");
         }
+
+        if(!employee.getPassword().equals(employee.getConfirmPassword())){
+            errors.rejectValue("confirmPassword", "Match", "Passwords do not match!");
+        }
     }
 }
