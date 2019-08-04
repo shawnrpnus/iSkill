@@ -105,7 +105,7 @@ const App: React.FC = () => {
 											path="/viewAllForms"
 											component={ViewAllSurveyForm}
 										/>
-										<Route
+										<SecuredRoute
 											exact
 											key="createEval"
 											path="/createEvaluation"

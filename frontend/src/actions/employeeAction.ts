@@ -45,6 +45,7 @@ export const getLoginDetails = (
 				// dispatch(getLoginDetailsSuccess(response.data));
 				dispatch(setCurrentUser(jwt.decode(token)));
 				console.log("dispatched");
+				window.location.reload();
 			})
 			.catch(err => {
 				dispatch(getErrors(err));

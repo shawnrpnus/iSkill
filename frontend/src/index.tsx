@@ -10,7 +10,7 @@ import { setCurrentUser } from './actions/employeeAction';
 if(localStorage.getItem('jwtToken')) {
     setAuthorizationToken(localStorage.jwtToken);
     let jwt = require('jsonwebtoken');
-    // store.dispatch(setCurrentUser(jwt.decode(localStorage.jwtToken)));
+    store.dispatch(setCurrentUser(jwt.decode(localStorage.jwtToken)));
 }
 
 ReactDOM.render(<App />, document.getElementById('root'));

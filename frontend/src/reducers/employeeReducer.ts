@@ -43,12 +43,11 @@ export default function (state = initialState, action: Action | any) {
         case SET_CURRENT_USER:
             console.log(action);
             console.log(isEmpty(action.user));
-            window.location.reload();
             return {
                 // isAuthenticated: (action.user != null || action.user != undefined),
                 ...state,
                 isAuthenticated: !isEmpty(action.user),
-                user: action.user
+                user: action.use
             };
 		default:
 			return state;
