@@ -36,7 +36,7 @@ export interface ICreateEvaluationProps extends FormComponentProps, RouteCompone
 	clearUpdatingEvaluation: typeof clearUpdatingEvaluation;
 }
 
-export interface ICreateEvaluationState { }
+export interface ICreateEvaluationState {}
 
 interface IRouteParams {
 	evaluationId?: number;
@@ -56,8 +56,8 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 	}
 
 	componentWillMount() {
-		let token = localStorage.getItem('jwtToken');
-		let jwt = require('jsonwebtoken');
+		let token = localStorage.getItem("jwtToken");
+		let jwt = require("jsonwebtoken");
 		console.log(jwt.decode(token)); //this returns employee object
 		let thisUser: Employee = jwt.decode(token);
 		console.log(thisUser.employeeId);
@@ -191,6 +191,7 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 		const { getFieldDecorator } = this.props.form;
 		let surveyFormId = this.props.form.getFieldValue("surveyForm");
 		if (!surveyFormId && this.props.evaluationToUpdate && this.props.evaluationToUpdate.evaluationId) {
+			//updating
 			surveyFormId = this.getSurveyFormIdForEvaluation(this.props.evaluationToUpdate.evaluationId);
 		}
 		let surveyFormName = "";
@@ -282,8 +283,8 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 							answers={this.props.evaluationToUpdate ? this.props.evaluationToUpdate.answers : undefined}
 						/>
 					) : (
-							""
-						)}
+						""
+					)}
 					<Form.Item style={{ textAlign: "right", marginTop: "10px" }}>
 						<AffixedButtons
 							leftButtonText="Save as Draft"
