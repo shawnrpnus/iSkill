@@ -36,7 +36,7 @@ export interface ICreateEvaluationProps extends FormComponentProps, RouteCompone
 	clearUpdatingEvaluation: typeof clearUpdatingEvaluation;
 }
 
-export interface ICreateEvaluationState {}
+export interface ICreateEvaluationState { }
 
 interface IRouteParams {
 	evaluationId?: number;
@@ -56,7 +56,13 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 	}
 
 	componentWillMount() {
-		this.props.getEmployeesForManager(1); // TODO: Use dynamic id based on who is logged in
+		let token = localStorage.getItem('jwtToken');
+		let jwt = require('jsonwebtoken');
+		console.log(jwt.decode(token)); //this returns employee object
+		let thisUser: Employee = jwt.decode(token);
+		console.log(thisUser.employeeId);
+		let loggedInEmployeeId: number = thisUser.employeeId || 0;
+		this.props.getEmployeesForManager(loggedInEmployeeId); // TODO: Use dynamic id based on who is logged in
 		this.props.getAllSurveyForms();
 		let params: IRouteParams = this.props.match.params;
 		if (params.evaluationId) {
@@ -276,8 +282,8 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 							answers={this.props.evaluationToUpdate ? this.props.evaluationToUpdate.answers : undefined}
 						/>
 					) : (
-						""
-					)}
+							""
+						)}
 					<Form.Item style={{ textAlign: "right", marginTop: "10px" }}>
 						<AffixedButtons
 							leftButtonText="Save as Draft"

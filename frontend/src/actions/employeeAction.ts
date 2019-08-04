@@ -40,7 +40,8 @@ export const getLoginDetails = (
 				let jwt = require('jsonwebtoken');
 				// console.log(jwt);
 				// console.log(token);
-				console.log(jwt.decode(token));
+				let thisUser : Employee = jwt.decode(token);
+				console.log(thisUser.employeeId); //this returns employee object
 				// dispatch(getLoginDetailsSuccess(response.data));
 				dispatch(setCurrentUser(jwt.decode(token)));
 				console.log("dispatched");
@@ -54,6 +55,14 @@ export const getLoginDetails = (
 			});
 	};
 };
+
+export function logout() {
+	return (dispatch: any) => {
+		localStorage.removeItem('jwtToken');
+		setAuthorizationToken(false);
+		dispatch(setCurrentUser({}));
+	}
+}
 
 const getLoginDetailsSuccess = (payload: any) => ({
 	type: GET_LOGIN_DETAILS,

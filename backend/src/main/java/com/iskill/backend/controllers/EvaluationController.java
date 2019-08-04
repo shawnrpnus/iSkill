@@ -1,6 +1,8 @@
 package com.iskill.backend.controllers;
 
 import com.iskill.backend.models.Evaluation;
+import com.iskill.backend.models.EvaluationStatusEnum;
+import com.iskill.backend.request.AssignEvaluationRequest;
 import com.iskill.backend.request.CreateEvaluationRequest;
 import com.iskill.backend.request.UpdateEvaluationRequest;
 import com.iskill.backend.services.EvaluationService;
@@ -42,6 +44,25 @@ public class EvaluationController {
         Evaluation createdEvaluation = evaluationService.createNewEvaluation(newEvaluation, creatorEmployeeId, evaluatorEmployeeId,
                 evaluateeEmployeeId, surveyFormId);
         return new ResponseEntity<>(createdEvaluation, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/assignEvaluations")
+    public ResponseEntity<?> assignEvaluation(@Valid @RequestBody AssignEvaluationRequest assignEvaluationRequest, BindingResult result) {
+        ResponseEntity<Map<String, String>> errorMapRsp = validationService.generateErrorMapResponse(result);
+        if (errorMapRsp != null) {
+            return errorMapRsp;
+        }
+        Long creatorEmployeeId = assignEvaluationRequest.getCreatorEmployeeId();
+        Long[] evaluatorEmployeeIds = assignEvaluationRequest.getEvaluatorEmployeeIds();
+        Long[] evaluateeEmployeeIds = assignEvaluationRequest.getEvaluateeEmployeeIds();
+        Long surveyFormId = assignEvaluationRequest.getSurveyFormId();
+        Evaluation[] createdEvaluations = new Evaluation[evaluateeEmployeeIds.length];
+        for(int i = 0; i < evaluatorEmployeeIds.length; i++) {
+            createdEvaluations[i] = evaluationService.createNewEvaluation(new Evaluation("TEST", EvaluationStatusEnum.NEW), creatorEmployeeId, evaluatorEmployeeIds[i],
+                    evaluateeEmployeeIds[i], surveyFormId);
+        }
+
+        return new ResponseEntity<>(createdEvaluations, HttpStatus.CREATED);
     }
 
     @GetMapping("/{evaluationId}")
