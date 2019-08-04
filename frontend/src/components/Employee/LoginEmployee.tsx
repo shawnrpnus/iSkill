@@ -4,10 +4,10 @@ import { Form, Icon, Input, Button, Checkbox } from "antd";
 import { connect } from "react-redux";
 import { getLoginDetails, logout } from "../../actions/employeeAction";
 import { FormComponentProps } from "antd/lib/form";
-import { RouteComponentProps } from "react-router";
+import { RouteComponentProps, Redirect } from "react-router";
 import "./LoginEmployee.css";
 import Employee from "../../models/Employee";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 
 export interface ILoginEmployeeProps extends FormComponentProps, RouteComponentProps<any> {
   getLoginDetails: typeof getLoginDetails;
@@ -32,6 +32,13 @@ class LoginEmployee extends React.Component<ILoginEmployeeProps, ILoginEmployeeS
 		this.props.form.validateFields();
 	}
 
+	componentDidUpdate() { 
+	// 	if (this.props.auth.isAuthenticated) {
+		
+	// 	return <Redirect to="/" />
+	//   }
+	}
+
 	handleSubmit(e: React.FormEvent<EventTarget>) {
 		e.preventDefault();
 		let username = this.props.form.getFieldValue("username");
@@ -52,12 +59,14 @@ class LoginEmployee extends React.Component<ILoginEmployeeProps, ILoginEmployeeS
 		const { isAuthenticated } = this.props.auth;
 		console.log(isAuthenticated);
 		console.log(this.props.auth.isAuthenticated);
+		console.log(this.props);
 
-		const userLinks =(
-			<Button>
-				<a onClick={this.logout.bind(this)}>Logout</a>
-			</Button>
-		);
+		// const userLinks =(
+		// 	<Redirect to="/" />
+		// 	// <Button>
+		// 	// 	<a onClick={this.logout.bind(this)}>Logout</a>
+		// 	// </Button>
+		// );
 
 		const guestLinks = (
 			<Form onSubmit={this.handleSubmit} className="login-form">
@@ -106,7 +115,8 @@ class LoginEmployee extends React.Component<ILoginEmployeeProps, ILoginEmployeeS
 		return (
 			<div>
 				<div>
-					{isAuthenticated ? userLinks : guestLinks}
+					{/* {isAuthenticated ? userLinks : guestLinks} */}
+					{guestLinks}
 				</div>
 			</div>
 		);
