@@ -28,8 +28,8 @@ const App: React.FC = () => {
 		<Provider store={store}>
 			<Router>
 				<div>
-				{localStorage.getItem('jwtToken') ? (
-							<Layout>
+					{localStorage.getItem("jwtToken") ? (
+						<Layout>
 							<Layout.Header style={{ padding: "0 1.5vw" }}>
 								<Header />
 							</Layout.Header>
@@ -87,52 +87,26 @@ const App: React.FC = () => {
 											path="/createForm"
 											component={CreateUpdateSurveyForm}
 										/>
-										<SecuredRoute
-											exact
-											key="update"
-											path="/updateForm/:formId"
-											component={CreateUpdateSurveyForm}
-										/>
-										<SecuredRoute
-											exact
-											key="viewOne"
-											path="/viewForm/:formId"
-											component={ViewSurveyForm}
-										/>
-										<SecuredRoute
-											exact
-											key="view"
-											path="/viewAllForms"
-											component={ViewAllSurveyForm}
-										/>
-										<SecuredRoute
-											exact
-											key="createEval"
-											path="/createEvaluation"
-											component={CreateUpdateEvaluation}
-										/>
+										<SecuredRoute exact key="update" path="/updateForm/:formId" component={CreateUpdateSurveyForm} />
+										<SecuredRoute exact key="viewOne" path="/viewForm/:formId" component={ViewSurveyForm} />
+										<SecuredRoute exact key="view" path="/viewAllForms" component={ViewAllSurveyForm} />
+										<SecuredRoute exact key="createEval" path="/createEvaluation" component={CreateUpdateEvaluation} />
 										<SecuredRoute
 											exact
 											key="createEval"
 											path="/updateEvaluation/:evaluationId"
 											component={CreateUpdateEvaluation}
 										/>
-										<SecuredRoute
-											exact
-											key="assignEvaluations"
-											path="/assignEvaluations"
-											component={AssignEvaluation}
-										/>
-										<Route exact key="view" path="/login" component={LoginEmployee} />
-										<Route exact key="view" path="/register" component={RegisterEmployee} />
+										<SecuredRoute exact key="assignEvaluations" path="/assignEvaluations" component={AssignEvaluation} />
+										<Route exact key="login" path="/login" component={LoginEmployee} />
+										<Route exact key="register" path="/register" component={RegisterEmployee} />
 									</Switch>
 								</Layout.Content>
 							</Layout>
 						</Layout>
-						) : (
-							<LoginEmployee/>
-						)}
-					
+					) : (
+						<LoginEmployee />
+					)}
 				</div>
 			</Router>
 		</Provider>

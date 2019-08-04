@@ -1,13 +1,17 @@
 import * as React from "react";
-import { Typography, Button } from "antd";
+import { Typography, Button, Menu, Icon } from "antd";
 import "./Header.css";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import Employee from "../../models/Employee";
 
-export interface IHeaderProps {}
+export interface IHeaderProps {
+	user: Employee;
+}
 
 export interface IHeaderState {}
 
-export default class Header extends React.Component<IHeaderProps, IHeaderState> {
+class Header extends React.Component<IHeaderProps, IHeaderState> {
 	constructor(props: IHeaderProps) {
 		super(props);
 
@@ -30,18 +34,41 @@ export default class Header extends React.Component<IHeaderProps, IHeaderState> 
 		// 	<Link to="/login">Login</Link>
 		// </Button>);
 		return (
-			<div className="headerText" style={{ height: "100%" }}>
-				<Typography.Title
-					style={{
-						color: "white",
-						marginBottom: 0,
-						height: "100%",
-						lineHeight: "64px"
-					}}
-				>
-					iSkill
-				</Typography.Title>
+			<div>
+				<div className="headerText" style={{ height: "100%" }}>
+					<Typography.Title
+						style={{
+							color: "white",
+							marginBottom: 0,
+							height: "100%",
+							lineHeight: "64px"
+						}}
+					>
+						iSkill
+					</Typography.Title>
+				</div>
+				{this.props.user && this.props.user.name ? (
+					<div style={{ textAlign: "right" }}>
+						<Menu theme="dark" mode="horizontal">
+							<Menu.Item>
+								<Icon type="user" />
+								<span>{this.props.user.name}</span>
+							</Menu.Item>
+							<Menu.Item>
+								<span>Logout</span>
+							</Menu.Item>
+						</Menu>
+					</div>
+				) : (
+					""
+				)}
 			</div>
 		);
 	}
 }
+
+const mapStateToProps = (state: any) => ({
+	user: state.employee.user
+});
+
+export default connect(mapStateToProps)(Header);
