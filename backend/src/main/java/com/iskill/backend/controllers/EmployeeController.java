@@ -79,14 +79,7 @@ public class EmployeeController {
         if (errorMapRsp != null) {
             return errorMapRsp;
         }
-//        String username = registerEmployeeRequest.getUsername();
-//        String name = registerEmployeeRequest.getName();
-//        String password = registerEmployeeRequest.getPassword();
-//        String costCenter = registerEmployeeRequest.getCostCenter();
-//        String shift = registerEmployeeRequest.getShift();
-//        Role role = registerEmployeeRequest.getRole();
 
-//        Employee newEmployee = new Employee(name, username, password, costCenter, shift, role);
         Employee createdNewEmployee = employeeService.createNewEmployee(newEmployee);
         return new ResponseEntity<>(createdNewEmployee, HttpStatus.CREATED);
     }
