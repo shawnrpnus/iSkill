@@ -5,13 +5,22 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import setAuthorizationToken from './utils/setAuthorizationToken';
 import store from './store';
-import { setCurrentUser } from './actions/employeeAction';
+import { setCurrentUser, logout } from './actions/employeeAction';
 
-if(localStorage.getItem('jwtToken')) {
-    setAuthorizationToken(localStorage.jwtToken);
-    let jwt = require('jsonwebtoken');
-    store.dispatch(setCurrentUser(jwt.decode(localStorage.jwtToken)));
-}
+// let jwt = require('jsonwebtoken');
+// if (localStorage.getItem('jwtToken')) {
+//     setAuthorizationToken(localStorage.jwtToken);
+//     store.dispatch(setCurrentUser(jwt.decode(localStorage.jwtToken)));
+//     console.log(jwt.decode(localStorage.jwtToken));
+//     const currentTime = Date.now() / 1000;
+//     console.log(currentTime, jwt.decode(localStorage.jwtToken).exp)
+//     if (jwt.decode(localStorage.jwtToken).exp < currentTime) {
+//         store.dispatch(logout());
+//         window.location.href = "/";
+//     }
+// }
+
+
 
 ReactDOM.render(<App />, document.getElementById('root'));
 

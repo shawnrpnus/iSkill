@@ -61,12 +61,12 @@ class LoginEmployee extends React.Component<ILoginEmployeeProps, ILoginEmployeeS
 		console.log(this.props.auth.isAuthenticated);
 		console.log(this.props);
 
-		// const userLinks =(
-		// 	<Redirect to="/" />
-		// 	// <Button>
-		// 	// 	<a onClick={this.logout.bind(this)}>Logout</a>
-		// 	// </Button>
-		// );
+		const userLinks =(
+			<Redirect to="/" />
+			// <Button>
+			// 	<a onClick={this.logout.bind(this)}>Logout</a>
+			// </Button>
+		);
 
 		const guestLinks = (
 			<Form onSubmit={this.handleSubmit} className="login-form">
@@ -107,7 +107,7 @@ class LoginEmployee extends React.Component<ILoginEmployeeProps, ILoginEmployeeS
 							>
 								Log in
 							</Button>
-							Or <a href="/">register now!</a>
+							Or <a href="/register">register now!</a>
 						</Form.Item>
 					</Form>
 		);
@@ -115,8 +115,8 @@ class LoginEmployee extends React.Component<ILoginEmployeeProps, ILoginEmployeeS
 		return (
 			<div>
 				<div>
-					{/* {isAuthenticated ? userLinks : guestLinks} */}
-					{guestLinks}
+					{isAuthenticated ? userLinks : guestLinks}
+					{/* {guestLinks} */}
 				</div>
 			</div>
 		);

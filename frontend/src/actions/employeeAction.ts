@@ -12,7 +12,7 @@ const getErrors = (errorData: any) => ({
 export function setCurrentUser(user:any) {
 	return {
 		type: SET_CURRENT_USER,
-		user
+		user: user
 	}
 }
 
@@ -45,7 +45,8 @@ export const getLoginDetails = (
 				// dispatch(getLoginDetailsSuccess(response.data));
 				dispatch(setCurrentUser(jwt.decode(token)));
 				console.log("dispatched");
-				window.location.reload();
+				// window.location.reload();
+				window.location.href = "/";
 			})
 			.catch(err => {
 				dispatch(getErrors(err));
@@ -57,7 +58,7 @@ export const getLoginDetails = (
 	};
 };
 
-export function logout() {
+export function logout() : any {
 	return (dispatch: any) => {
 		localStorage.removeItem('jwtToken');
 		setAuthorizationToken(false);
