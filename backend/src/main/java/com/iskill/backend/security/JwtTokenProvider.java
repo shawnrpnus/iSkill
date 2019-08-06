@@ -15,6 +15,7 @@ import static com.iskill.backend.security.SecurityConstants.SECRET;
 @Component
 public class JwtTokenProvider {
 
+    //generates token after authentication (used in EmployeeController)
     public String generateToken(Authentication authentication) {
 
         Employee employee = (Employee) authentication.getPrincipal();
