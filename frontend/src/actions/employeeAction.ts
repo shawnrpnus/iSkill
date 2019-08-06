@@ -12,7 +12,7 @@ const getErrors = (errorData: any) => ({
 export function setCurrentUser(user:any) {
 	return {
 		type: SET_CURRENT_USER,
-		user
+		user: user
 	}
 }
 
@@ -45,10 +45,13 @@ export const getLoginDetails = (
 				// dispatch(getLoginDetailsSuccess(response.data));
 				dispatch(setCurrentUser(jwt.decode(token)));
 				console.log("dispatched");
-				window.location.reload();
+				// window.location.reload();
+				window.location.href = "/";
 			})
 			.catch(err => {
-				dispatch(getErrors(err));
+				console.log("got reach");
+				// console.log(getErrors(err).errorObj.response.data);
+				dispatch(getErrors(err.response.data));
 				// if (err.response.status === 500) {
 				// 	alert("Internal server error has occured. Please contact the system administrator.");
 				// 	console.log(err.response)
@@ -57,7 +60,7 @@ export const getLoginDetails = (
 	};
 };
 
-export function logout() {
+export function logout() : any {
 	return (dispatch: any) => {
 		localStorage.removeItem('jwtToken');
 		setAuthorizationToken(false);

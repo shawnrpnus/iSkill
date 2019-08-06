@@ -47,7 +47,7 @@ export default function (state = initialState, action: Action | any) {
                 // isAuthenticated: (action.user != null || action.user != undefined),
                 ...state,
                 isAuthenticated: !isEmpty(action.user),
-                user: action.use
+                user: action.user
             };
 		default:
 			return state;
