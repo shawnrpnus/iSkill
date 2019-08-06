@@ -10,15 +10,15 @@ import Employee from "../../models/Employee";
 import { Link, withRouter } from "react-router-dom";
 
 export interface ILoginEmployeeProps extends FormComponentProps, RouteComponentProps<any> {
-  getLoginDetails: typeof getLoginDetails;
-  logout: typeof logout;
-  errors: any;
-  // employeeToCreate: Employee;
-  employeeLoggedIn: Employee;
-  auth: any;
+	getLoginDetails: typeof getLoginDetails;
+	logout: typeof logout;
+	errors: any;
+	// employeeToCreate: Employee;
+	employeeLoggedIn: Employee;
+	auth: any;
 }
 
-export interface ILoginEmployeeState {}
+export interface ILoginEmployeeState { }
 
 class LoginEmployee extends React.Component<ILoginEmployeeProps, ILoginEmployeeState> {
 	constructor(props: ILoginEmployeeProps) {
@@ -32,11 +32,11 @@ class LoginEmployee extends React.Component<ILoginEmployeeProps, ILoginEmployeeS
 		this.props.form.validateFields();
 	}
 
-	componentDidUpdate() { 
-	// 	if (this.props.auth.isAuthenticated) {
-		
-	// 	return <Redirect to="/" />
-	//   }
+	componentDidUpdate() {
+		// 	if (this.props.auth.isAuthenticated) {
+
+		// 	return <Redirect to="/" />
+		//   }
 	}
 
 	handleSubmit(e: React.FormEvent<EventTarget>) {
@@ -57,11 +57,11 @@ class LoginEmployee extends React.Component<ILoginEmployeeProps, ILoginEmployeeS
 	render() {
 		const { getFieldDecorator } = this.props.form;
 		const { isAuthenticated } = this.props.auth;
-		console.log(isAuthenticated);
-		console.log(this.props.auth.isAuthenticated);
-		console.log(this.props);
+		// console.log(isAuthenticated);
+		// console.log(this.props.auth.isAuthenticated);
+		// console.log(this.props);
 
-		const userLinks =(
+		const userLinks = (
 			<Redirect to="/" />
 			// <Button>
 			// 	<a onClick={this.logout.bind(this)}>Logout</a>
@@ -70,46 +70,50 @@ class LoginEmployee extends React.Component<ILoginEmployeeProps, ILoginEmployeeS
 
 		const guestLinks = (
 			<Form onSubmit={this.handleSubmit} className="login-form">
-						<Form.Item>
-							{getFieldDecorator("username", {
-								rules: [{ required: true, message: "Please input your username!" }]
-							})(
-								<Input
-									prefix={<Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
-									placeholder="Username"
-								/>
-							)}
-						</Form.Item>
-						<Form.Item>
-							{getFieldDecorator("password", {
-								rules: [{ required: true, message: "Please input your Password!" }]
-							})(
-								<Input
-									prefix={<Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />}
-									type="password"
-									placeholder="Password"
-								/>
-							)}
-						</Form.Item>
-						<Form.Item>
-							{getFieldDecorator("remember", {
-								valuePropName: "checked",
-								initialValue: true
-							})(<Checkbox>Remember me</Checkbox>)}
-							<a className="login-form-forgot" href="/">
-								Forgot password
+				<Form.Item
+					validateStatus={this.props.errors.username ? "error" : ""}
+					help={this.props.errors.username}
+					hasFeedback={true}
+					
+				>
+					{getFieldDecorator("username")(
+						<Input
+							prefix={<Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
+							placeholder="Username"
+						/>
+					)}
+				</Form.Item>
+				<Form.Item
+					validateStatus={this.props.errors.username ? "error" : ""}
+					help={this.props.errors.password}
+					hasFeedback={true}>
+					{getFieldDecorator("password")(
+						<Input
+							prefix={<Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />}
+							type="password"
+							placeholder="Password"
+						/>
+					)}
+				</Form.Item>
+				<Form.Item>
+					{getFieldDecorator("remember", {
+						valuePropName: "checked",
+						initialValue: true
+					})(<Checkbox>Remember me</Checkbox>)}
+					<a className="login-form-forgot" href="/">
+						Forgot password
 							</a>
-							<Button
-								type="primary"
-								htmlType="submit"
-								className="login-form-button"
-								onSubmit={this.handleSubmit}
-							>
-								Log in
+					<Button
+						type="primary"
+						htmlType="submit"
+						className="login-form-button"
+						onSubmit={this.handleSubmit}
+					>
+						Log in
 							</Button>
-							Or <a href="/register">register now!</a>
-						</Form.Item>
-					</Form>
+					Or <a href="/register">register now!</a>
+				</Form.Item>
+			</Form>
 		);
 
 		return (

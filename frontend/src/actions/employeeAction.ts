@@ -49,7 +49,9 @@ export const getLoginDetails = (
 				window.location.href = "/";
 			})
 			.catch(err => {
-				dispatch(getErrors(err));
+				console.log("got reach");
+				// console.log(getErrors(err).errorObj.response.data);
+				dispatch(getErrors(err.response.data));
 				// if (err.response.status === 500) {
 				// 	alert("Internal server error has occured. Please contact the system administrator.");
 				// 	console.log(err.response)
