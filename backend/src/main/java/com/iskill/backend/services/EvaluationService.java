@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 public class EvaluationService {
 
     private final EvaluationRepository evaluationRepository;
@@ -162,10 +163,7 @@ public class EvaluationService {
 
         existingEvaluation.setMaxScore(calculateSurveyFormMaxScore(newSurveyForm));
 
-        Evaluation savedEvaluation = evaluationRepository.save(existingEvaluation);
-        System.out.println(savedEvaluation.getSurveyForm().getSurveyFormId());
-        System.out.println(savedEvaluation.getSurveyForm().getEvaluations().get(0).getEvaluationId());
-        return savedEvaluation;
+        return evaluationRepository.save(existingEvaluation);
     }
 
     public void deleteEvaluation(Long evaluationId){
