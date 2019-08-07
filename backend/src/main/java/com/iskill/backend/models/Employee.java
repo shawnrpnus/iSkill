@@ -31,7 +31,7 @@ public class Employee implements UserDetails {
     private String username;
 
     @NotBlank(message = "Password is required")
-    private String password;
+    private String password; //field must be called password by default, otherwise override the getPassword() method
 
     @Transient
     private String confirmPassword;

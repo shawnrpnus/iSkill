@@ -51,6 +51,8 @@ public class EmployeeController {
             return errorMapRsp;
         }
 
+        //authenticationManager is configured to use CustomEmployeeService in SecurityConfig
+        //if authentication fails, exception is caught, then commence() method in JwtAuthenticationEntryPoint is called
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.getUsername(),
@@ -64,16 +66,6 @@ public class EmployeeController {
 
         return ResponseEntity.ok(new JWTLoginSuccessResponse(true, jwt));
 
-//        String username = loginRequest.getUsername();
-//        String password = loginRequest.getPassword();
-//        Employee employeeLoggedIn = employeeService.getEmployeeByUsernameAndPassword(username, password);
-//        if(employeeLoggedIn != null) {
-//            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-//            if(bCryptPasswordEncoder.matches(password,employeeLoggedIn.getPassword())) {
-//                return new ResponseEntity<>(employeeLoggedIn, HttpStatus.OK);
-//            }
-//        }
-//        return null;
     }
 
     @PostMapping("/register")

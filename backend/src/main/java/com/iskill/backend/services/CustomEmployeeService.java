@@ -18,7 +18,7 @@ public class CustomEmployeeService implements UserDetailsService {
         this.employeeRepository = employeeRepository;
     }
 
-    @Override
+    @Override //used by the AuthenticationManager (set in SecurityConfig)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Employee employee = employeeRepository.findByUsername(username);
 

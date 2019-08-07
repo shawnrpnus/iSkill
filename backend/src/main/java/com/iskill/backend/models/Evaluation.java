@@ -48,6 +48,10 @@ public class Evaluation {
     @OneToMany
     private List<Answer> answers = new ArrayList<>();
 
+    private Integer maxScore = 0;
+
+    private Integer totalScore = 0;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss Z", locale = "en_SG", timezone = "GMT+8")
     @Column(updatable = false)
     private Date created_At;

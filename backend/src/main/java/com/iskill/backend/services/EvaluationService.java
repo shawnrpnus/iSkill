@@ -50,6 +50,9 @@ public class EvaluationService {
         evaluation.setSurveyForm(surveyForm);
         surveyForm.getEvaluations().add(evaluation);
 
+        evaluation.setMaxScore(calculateSurveyFormMaxScore(surveyForm));
+
+        Integer totalScore = 0;
         //evaluation already contains answers
         for (Answer answer : evaluation.getAnswers()){
             //each answer already contains question
@@ -57,10 +60,24 @@ public class EvaluationService {
             question.getAnswers().add(answer);
             answer.setQuestion(question);
             answerRepository.save(answer);
-
+            totalScore += answer.getNumericAnswer();
         }
 
+        evaluation.setTotalScore(totalScore);
+
         return evaluationRepository.save(evaluation);
+    }
+
+    private Integer calculateSurveyFormMaxScore(SurveyForm surveyForm){
+        Integer maxScore = 0;
+        for (Category c: surveyForm.getCategories()){
+            for (Question q: c.getQuestions()){
+                if (q instanceof NumericChoiceQuestion){
+                    maxScore += ((NumericChoiceQuestion) q).getUpperBound();
+                }
+            }
+        }
+        return maxScore;
     }
 
     public Evaluation getEvaluationById (Long evaluationId){
@@ -101,6 +118,7 @@ public class EvaluationService {
             answerRepository.delete(answer);
         }
 
+        Integer totalScore = 0;
         for (Answer answer: updatedEvaluation.getAnswers()){
             Long questionId = answer.getQuestion().getQuestionId();
             Question question = questionService.getQuestion(questionId);
@@ -108,7 +126,11 @@ public class EvaluationService {
             answerRepository.save(answer);
             question.getAnswers().add(answer);
             existingEvaluation.getAnswers().add(answer);
+            totalScore += answer.getNumericAnswer();
         }
+
+        existingEvaluation.setTotalScore(totalScore);
+
         //override remarks and status
         existingEvaluation.setRemarks(updatedEvaluation.getRemarks());
         existingEvaluation.setStatus(updatedEvaluation.getStatus());
@@ -137,6 +159,8 @@ public class EvaluationService {
 
         newSurveyForm.getEvaluations().add(existingEvaluation);
         existingEvaluation.setSurveyForm(newSurveyForm);
+
+        existingEvaluation.setMaxScore(calculateSurveyFormMaxScore(newSurveyForm));
 
         Evaluation savedEvaluation = evaluationRepository.save(existingEvaluation);
         System.out.println(savedEvaluation.getSurveyForm().getSurveyFormId());
