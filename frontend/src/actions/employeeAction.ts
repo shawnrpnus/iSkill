@@ -43,7 +43,7 @@ export const getLoginDetails = (
 				// console.log(jwt);
 				// console.log(token);
 				let thisUser: Employee = jwt.decode(token);
-				console.log(thisUser.employeeId); //this returns employee object
+				console.log(thisUser); //this returns employee object
 				// dispatch(getLoginDetailsSuccess(response.data));
 				dispatch(setCurrentUser(jwt.decode(token)));
 				console.log("dispatched");

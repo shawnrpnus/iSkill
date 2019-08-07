@@ -13,11 +13,13 @@ import CreateUpdateSurveyForm from "../components/SurveyForm/CreateUpdateSurveyF
 import ViewAllSurveyForm from "../components/SurveyForm/ViewAllSurveyForm";
 import ViewSurveyForm from "../components/SurveyForm/ViewSurveyForm";
 import setAuthorizationToken from "../utils/setAuthorizationToken";
+import Employee from "../models/Employee";
 let jwt = require("jsonwebtoken");
 
 export interface IMainPagesProps extends RouteComponentProps {
 	setCurrentUser: typeof setCurrentUser;
 	logout: typeof logout;
+	user: Employee;
 }
 
 export interface IMainPagesState {}
@@ -28,27 +30,33 @@ class MainPages extends React.Component<IMainPagesProps, IMainPagesState> {
 
 		this.state = {};
 		this.checkJWT = this.checkJWT.bind(this);
+		this.resetUser = this.resetUser.bind(this);
 	}
 
 	componentDidMount() {
-		this.checkJWT();
+		this.resetUser();
 	}
 
 	componentDidUpdate() {
 		this.checkJWT();
 	}
 
-	checkJWT() {
+	resetUser() {
 		if (localStorage.getItem("jwtToken")) {
 			setAuthorizationToken(localStorage.jwtToken);
 			this.props.setCurrentUser(jwt.decode(localStorage.jwtToken));
-			console.log(jwt.decode(localStorage.jwtToken));
-			const currentTime = Date.now() / 1000;
-			console.log(currentTime, jwt.decode(localStorage.jwtToken).exp);
-			if (jwt.decode(localStorage.jwtToken).exp < currentTime) {
-				this.props.logout();
-				this.props.history.push("/login");
-			}
+		}
+	}
+	checkJWT() {
+		if (!this.props.user) {
+			this.props.history.push("/login");
+		}
+
+		const currentTime = Date.now() / 1000;
+
+		if (localStorage.getItem("jwtToken") && jwt.decode(localStorage.jwtToken).exp < currentTime) {
+			this.props.logout();
+			this.props.history.push("/login");
 		}
 	}
 
@@ -70,6 +78,23 @@ class MainPages extends React.Component<IMainPagesProps, IMainPagesState> {
 					<Layout style={{ minHeight: "100vh" }}>
 						<Layout.Sider collapsible breakpoint="md" {...siderProps} theme="dark">
 							<Menu theme="dark" mode="inline" defaultOpenKeys={["Forms", "Eval"]}>
+								{this.props.user && this.props.user.name ? (
+									<SubMenu
+										title={
+											<span>
+												<Icon type="user" />
+												<span>Account</span>
+											</span>
+										}
+									>
+										<Menu.Item>
+											<span>{`Welcome, ${this.props.user.name}`}</span>
+										</Menu.Item>
+										<Menu.Item onClick={() => this.props.logout()}>Logout</Menu.Item>
+									</SubMenu>
+								) : (
+									""
+								)}
 								<SubMenu
 									title={
 										<span>
@@ -149,12 +174,16 @@ class MainPages extends React.Component<IMainPagesProps, IMainPagesState> {
 	}
 }
 
+const mapStateToProps = (state: any) => ({
+	user: state.employee.user
+});
+
 const mapDispatchToProps = {
 	setCurrentUser,
 	logout
 };
 
 export default connect(
-	null,
+	mapStateToProps,
 	mapDispatchToProps
 )(MainPages);
