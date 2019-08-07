@@ -30,6 +30,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
         try {
+            //extract token from header of any API calls
             String jwt = getJWTFromRequest(httpServletRequest);
 
             if(StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt)) {
