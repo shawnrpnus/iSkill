@@ -17,15 +17,13 @@ public class EvaluationService {
 
     private final EvaluationRepository evaluationRepository;
     private final AnswerRepository answerRepository;
-    private final SurveyFormRepository surveyFormRepository;
     private final EmployeeService employeeService;
     private final SurveyFormService surveyFormService;
     private final QuestionService questionService;
 
-    public EvaluationService(EvaluationRepository evaluationRepository, AnswerRepository answerRepository, SurveyFormRepository surveyFormRepository, EmployeeService employeeService, SurveyFormService surveyFormService, QuestionService questionService) {
+    public EvaluationService(EvaluationRepository evaluationRepository, AnswerRepository answerRepository, EmployeeService employeeService, SurveyFormService surveyFormService, QuestionService questionService) {
         this.evaluationRepository = evaluationRepository;
         this.answerRepository = answerRepository;
-        this.surveyFormRepository = surveyFormRepository;
         this.employeeService = employeeService;
         this.surveyFormService = surveyFormService;
         this.questionService = questionService;
@@ -112,12 +110,13 @@ public class EvaluationService {
 
         //remove all current answers
         List<Answer> previousAnswers = existingEvaluation.getAnswers();
-        existingEvaluation.setAnswers(new ArrayList<>());
+
         for (Answer answer: previousAnswers){
             answer.getQuestion().getAnswers().remove(answer);
             answer.setQuestion(null);
             answerRepository.delete(answer);
         }
+        existingEvaluation.setAnswers(new ArrayList<>());
 
         Integer totalScore = 0;
         for (Answer answer: updatedEvaluation.getAnswers()){
@@ -152,11 +151,13 @@ public class EvaluationService {
 
         //remove evaluation from previous survey form
         //remove survey form from existing evaluation
-        SurveyForm previousSurveyForm = surveyFormService.getSurveyForm(existingEvaluation.getSurveyForm().getSurveyFormId());
+
+        SurveyForm previousSurveyForm = existingEvaluation.getSurveyForm();
         if (previousSurveyForm != null){
             previousSurveyForm.getEvaluations().remove(existingEvaluation);
             existingEvaluation.setSurveyForm(null);
         }
+
 
         newSurveyForm.getEvaluations().add(existingEvaluation);
         existingEvaluation.setSurveyForm(newSurveyForm);
