@@ -1,4 +1,4 @@
-import { CREATE_EVALUATION_SUCCESS, GET_EVALUATION_SUCCESS, UPDATE_EVALUATION_SUCCESS, CLEAR_UPDATING_EVALUATION, ASSIGN_EVALUATION_SUCCESS } from "../actions/types";
+import { CREATE_EVALUATION_SUCCESS, GET_EVALUATION_SUCCESS, UPDATE_EVALUATION_SUCCESS, CLEAR_UPDATING_EVALUATION, ASSIGN_EVALUATION_SUCCESS, GET_ASSIGNED_EVALUATIONS_SUCCESS } from "../actions/types";
 import Evaluation from "../models/Evaluation";
 
 const initialState = {
@@ -25,6 +25,11 @@ export default function (state = initialState, action: Action | any) {
 			return {
 				...state,
 				evaluationToViewOrUpdate: action.evaluation
+			}
+		case GET_ASSIGNED_EVALUATIONS_SUCCESS:
+			return {
+				...state,
+				assignedEvaluations: action.assignedEvaluations
 			}
 		case UPDATE_EVALUATION_SUCCESS:
 			alert("Evaluation Updated!");

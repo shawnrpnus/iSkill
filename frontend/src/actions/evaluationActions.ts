@@ -1,6 +1,6 @@
 import { CreateEvaluationRequest, UpdateEvaluationRequest, AssignEvaluationRequest } from "../models/CreateUpdateEvaluationRequest";
 import axios from "axios";
-import { GET_ERRORS, CREATE_EVALUATION_SUCCESS, GET_EVALUATION_SUCCESS, UPDATE_EVALUATION_SUCCESS, CLEAR_UPDATING_EVALUATION, ASSIGN_EVALUATION_SUCCESS } from "./types";
+import { GET_ERRORS, CREATE_EVALUATION_SUCCESS, GET_EVALUATION_SUCCESS, UPDATE_EVALUATION_SUCCESS, CLEAR_UPDATING_EVALUATION, ASSIGN_EVALUATION_SUCCESS, GET_ASSIGNED_EVALUATIONS_SUCCESS } from "./types";
 import Evaluation from "../models/Evaluation";
 
 const getErrors = (errorData: any) => ({
@@ -116,7 +116,28 @@ export const clearUpdatingEvaluation = () => ({
     type: CLEAR_UPDATING_EVALUATION
 })
 
+export const getAssignedEvaluations = (
+    employeeId:number
+) => {
+    let url = `/api/evaluation/getReceivedEvaluations?employeeId=${employeeId}`;
+    return (dispatch: any) => {
+        axios
+            .get(url)
+            .then(response => {
+                dispatch(getAssignedEvaluationSuccess(response.data));
+            })
+            .catch(err => {
+                dispatch(getErrors(err));
+                // if (err.response.status === 500) {
+                // 	alert("Internal server error has occured. Please contact the system administrator.");
+                // 	console.log(err.response)
+                // }
+            });
+    };
+};
 
 
-
-
+const getAssignedEvaluationSuccess = (assignedEvaluations: Evaluation[]) => ({
+    type: GET_ASSIGNED_EVALUATIONS_SUCCESS,
+    assignedEvaluations: assignedEvaluations
+})

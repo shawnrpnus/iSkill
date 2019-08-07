@@ -78,7 +78,7 @@ public class EvaluationController {
     }
 
     @GetMapping("/getReceivedEvaluations")
-    public ResponseEntity<?> getReceivedEvaluationsForEmployee(@RequestParam Long employeeId){
+    public ResponseEntity<?> getReceivedEvaluationsForEmployee(@RequestParam("employeeId") Long employeeId){
         List<Evaluation> evalList = evaluationService.getEmployeeReceivedEvaluations(employeeId);
         return new ResponseEntity<>(evalList, HttpStatus.OK);
     }

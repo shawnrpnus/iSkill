@@ -78,7 +78,12 @@ public class EvaluationService {
     }
 
     public List<Evaluation> getEmployeeReceivedEvaluations(Long evaluateeEmployeeId){
-        return evaluationRepository.findEvaluationByEvaluateeEmployeeId(evaluateeEmployeeId);
+        List<Evaluation> allEval = evaluationRepository.findEvaluationByEvaluateeEmployeeId(evaluateeEmployeeId);
+
+        for(Evaluation e : allEval) {
+            e.getSurveyForm().setEvaluations(null);
+        }
+        return allEval;
     }
 
     public Evaluation updateEvaluation(Evaluation updatedEvaluation, Long newEvaluatorEmployeeId, Long newEvaluateeEmployeeId, Long newSurveyFormId){

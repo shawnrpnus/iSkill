@@ -16,6 +16,7 @@ import AssignEvaluation from "./components/Evaluation/AssignEvaluation";
 import SecuredRoute from "./components/Layout/SecuredRoute";
 import { setCurrentUser, logout } from "./actions/employeeAction";
 import setAuthorizationToken from "./utils/setAuthorizationToken";
+import ViewAllAssignedEvaluations from "./components/Evaluation/ViewAllAssignedEvaluations";
 
 let jwt = require('jsonwebtoken');
 
@@ -82,7 +83,7 @@ const App: React.FC = () => {
 												<Link to="/">Evaluations To Do</Link>
 											</Menu.Item>
 											<Menu.Item>
-												<Link to="/">Assigned Evaluations</Link>
+												<Link to="/getReceivedEvaluations">Assigned Evaluations</Link>
 											</Menu.Item>
 											<Menu.Item>
 												<Link to="/assignEvaluations">Assign Evaluation</Link>
@@ -118,6 +119,7 @@ const App: React.FC = () => {
 											component={CreateUpdateEvaluation}
 										/>
 										<SecuredRoute exact key="assignEvaluations" path="/assignEvaluations" component={AssignEvaluation} />
+										<SecuredRoute exact key="getReceivedEvaluations" path="/getReceivedEvaluations" component={ViewAllAssignedEvaluations}/>
 										<Route exact key="login" path="/" component={LoginEmployee} />
 										<Route exact key="login" path="/login" component={LoginEmployee} />
 										<Route exact key="register" path="/register" component={RegisterEmployee} />
