@@ -43,7 +43,7 @@ class LoginEmployee extends React.Component<ILoginEmployeeProps, ILoginEmployeeS
 		e.preventDefault();
 		let username = this.props.form.getFieldValue("username");
 		let password = this.props.form.getFieldValue("password");
-		this.props.getLoginDetails(username, password);
+		this.props.getLoginDetails(username, password, this.props.history);
 	}
 	hasErrors(fieldsError: any) {
 		return Object.keys(fieldsError).some(field => fieldsError[field]);

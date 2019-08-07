@@ -3,13 +3,14 @@ import { GET_ERRORS, GET_LOGIN_DETAILS, REGISTER_NEW_EMPLOYEE, GET_EMPLOYEES_FOR
 import Employee from "../models/Employee";
 import Role from "../models/Role";
 import setAuthorizationToken from "../utils/setAuthorizationToken";
+import { History } from "history";
 
 const getErrors = (errorData: any) => ({
 	type: GET_ERRORS,
 	errorObj: errorData
 })
 
-export function setCurrentUser(user:any) {
+export function setCurrentUser(user: any) {
 	return {
 		type: SET_CURRENT_USER,
 		user: user
@@ -18,7 +19,8 @@ export function setCurrentUser(user:any) {
 
 export const getLoginDetails = (
 	username: string,
-	password: string
+	password: string,
+	history: History
 ) => {
 	let url = `/api/employee/login`;
 	// let bodyFormData = new FormData();
@@ -33,20 +35,20 @@ export const getLoginDetails = (
 			})
 			.then(response => {
 				console.log(response);
-				const token:string = response.data.token.substring(7,response.data.token.length);
+				const token: string = response.data.token.substring(7, response.data.token.length);
 				// const token1 = token.substring(7, token.length);
-				localStorage.setItem('jwtToken',token);
+				localStorage.setItem('jwtToken', token);
 				setAuthorizationToken(token);
 				let jwt = require('jsonwebtoken');
 				// console.log(jwt);
 				// console.log(token);
-				let thisUser : Employee = jwt.decode(token);
+				let thisUser: Employee = jwt.decode(token);
 				console.log(thisUser.employeeId); //this returns employee object
 				// dispatch(getLoginDetailsSuccess(response.data));
 				dispatch(setCurrentUser(jwt.decode(token)));
 				console.log("dispatched");
 				// window.location.reload();
-				window.location.href = "/";
+				history.push("/viewAllForms");
 			})
 			.catch(err => {
 				console.log("got reach");
@@ -60,7 +62,7 @@ export const getLoginDetails = (
 	};
 };
 
-export function logout() : any {
+export function logout(): any {
 	return (dispatch: any) => {
 		localStorage.removeItem('jwtToken');
 		setAuthorizationToken(false);
