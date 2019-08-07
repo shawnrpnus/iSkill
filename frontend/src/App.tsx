@@ -18,19 +18,9 @@ import { setCurrentUser, logout } from "./actions/employeeAction";
 import setAuthorizationToken from "./utils/setAuthorizationToken";
 import ViewAllAssignedEvaluations from "./components/Evaluation/ViewAllAssignedEvaluations";
 
-let jwt = require('jsonwebtoken');
+let jwt = require("jsonwebtoken");
 
-if (localStorage.getItem('jwtToken')) {
-	setAuthorizationToken(localStorage.jwtToken);
-	store.dispatch(setCurrentUser(jwt.decode(localStorage.jwtToken)));
-	console.log(jwt.decode(localStorage.jwtToken));
-	const currentTime = Date.now() / 1000;
-	console.log(currentTime, jwt.decode(localStorage.jwtToken).exp)
-	if (jwt.decode(localStorage.jwtToken).exp < currentTime) {
-		store.dispatch(logout());
-		window.location.href = "localhost:3000";
-	}
-}
+
 
 const App: React.FC = () => {
 	let viewportWidth = window.innerWidth || document.documentElement.clientWidth;
@@ -41,6 +31,17 @@ const App: React.FC = () => {
 		};
 	}
 	console.log(viewportWidth);
+	if (localStorage.getItem("jwtToken")) {
+		setAuthorizationToken(localStorage.jwtToken);
+		store.dispatch(setCurrentUser(jwt.decode(localStorage.jwtToken)));
+		console.log(jwt.decode(localStorage.jwtToken));
+		const currentTime = Date.now() / 1000;
+		console.log(currentTime, jwt.decode(localStorage.jwtToken).exp);
+		if (jwt.decode(localStorage.jwtToken).exp < currentTime) {
+			store.dispatch(logout());
+			window.location.href = "localhost:3000";
+		}
+	}
 	return (
 		<Provider store={store}>
 			<Router>
@@ -49,8 +50,8 @@ const App: React.FC = () => {
 						<Layout.Header style={{ padding: "0 1.5vw" }}>
 							<Header />
 						</Layout.Header>
-						
-							<Layout style={{ minHeight: "100vh" }}>
+
+						<Layout style={{ minHeight: "100vh" }}>
 							{localStorage.getItem("jwtToken") ? (
 								<Layout.Sider collapsible breakpoint="md" {...siderProps} theme="dark">
 									<Menu theme="dark" mode="inline" defaultOpenKeys={["Forms", "Eval"]}>
@@ -97,35 +98,41 @@ const App: React.FC = () => {
 										</SubMenu>
 									</Menu>
 								</Layout.Sider>
-								) : (
+							) : (
 								""
 							)}
-								<Layout.Content>
-									<Switch>
-										<SecuredRoute
-											exact
-											key="create" //key is to force a rerender
-											path="/createForm"
-											component={CreateUpdateSurveyForm}
-										/>
-										<SecuredRoute exact key="update" path="/updateForm/:formId" component={CreateUpdateSurveyForm} />
-										<SecuredRoute exact key="viewOne" path="/viewForm/:formId" component={ViewSurveyForm} />
-										<SecuredRoute exact key="view" path="/viewAllForms" component={ViewAllSurveyForm} />
-										<SecuredRoute exact key="createEval" path="/createEvaluation" component={CreateUpdateEvaluation} />
-										<SecuredRoute
-											exact
-											key="createEval"
-											path="/updateEvaluation/:evaluationId"
-											component={CreateUpdateEvaluation}
-										/>
-										<SecuredRoute exact key="assignEvaluations" path="/assignEvaluations" component={AssignEvaluation} />
-										<SecuredRoute exact key="getReceivedEvaluations" path="/getReceivedEvaluations" component={ViewAllAssignedEvaluations}/>
-										<Route exact key="login" path="/" component={LoginEmployee} />
-										<Route exact key="login" path="/login" component={LoginEmployee} />
-										<Route exact key="register" path="/register" component={RegisterEmployee} />
-									</Switch>
-								</Layout.Content>
-							</Layout>
+							<Layout.Content>
+								<Switch>
+									<SecuredRoute
+										exact
+										key="create" //key is to force a rerender
+										path="/createForm"
+										component={CreateUpdateSurveyForm}
+									/>
+									<SecuredRoute exact key="update" path="/updateForm/:formId" component={CreateUpdateSurveyForm} />
+									<SecuredRoute exact key="viewOne" path="/viewForm/:formId" component={ViewSurveyForm} />
+									<SecuredRoute exact key="view" path="/viewAllForms" component={ViewAllSurveyForm} />
+									<SecuredRoute exact key="createEval" path="/createEvaluation" component={CreateUpdateEvaluation} />
+									<SecuredRoute exact key="createEval" path="/updateEvaluation/:evaluationId" component={CreateUpdateEvaluation} />
+									<SecuredRoute
+										exact
+										key="doAssignedEval"
+										path="/doAssignedEvaluation/:evaluationId"
+										component={CreateUpdateEvaluation}
+									/>
+									<SecuredRoute exact key="assignEvaluations" path="/assignEvaluations" component={AssignEvaluation} />
+									<SecuredRoute
+										exact
+										key="getReceivedEvaluations"
+										path="/getReceivedEvaluations"
+										component={ViewAllAssignedEvaluations}
+									/>
+									<Route exact key="login" path="/" component={LoginEmployee} />
+									<Route exact key="login" path="/login" component={LoginEmployee} />
+									<Route exact key="register" path="/register" component={RegisterEmployee} />
+								</Switch>
+							</Layout.Content>
+						</Layout>
 					</Layout>
 				</div>
 			</Router>

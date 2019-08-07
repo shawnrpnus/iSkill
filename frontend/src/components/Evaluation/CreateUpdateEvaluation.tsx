@@ -1,4 +1,4 @@
-import { Card, Col, Form, Input, Row, Select } from "antd";
+import { Card, Col, Form, Input, Row, Select, Spin } from "antd";
 import { FormComponentProps } from "antd/lib/form";
 import * as React from "react";
 import { connect } from "react-redux";
@@ -210,93 +210,97 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 			}
 		}
 		return (
-			<Form onSubmit={this.handleSubmit} style={{ padding: "2vw 5vw 0 5vw" }}>
-				<PageTitle>{this.props.evaluationToUpdate ? "Updating Evaluation" : "Creating Evaluation"}</PageTitle>
-				<Card
-					title={
-						<Row gutter={24} type="flex" justify="center">
-							<Col sm={12} xs={24} style={{ textAlign: "center", fontSize: "24px" }}>
-								<Form.Item
-									validateStatus={this.props.errors.evaluateeEmployeeId ? "error" : ""}
-									help={this.props.errors.evaluateeEmployeeId}
-									hasFeedback={true}
-									label="Select an employee to evaluate:"
-								>
-									{getFieldDecorator("evaluatee", {
-										initialValue: this.props.evaluationToUpdate ? this.props.evaluationToUpdate.evaluatee.employeeId : undefined
-									})(
-										<Select placeholder="Select Employee" size="large" style={{ width: "100%" }}>
-											{this.props.employees.map(employee => (
-												<Select.Option key={employee.username} value={employee.employeeId}>
-													{employee.name}
-												</Select.Option>
-											))}
-										</Select>
-									)}
-								</Form.Item>
-							</Col>
-							<Col sm={12} xs={24} style={{ textAlign: "center", fontSize: "24px" }}>
-								<Form.Item
-									validateStatus={this.props.errors.surveyFormId ? "error" : ""}
-									help={this.props.errors.surveyFormId}
-									hasFeedback={true}
-									label="Select an evaluation form:"
-								>
-									{getFieldDecorator("surveyForm", {
-										initialValue:
-											this.props.evaluationToUpdate && this.props.evaluationToUpdate.evaluationId
-												? this.getSurveyFormIdForEvaluation(this.props.evaluationToUpdate.evaluationId)
+			<Spin spinning={((this.props.match.params as IRouteParams).evaluationId ? true : false) && !this.props.evaluationToUpdate}>
+				<Form onSubmit={this.handleSubmit} style={{ padding: "2vw 5vw 0 5vw" }}>
+					<PageTitle>{this.props.evaluationToUpdate ? "Updating Evaluation" : "Creating Evaluation"}</PageTitle>
+					<Card
+						title={
+							<Row gutter={24} type="flex" justify="center">
+								<Col sm={12} xs={24} style={{ textAlign: "center", fontSize: "24px" }}>
+									<Form.Item
+										validateStatus={this.props.errors.evaluateeEmployeeId ? "error" : ""}
+										help={this.props.errors.evaluateeEmployeeId}
+										hasFeedback={true}
+										label="Select an employee to evaluate:"
+									>
+										{getFieldDecorator("evaluatee", {
+											initialValue: this.props.evaluationToUpdate
+												? this.props.evaluationToUpdate.evaluatee.employeeId
 												: undefined
-									})(
-										<Select placeholder="Select Form" size="large" style={{ width: "100%" }}>
-											{this.props.surveyForms.map((surveyForm: SurveyForm) => (
-												<Select.Option key={surveyForm.surveyFormName} value={surveyForm.surveyFormId}>
-													{surveyForm.surveyFormName}
-												</Select.Option>
-											))}
-										</Select>
-									)}
-								</Form.Item>
-							</Col>
-							<Col span={24} style={{ textAlign: "center" }}>
-								<Form.Item
-									validateStatus={this.props.errors.remarks ? "error" : ""}
-									help={this.props.errors.remarks}
-									hasFeedback={true}
-									label="Remarks:"
-								>
-									{getFieldDecorator("remarks", {
-										initialValue: this.props.evaluationToUpdate ? this.props.evaluationToUpdate.remarks : undefined
-									})(<Input.TextArea autosize={{ minRows: 2 }} />)}
-								</Form.Item>
-							</Col>
-						</Row>
-					}
-				>
-					{surveyFormId !== undefined ? (
-						<SurveyFormTemplate
-							surveyFormName={surveyFormName}
-							toolProcessName={toolProcessName}
-							skillLevel={skillLevel}
-							categories={categories}
-							form={this.props.form}
-							answers={this.props.evaluationToUpdate ? this.props.evaluationToUpdate.answers : undefined}
-						/>
-					) : (
-						""
-					)}
-					<Form.Item style={{ textAlign: "right", marginTop: "10px" }}>
-						<AffixedButtons
-							leftButtonText="Save as Draft"
-							leftButtonOnClickFunction={this.handleSaveAsDraft}
-							leftButtonIconType="save"
-							rightButtonText="Submit"
-							rightButtonOnSubmitFunction={this.handleSubmit}
-							rightButtonIconType="save"
-						/>
-					</Form.Item>
-				</Card>
-			</Form>
+										})(
+											<Select placeholder="Select Employee" size="large" style={{ width: "100%" }}>
+												{this.props.employees.map(employee => (
+													<Select.Option key={employee.username} value={employee.employeeId}>
+														{employee.name}
+													</Select.Option>
+												))}
+											</Select>
+										)}
+									</Form.Item>
+								</Col>
+								<Col sm={12} xs={24} style={{ textAlign: "center", fontSize: "24px" }}>
+									<Form.Item
+										validateStatus={this.props.errors.surveyFormId ? "error" : ""}
+										help={this.props.errors.surveyFormId}
+										hasFeedback={true}
+										label="Select an evaluation form:"
+									>
+										{getFieldDecorator("surveyForm", {
+											initialValue:
+												this.props.evaluationToUpdate && this.props.evaluationToUpdate.evaluationId
+													? this.getSurveyFormIdForEvaluation(this.props.evaluationToUpdate.evaluationId)
+													: undefined
+										})(
+											<Select placeholder="Select Form" size="large" style={{ width: "100%" }}>
+												{this.props.surveyForms.map((surveyForm: SurveyForm) => (
+													<Select.Option key={surveyForm.surveyFormName} value={surveyForm.surveyFormId}>
+														{surveyForm.surveyFormName}
+													</Select.Option>
+												))}
+											</Select>
+										)}
+									</Form.Item>
+								</Col>
+								<Col span={24} style={{ textAlign: "center" }}>
+									<Form.Item
+										validateStatus={this.props.errors.remarks ? "error" : ""}
+										help={this.props.errors.remarks}
+										hasFeedback={true}
+										label="Remarks:"
+									>
+										{getFieldDecorator("remarks", {
+											initialValue: this.props.evaluationToUpdate ? this.props.evaluationToUpdate.remarks : undefined
+										})(<Input.TextArea autosize={{ minRows: 2 }} />)}
+									</Form.Item>
+								</Col>
+							</Row>
+						}
+					>
+						{surveyFormId !== undefined ? (
+							<SurveyFormTemplate
+								surveyFormName={surveyFormName}
+								toolProcessName={toolProcessName}
+								skillLevel={skillLevel}
+								categories={categories}
+								form={this.props.form}
+								answers={this.props.evaluationToUpdate ? this.props.evaluationToUpdate.answers : undefined}
+							/>
+						) : (
+							""
+						)}
+						<Form.Item style={{ textAlign: "right", marginTop: "10px" }}>
+							<AffixedButtons
+								leftButtonText="Save as Draft"
+								leftButtonOnClickFunction={this.handleSaveAsDraft}
+								leftButtonIconType="save"
+								rightButtonText="Submit"
+								rightButtonOnSubmitFunction={this.handleSubmit}
+								rightButtonIconType="save"
+							/>
+						</Form.Item>
+					</Card>
+				</Form>
+			</Spin>
 		);
 	}
 }
