@@ -1,5 +1,6 @@
 package com.iskill.backend.controllers;
 
+import com.iskill.backend.models.Evaluation;
 import com.iskill.backend.models.SurveyForm;
 import com.iskill.backend.services.EmployeeService;
 import com.iskill.backend.services.SurveyFormService;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -49,7 +51,14 @@ public class SurveyFormController {
 
     @GetMapping("/all")
     public ResponseEntity<?> getAllSurveyForms(){
-        return new ResponseEntity<>(surveyFormService.getAllSurveyForms(), HttpStatus.OK);
+        List<SurveyForm> allForms = surveyFormService.getAllSurveyForms();
+        for(SurveyForm s: allForms) {
+            for(Evaluation e: s.getEvaluations()) {
+                e.setSurveyForm(null);
+            }
+
+        }
+        return new ResponseEntity<>(allForms, HttpStatus.OK);
     }
 
     @GetMapping("/all/{employeeId}")

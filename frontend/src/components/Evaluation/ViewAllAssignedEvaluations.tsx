@@ -34,6 +34,7 @@ class ViewAllAssignedEvalutions extends React.Component<IViewAllAssignedEvalutio
     componentWillMount() {
         // console.log(this.props.user);
         if(this.props.user.employeeId !== undefined) {
+            console.log("got run");
             this.props.getAssignedEvaluations(this.props.user.employeeId);
         }
     }
@@ -127,9 +128,9 @@ class ViewAllAssignedEvalutions extends React.Component<IViewAllAssignedEvalutio
             },
             {
                 title: "Name",
-                dataIndex: "remarks",
-                key: "surveyFormName",
-                // ...this.getColumnSearchProps("surveyFormName")
+                dataIndex: "surveyForm.surveyFormName",
+                key: "surveyForm.surveyFormName",
+                ...this.getColumnSearchProps("surveyForm.surveyFormName")
             },
             {
                 title: "Status",
@@ -163,7 +164,7 @@ class ViewAllAssignedEvalutions extends React.Component<IViewAllAssignedEvalutio
             <div style={{ padding: "2vw 5vw 0 5vw" }}>
                 <PageTitle>View All Assigned Evaluations</PageTitle>
                 <Card>
-                    <Table rowKey="surveyFormId" dataSource={dataSource} columns={columns} onChange={this.handleChange} />
+                    <Table rowKey="evaluationId" dataSource={dataSource} columns={columns} onChange={this.handleChange} />
                 </Card>
             </div>
         );
@@ -175,7 +176,7 @@ const wrappedViewAllAssignedEval = Form.create({ name: "view_all_assigned_evalua
 const mapStateToProps = (state: any) => ({
     errors: state.errors,
     user: state.employee.user,
-    assignedEvaluations: state.evaluation.assignedEvaluations
+    assignedEvaluations: state.evaluation.assignedEvaluations,
 });
 
 const mapDispatchToProps = {
