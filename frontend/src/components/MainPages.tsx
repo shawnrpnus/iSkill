@@ -33,7 +33,7 @@ class MainPages extends React.Component<IMainPagesProps, IMainPagesState> {
 		this.resetUser = this.resetUser.bind(this);
 	}
 
-	componentDidMount() {
+	componentWillMount() {
 		this.resetUser();
 	}
 
@@ -47,13 +47,11 @@ class MainPages extends React.Component<IMainPagesProps, IMainPagesState> {
 			this.props.setCurrentUser(jwt.decode(localStorage.jwtToken));
 		}
 	}
-	checkJWT() {
-		if (!this.props.user || !localStorage.getItem("jwtToken")) {
-			this.props.history.push("/login");
-		}
 
+	checkJWT() {
 		const currentTime = Date.now() / 1000;
 
+		//expired
 		if (localStorage.getItem("jwtToken") && jwt.decode(localStorage.jwtToken).exp < currentTime) {
 			this.props.logout();
 			this.props.history.push("/login");
@@ -140,7 +138,7 @@ class MainPages extends React.Component<IMainPagesProps, IMainPagesState> {
 						</Layout.Sider>
 						<Layout.Content>
 							<Switch>
-								<Route exact path="/" render={() => <Redirect to="/viewAllForms" />} />
+								{/* <Route exact path="/" render={() => <Redirect to={this.props.user ? "/viewAllForms" : "/login"} />} /> */}
 								<SecuredRoute
 									exact
 									key="create" //key is to force a rerender
@@ -151,7 +149,7 @@ class MainPages extends React.Component<IMainPagesProps, IMainPagesState> {
 								<SecuredRoute exact key="viewOne" path="/viewForm/:formId" component={ViewSurveyForm} />
 								<SecuredRoute exact key="view" path="/viewAllForms" component={ViewAllSurveyForm} />
 								<SecuredRoute exact key="createEval" path="/createEvaluation" component={CreateUpdateEvaluation} />
-								<SecuredRoute exact key="createEval" path="/updateEvaluation/:evaluationId" component={CreateUpdateEvaluation} />
+								<SecuredRoute exact key="updateEval" path="/updateEvaluation/:evaluationId" component={CreateUpdateEvaluation} />
 								<SecuredRoute
 									exact
 									key="doAssignedEval"
