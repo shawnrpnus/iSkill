@@ -1,13 +1,12 @@
-import * as React from "react";
+import { Button, Checkbox, Form, Icon, Input } from "antd";
 import "antd/dist/antd.css";
-import { Form, Icon, Input, Button, Checkbox } from "antd";
-import { connect } from "react-redux";
-import { getLoginDetails, logout } from "../../actions/employeeAction";
 import { FormComponentProps } from "antd/lib/form";
-import { RouteComponentProps, Redirect } from "react-router";
-import "./LoginEmployee.css";
+import * as React from "react";
+import { connect } from "react-redux";
+import { Redirect, RouteComponentProps } from "react-router";
+import { getLoginDetails, logout } from "../../actions/employeeAction";
 import Employee from "../../models/Employee";
-import { Link, withRouter } from "react-router-dom";
+import "./LoginEmployee.css";
 
 export interface ILoginEmployeeProps extends FormComponentProps, RouteComponentProps<any> {
 	getLoginDetails: typeof getLoginDetails;
@@ -43,7 +42,7 @@ class LoginEmployee extends React.Component<ILoginEmployeeProps, ILoginEmployeeS
 		e.preventDefault();
 		let username = this.props.form.getFieldValue("username");
 		let password = this.props.form.getFieldValue("password");
-		this.props.getLoginDetails(username, password);
+		this.props.getLoginDetails(username, password, this.props.history);
 	}
 	hasErrors(fieldsError: any) {
 		return Object.keys(fieldsError).some(field => fieldsError[field]);

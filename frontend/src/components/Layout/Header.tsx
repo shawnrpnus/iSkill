@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Typography, Button, Menu, Icon } from "antd";
+import { Typography, Button, Menu, Icon, Row, Col } from "antd";
 import "./Header.css";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
@@ -19,23 +19,9 @@ class Header extends React.Component<IHeaderProps, IHeaderState> {
 	}
 
 	public render() {
-		// const userLinks: any = (<Button style={{
-		// 	position: "absolute",
-		// 	right: "10px",
-		// 	top: "10px"
-		// }}>
-		// 	<Link to="/logout">Login</Link>
-		// </Button>);
-		// const guestLinks : any =(<Button style={{
-		// 	position: "absolute",
-		// 	right: "10px",
-		// 	top: "10px"
-		// }}>
-		// 	<Link to="/login">Login</Link>
-		// </Button>);
 		return (
 			<div>
-				<div className="headerText" style={{ height: "100%" }}>
+				<span className="headerText" style={{ height: "100%" }}>
 					<Typography.Title
 						style={{
 							color: "white",
@@ -46,22 +32,7 @@ class Header extends React.Component<IHeaderProps, IHeaderState> {
 					>
 						iSkill
 					</Typography.Title>
-				</div>
-				{this.props.user && this.props.user.name ? (
-					<div style={{ textAlign: "right" }}>
-						<Menu theme="dark" mode="horizontal">
-							<Menu.Item>
-								<Icon type="user" />
-								<span>{this.props.user.name}</span>
-							</Menu.Item>
-							<Menu.Item>
-								<span>Logout</span>
-							</Menu.Item>
-						</Menu>
-					</div>
-				) : (
-					""
-				)}
+				</span>
 			</div>
 		);
 	}
