@@ -48,7 +48,7 @@ class MainPages extends React.Component<IMainPagesProps, IMainPagesState> {
 		}
 	}
 	checkJWT() {
-		if (!this.props.user) {
+		if (!this.props.user || !localStorage.getItem("jwtToken")) {
 			this.props.history.push("/login");
 		}
 
