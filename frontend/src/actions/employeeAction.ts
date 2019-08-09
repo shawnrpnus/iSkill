@@ -105,7 +105,7 @@ const registerNewEmployeeSuccess = (payload: any) => ({
 });
 
 export const getEmployeesForManager = (managerId: number) => {
-	let url = `api/employee/getEmployeesForManager/${managerId}`
+	let url = `/api/employee/getEmployeesForManager/${managerId}`
 	return (dispatch: any) => {
 		axios.get(url).then(response => {
 			dispatch(getEmployeesForManagerSuccess(response.data))
