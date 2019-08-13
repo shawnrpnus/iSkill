@@ -50,12 +50,13 @@ class RegisterEmployee extends React.Component<IRegisterEmployeeProps, IRegister
 		let username = this.props.form.getFieldValue("username");
 		let name = this.props.form.getFieldValue("name");
 		let password = this.props.form.getFieldValue("password");
+		let confirm = this.props.form.getFieldValue("confirm");
 		let costCenter = this.props.form.getFieldValue("costCenter");
 		let shift = this.props.form.getFieldValue("shift");
 		let role = this.props.form.getFieldValue("role");
 		let roleAct = this.props.roles[role - 1];
 
-		let employeeModel = new Employee(name, username, password, costCenter, shift, roleAct);
+		let employeeModel = new Employee(name, username, password, confirm, costCenter, shift, roleAct);
 		console.log(employeeModel);
 		return employeeModel;
 	}

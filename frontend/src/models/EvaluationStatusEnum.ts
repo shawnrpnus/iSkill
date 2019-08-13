@@ -1,7 +1,7 @@
 enum EvaluationStatusEnum {
-	NEW,
-	ONGOING,
-	COMPLETED
+	NEW = "NEW",
+	ONGOING = "ONGOING",
+	COMPLETED = "COMPLETED"
 }
 
 export default EvaluationStatusEnum;

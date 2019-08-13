@@ -42,7 +42,7 @@ public class Evaluation {
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    @JsonIgnore
+//    @JsonIgnore
     private SurveyForm surveyForm;
 
     @OneToMany

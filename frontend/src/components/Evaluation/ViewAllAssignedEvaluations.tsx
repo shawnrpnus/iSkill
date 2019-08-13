@@ -167,9 +167,9 @@ class ViewAllAssignedEvalutions extends React.Component<IViewAllAssignedEvalutio
 const wrappedViewAllAssignedEval = Form.create({ name: "view_all_assigned_evaluations" })(ViewAllAssignedEvalutions);
 
 const mapStateToProps = (state: any) => ({
-	errors: state.errors,
-	user: state.employee.user,
-	assignedEvaluations: state.evaluation.assignedEvaluations
+    errors: state.errors,
+    user: state.employee.user,
+    assignedEvaluations: state.evaluation.assignedEvaluations,
 });
 
 const mapDispatchToProps = {

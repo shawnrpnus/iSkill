@@ -66,12 +66,14 @@ public class Employee implements UserDetails {
     public Employee(@NotBlank(message = "Name is required") String name,
                     @NotBlank(message = "Username is required") @Size(max = 12, min = 4, message = "Please use 4 to 12 characters") String username,
                     @NotBlank(message = "Password is required") String password,
+                    @NotBlank(message = "Confirm Password is required") String confirmPassword,
                     @NotBlank(message = "Cost Center is required") String costCenter,
                     String shift,
                     @NotNull Role role) {
         this.name = name;
         this.username = username;
         this.password = password;
+        this.confirmPassword = confirmPassword;
         this.costCenter = costCenter;
         this.shift = shift;
         this.role = role;

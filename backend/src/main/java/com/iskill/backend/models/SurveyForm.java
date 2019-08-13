@@ -39,7 +39,7 @@ public class SurveyForm {
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
-    @JsonIgnore
+//    @JsonIgnore
     private Employee creator;
 
     @OneToMany(mappedBy = "surveyForm", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
