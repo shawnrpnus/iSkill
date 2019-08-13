@@ -79,7 +79,7 @@ class ViewAllAssignedEvalutions extends React.Component<IViewAllAssignedEvalutio
 		),
 		filterIcon: (filtered: any) => <Icon type="search" style={{ color: filtered ? "#1890ff" : undefined }} />,
 		onFilter: (value: any, record: any) =>
-			record[dataIndex]
+			value
 				.toString()
 				.toLowerCase()
 				.includes(value.toLowerCase()),

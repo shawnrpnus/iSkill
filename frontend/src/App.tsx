@@ -6,6 +6,7 @@ import LoginEmployee from "./components/Employee/LoginEmployee";
 import MainPages from "./components/MainPages";
 import store from "./store";
 import RegisterEmployee from "./components/Employee/RegisterEmployee";
+import SecuredRoute from "./components/Layout/SecuredRoute";
 
 const App: React.FC = () => {
 	return (
@@ -14,7 +15,7 @@ const App: React.FC = () => {
 				<Switch>
 					<Route exact key="login" path="/login" component={LoginEmployee} />
 					<Route exact key="register" path="/register" component={RegisterEmployee} />
-					<Route component={MainPages} />
+					<SecuredRoute component={MainPages} />
 				</Switch>
 			</BrowserRouter>
 		</Provider>
