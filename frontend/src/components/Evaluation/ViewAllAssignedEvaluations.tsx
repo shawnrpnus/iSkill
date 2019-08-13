@@ -1,44 +1,43 @@
-import * as React from 'react';
-import { Form, Button, Popconfirm, Card, Table, Icon, Input } from 'antd';
-import { connect } from 'react-redux';
-import { getAssignedEvaluations } from '../../actions/evaluationActions';
-import { Link } from 'react-router-dom';
-import Evaluation from '../../models/Evaluation';
-import PageTitle from '../Layout/PageTitle';
-import Employee from '../../models/Employee';
-import Highlighter from 'react-highlight-words';
+import * as React from "react";
+import { Form, Button, Popconfirm, Card, Table, Icon, Input } from "antd";
+import { connect } from "react-redux";
+import { getAssignedEvaluations } from "../../actions/evaluationActions";
+import { Link } from "react-router-dom";
+import Evaluation from "../../models/Evaluation";
+import PageTitle from "../Layout/PageTitle";
+import Employee from "../../models/Employee";
+import Highlighter from "react-highlight-words";
 
 export interface IViewAllAssignedEvalutionsProps {
-    getAssignedEvaluations: typeof getAssignedEvaluations;
-    errors: any;
-    assignedEvaluations: Array<Evaluation>;
-    user: Employee;
+	getAssignedEvaluations: typeof getAssignedEvaluations;
+	errors: any;
+	assignedEvaluations: Array<Evaluation>;
+	user: Employee;
 }
 
 export interface IViewAllAssignedEvalutionsState {
-    searchText: string;
+	searchText: string;
 	filteredInfo: any;
 }
 
 class ViewAllAssignedEvalutions extends React.Component<IViewAllAssignedEvalutionsProps, IViewAllAssignedEvalutionsState> {
-    constructor(props: IViewAllAssignedEvalutionsProps) {
-        super(props);
+	constructor(props: IViewAllAssignedEvalutionsProps) {
+		super(props);
 
-        this.state = {
-            searchText: "",
+		this.state = {
+			searchText: "",
 			filteredInfo: null
-        };
+		};
+	}
 
-    }
+	componentWillMount() {
+		// console.log(this.props.user);
+		if (this.props.user.employeeId !== undefined) {
+			this.props.getAssignedEvaluations(this.props.user.employeeId);
+		}
+	}
 
-    componentWillMount() {
-        // console.log(this.props.user);
-        if(this.props.user.employeeId !== undefined) {
-            this.props.getAssignedEvaluations(this.props.user.employeeId);
-        }
-    }
-
-    getColumnSearchProps = (dataIndex: string) => ({
+	getColumnSearchProps = (dataIndex: string) => ({
 		filterDropdown: ({
 			setSelectedKeys,
 			selectedKeys,
@@ -95,9 +94,9 @@ class ViewAllAssignedEvalutions extends React.Component<IViewAllAssignedEvalutio
 				textToHighlight={text.toString()}
 			/>
 		)
-    });
-    
-    handleSearch = (selectedKeys: string[], confirm: () => void) => {
+	});
+
+	handleSearch = (selectedKeys: string[], confirm: () => void) => {
 		confirm();
 		this.setState({ searchText: selectedKeys[0] });
 	};
@@ -114,75 +113,70 @@ class ViewAllAssignedEvalutions extends React.Component<IViewAllAssignedEvalutio
 		});
 	};
 
-    public render() {
-        const dataSource = this.props.assignedEvaluations;
-        console.log(this.props);
-        console.log(dataSource);
-        const columns = [
-            {
-                title: "ID",
-                dataIndex: "evaluationId",
-                key: "evaluationId",
-                // render: (text: any) => <Link to={"viewForm/" + text}>{text}</Link>
-            },
-            {
-                title: "Name",
-                dataIndex: "remarks",
-                key: "surveyFormName",
-                // ...this.getColumnSearchProps("surveyFormName")
-            },
-            {
-                title: "Status",
-                dataIndex: "status",
-                filters: [{ text: "New", value: "NEW" }, { text: "Ongoing", value: "ONGOING" }, { text: "Completed", value: "COMPLETED"}],
-                onFilter: (value: any, record: any) => record.status.includes(value)
-            },
-            {
-                title: "Actions",
-                dataIndex: "evaluationId",
-                key: "actions",
-                render: (evaluationId: any) => (
-                    <React.Fragment>
-                        <Link to={"doAssignedEvaluation/" + evaluationId}>
-                            <Button type="primary" shape="circle" icon="search" />
-                        </Link>
-                        &nbsp;
-						<Popconfirm
-                            title="Are you sure you want to delete this form?"
-                            okText="Yes"
-                            cancelText="No"
-                            placement="topRight"
-                        >
-                            <Button type="danger" shape="circle" icon="delete" />
-                        </Popconfirm>
-                    </React.Fragment>
-                )
-            }
-        ];
-        return (
-            <div style={{ padding: "2vw 5vw 0 5vw" }}>
-                <PageTitle>View All Assigned Evaluations</PageTitle>
-                <Card>
-                    <Table rowKey="surveyFormId" dataSource={dataSource} columns={columns} onChange={this.handleChange} />
-                </Card>
-            </div>
-        );
-    }
+	public render() {
+		const dataSource = this.props.assignedEvaluations;
+		console.log(this.props);
+		console.log(dataSource);
+		const columns = [
+			{
+				title: "ID",
+				dataIndex: "evaluationId",
+				key: "evaluationId"
+				// render: (text: any) => <Link to={"viewForm/" + text}>{text}</Link>
+			},
+			{
+				title: "Name",
+				dataIndex: "remarks",
+				key: "surveyFormName"
+				// ...this.getColumnSearchProps("surveyFormName")
+			},
+			{
+				title: "Status",
+				dataIndex: "status",
+				filters: [{ text: "New", value: "NEW" }, { text: "Ongoing", value: "ONGOING" }, { text: "Completed", value: "COMPLETED" }],
+				onFilter: (value: any, record: any) => record.status.includes(value)
+			},
+			{
+				title: "Actions",
+				dataIndex: "evaluationId",
+				key: "actions",
+				render: (evaluationId: any) => (
+					<React.Fragment>
+						<Link to={"doAssignedEvaluation/" + evaluationId}>
+							<Button type="primary" shape="circle" icon="search" />
+						</Link>
+						&nbsp;
+						<Popconfirm title="Are you sure you want to delete this form?" okText="Yes" cancelText="No" placement="topRight">
+							<Button type="danger" shape="circle" icon="delete" />
+						</Popconfirm>
+					</React.Fragment>
+				)
+			}
+		];
+		return (
+			<div style={{ padding: "2vw 5vw 0 5vw" }}>
+				<PageTitle>View All Assigned Evaluations</PageTitle>
+				<Card>
+					<Table rowKey="surveyFormId" dataSource={dataSource} columns={columns} onChange={this.handleChange} />
+				</Card>
+			</div>
+		);
+	}
 }
 
 const wrappedViewAllAssignedEval = Form.create({ name: "view_all_assigned_evaluations" })(ViewAllAssignedEvalutions);
 
 const mapStateToProps = (state: any) => ({
-    errors: state.errors,
-    user: state.employee.user,
-    assignedEvaluations: state.evaluation.assignedEvaluations
+	errors: state.errors,
+	user: state.employee.user,
+	assignedEvaluations: state.evaluation.assignedEvaluations
 });
 
 const mapDispatchToProps = {
-    getAssignedEvaluations
+	getAssignedEvaluations
 };
 
 export default connect(
-    mapStateToProps,
-    mapDispatchToProps
+	mapStateToProps,
+	mapDispatchToProps
 )(wrappedViewAllAssignedEval);
