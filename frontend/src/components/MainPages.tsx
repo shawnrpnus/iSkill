@@ -35,6 +35,7 @@ class MainPages extends React.Component<IMainPagesProps, IMainPagesState> {
 
 	componentWillMount() {
 		this.resetUser();
+		this.checkJWT();
 	}
 
 	componentDidUpdate() {
@@ -138,7 +139,7 @@ class MainPages extends React.Component<IMainPagesProps, IMainPagesState> {
 						</Layout.Sider>
 						<Layout.Content>
 							<Switch>
-								{/* <Route exact path="/" render={() => <Redirect to={this.props.user ? "/viewAllForms" : "/login"} />} /> */}
+								<Route exact path="/" render={() => <Redirect to={this.props.user ? "/viewAllForms" : "/login"} />} />
 								<SecuredRoute
 									exact
 									key="create" //key is to force a rerender
