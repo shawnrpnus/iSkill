@@ -87,6 +87,8 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 		let skillLevel = "";
 		let categories: Array<CategoryModel> = [];
 		let surveyFormId = null;
+		console.log(this.props.surveyFormToViewOrUpdate);
+		console.log(this.props.surveyFormToPreview);
 		if (this.props.surveyFormToPreview) {
 			surveyFormName = this.props.surveyFormToPreview.surveyFormName;
 			toolProcessName = this.props.surveyFormToPreview.toolProcess ? this.props.surveyFormToPreview.toolProcess.toolProcessName : "";

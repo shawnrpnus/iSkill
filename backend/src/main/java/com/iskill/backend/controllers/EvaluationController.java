@@ -43,6 +43,7 @@ public class EvaluationController {
         Long surveyFormId = createEvaluationRequest.getSurveyFormId();
         Evaluation createdEvaluation = evaluationService.createNewEvaluation(newEvaluation, creatorEmployeeId, evaluatorEmployeeId,
                 evaluateeEmployeeId, surveyFormId);
+        createdEvaluation.setSurveyForm(null);
         return new ResponseEntity<>(createdEvaluation, HttpStatus.CREATED);
     }
 
@@ -68,6 +69,7 @@ public class EvaluationController {
     @GetMapping("/{evaluationId}")
     public ResponseEntity<?> getEvaluationById(@PathVariable Long evaluationId){
         Evaluation evaluation = evaluationService.getEvaluationById(evaluationId);
+        evaluation.setSurveyForm(null);
         return new ResponseEntity<>(evaluation, HttpStatus.OK);
     }
 
@@ -97,7 +99,7 @@ public class EvaluationController {
         Long newSurveyFormId = updateEvaluationRequest.getNewSurveyFormId();
 
         Evaluation updatedEvaluation = evaluationService.updateEvaluation(incomingEvaluation, newEvaluatorEmployeeId, newEvaluateeEmployeeId, newSurveyFormId);
-
+        updatedEvaluation.setSurveyForm(null);
         return new ResponseEntity<>(updatedEvaluation, HttpStatus.OK);
 
     }

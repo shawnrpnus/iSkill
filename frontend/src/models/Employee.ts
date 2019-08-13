@@ -11,6 +11,8 @@ export default class Employee {
 
 	password: string;
 
+	confirmPassword: string;
+
 	costCenter: string;
 
 	shift: string;
@@ -27,6 +29,7 @@ export default class Employee {
 		$name: string,
 		$username: string,
 		$password: string,
+		$confirmPassword: string,
 		$costCenter: string,
 		$shift: string,
 		$role: Role
@@ -34,6 +37,7 @@ export default class Employee {
 		this.name = $name;
 		this.username = $username;
 		this.password = $password;
+		this.confirmPassword = $confirmPassword;
 		this.costCenter = $costCenter;
 		this.shift = $shift;
 		this.role = $role;
