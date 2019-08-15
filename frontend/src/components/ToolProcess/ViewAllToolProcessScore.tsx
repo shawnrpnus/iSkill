@@ -1,39 +1,47 @@
-import * as React from "react";
-import { Form, Button, Popconfirm, Card, Table, Icon, Input } from "antd";
-import { connect } from "react-redux";
-import { getAssignedEvaluations } from "../../actions/evaluationActions";
-import { Link } from "react-router-dom";
-import Evaluation from "../../models/Evaluation";
-import PageTitle from "../Layout/PageTitle";
-import Employee from "../../models/Employee";
-import Highlighter from "react-highlight-words";
+import * as React from 'react';
+import { Link } from 'react-router-dom';
+import { Button, Popconfirm, Card, Table, Input, Icon, Form, Typography } from 'antd';
+import PageTitle from '../Layout/PageTitle';
+import { getAllToolProcessScores, getAllToolProcess } from '../../actions/toolProcessActions';
+import Employee from '../../models/Employee';
+import Highlighter from 'react-highlight-words';
+import { connect } from 'react-redux';
+import Column from 'antd/lib/table/Column';
+import employeeReducer from '../../reducers/employeeReducer';
 
-export interface IViewAllAssignedEvalutionsProps {
-	getAssignedEvaluations: typeof getAssignedEvaluations;
-	errors: any;
-	assignedEvaluations: Array<Evaluation>;
-	user: Employee;
+export interface IViewAllToolProcessScoreProps {
+	getAllToolProcessScores: typeof getAllToolProcessScores;
+	getAllToolProcess: typeof getAllToolProcess;
+    errors: any;
+    user: Employee;
+    toolProcessScores: any;
+	toolProcess: any;
 }
 
-export interface IViewAllAssignedEvalutionsState {
-	searchText: string;
+export interface IViewAllToolProcessScoreState {
+    searchText: string;
 	filteredInfo: any;
 }
 
-class ViewAllAssignedEvalutions extends React.Component<IViewAllAssignedEvalutionsProps, IViewAllAssignedEvalutionsState> {
-	constructor(props: IViewAllAssignedEvalutionsProps) {
-		super(props);
+class ViewAllToolProcessScore extends React.Component<IViewAllToolProcessScoreProps, IViewAllToolProcessScoreState> {
+    constructor(props: IViewAllToolProcessScoreProps) {
+        super(props);
 
-		this.state = {
-			searchText: "",
-			filteredInfo: null
-		};
+        this.state = {
+            searchText: "",
+            filteredInfo: null
+        };
 	}
-
-	componentWillMount() {
+	// componentWillReceiveProps() {
+	// 	if (this.props.user.employeeId !== undefined) {
+	// 		this.props.getAllToolProcessScores(this.props.user.employeeId);
+	// 	}
+	// }
+    componentWillMount() {
 		// console.log(this.props.user);
 		if (this.props.user.employeeId !== undefined) {
-			this.props.getAssignedEvaluations(this.props.user.employeeId);
+			this.props.getAllToolProcessScores(this.props.user.employeeId);
+			this.props.getAllToolProcess();
 		}
 	}
 
@@ -113,28 +121,42 @@ class ViewAllAssignedEvalutions extends React.Component<IViewAllAssignedEvalutio
 		});
 	};
 
-	public render() {
-		const dataSource = this.props.assignedEvaluations;
+    public render() {
+		const dataSource = this.props.toolProcessScores;
+		if(dataSource != undefined) {
+			
+		dataSource.push(this.props.toolProcess);
+		}
 		console.log(this.props);
 		console.log(dataSource);
+		console.log(this.props.toolProcess);
+
+		// if(dataSource != undefined) {
+		// // 	let tryThis:[] = dataSource[0].toolProcessScores;
+		// // console.log(tryThis);
+		// 	console.log(dataSource[0].toolProcessScores["Tool 1"].manager);
+			
+		// console.log(columnItems);
+		// }
+		
 		const columns = [
 			{
 				title: "ID",
-				dataIndex: "evaluationId",
-				key: "evaluationId"
+				dataIndex: "employee.employeeId",
+				key: "employee.employeeId"
 				// render: (text: any) => <Link to={"viewForm/" + text}>{text}</Link>
 			},
 			{
 				title: "Name",
-				dataIndex: "surveyForm.surveyFormName",
-				key: "surveyFormName"
+				dataIndex: "employee.name",
+				key: "employee.name"
 				// ...this.getColumnSearchProps("surveyFormName")
 			},
 			{
-				title: "Status",
-				dataIndex: "status",
-				filters: [{ text: "New", value: "NEW" }, { text: "Ongoing", value: "ONGOING" }, { text: "Completed", value: "COMPLETED" }],
-				onFilter: (value: any, record: any) => record.status.includes(value)
+				title: "Tool 1",
+				dataIndex: "toolProcessScores['Tool 1'].manager",
+				// filters: [{ text: "New", value: "NEW" }, { text: "Ongoing", value: "ONGOING" }, { text: "Completed", value: "COMPLETED" }],
+				// onFilter: (value: any, record: any) => record.status.includes(value)
 			},
 			{
 				title: "Actions",
@@ -155,28 +177,36 @@ class ViewAllAssignedEvalutions extends React.Component<IViewAllAssignedEvalutio
 		];
 		return (
 			<div style={{ padding: "2vw 5vw 0 5vw" }}>
-				<PageTitle>View All Assigned Evaluations</PageTitle>
+				<PageTitle>View All Tool Process Scores</PageTitle>
 				<Card>
-					<Table rowKey="surveyFormId" dataSource={dataSource} columns={columns} onChange={this.handleChange} />
+					<Table rowKey="surveyFormId" dataSource={dataSource} columns={columns} onChange={this.handleChange} >
+					{/* {this.props.toolProcess.map((tool:any) => */}
+						<Column title={"Tool 13"} dataIndex={this.props.toolProcess} 
+						/>
+					{/* )} */}
+					</Table>
 				</Card>
 			</div>
 		);
-	}
+    }
 }
 
-const wrappedViewAllAssignedEval = Form.create({ name: "view_all_assigned_evaluations" })(ViewAllAssignedEvalutions);
+
+const wrappedViewAllToolProcessScore = Form.create({ name: "view_all_tool_process_score" })(ViewAllToolProcessScore);
 
 const mapStateToProps = (state: any) => ({
     errors: state.errors,
     user: state.employee.user,
-    assignedEvaluations: state.evaluation.assignedEvaluations,
+	toolProcessScores: state.toolProcess.toolProcessScoreList,
+	toolProcess: state.toolProcess.toolProcessList
 });
 
 const mapDispatchToProps = {
-	getAssignedEvaluations
+	getAllToolProcessScores,
+	getAllToolProcess
 };
 
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(wrappedViewAllAssignedEval);
+)(wrappedViewAllToolProcessScore);

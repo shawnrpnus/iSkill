@@ -33,7 +33,7 @@ public class Evaluation {
 
     @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
-    @JsonIgnore
+//    @JsonIgnore
     private Employee evaluator;
 
     @ManyToOne

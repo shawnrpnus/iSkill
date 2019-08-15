@@ -231,7 +231,7 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 													? this.props.evaluationToUpdate.evaluatee.employeeId
 													: undefined
 											})(
-												<Select placeholder="Select Employee" size="large" style={{ width: "100%" }}>
+												<Select placeholder="Select Employee" size="large" style={{ width: "100%" }} disabled={this.props.evaluationToUpdate != undefined && this.props.evaluationToUpdate.evaluatee.employeeId == this.props.evaluationToUpdate.evaluator.employeeId}>
 													{this.props.employees.map(employee => (
 														<Select.Option key={employee.username} value={employee.employeeId}>
 															{employee.name}
@@ -254,7 +254,7 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 														? this.getSurveyFormIdForEvaluation(this.props.evaluationToUpdate.evaluationId)
 														: undefined
 											})(
-												<Select placeholder="Select Form" size="large" style={{ width: "100%" }}>
+												<Select placeholder="Select Form" size="large" style={{ width: "100%" }} disabled={this.props.evaluationToUpdate != undefined}>
 													{this.props.surveyForms.map((surveyForm: SurveyForm) => (
 														<Select.Option key={surveyForm.surveyFormName} value={surveyForm.surveyFormId}>
 															{surveyForm.surveyFormName}

@@ -15,7 +15,7 @@ const App: React.FC = () => {
 				<Switch>
 					<Route exact key="login" path="/login" component={LoginEmployee} />
 					<Route exact key="register" path="/register" component={RegisterEmployee} />
-					<SecuredRoute component={MainPages} />
+					<Route component={MainPages} />
 				</Switch>
 			</BrowserRouter>
 		</Provider>

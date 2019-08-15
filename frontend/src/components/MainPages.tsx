@@ -14,6 +14,7 @@ import ViewAllSurveyForm from "../components/SurveyForm/ViewAllSurveyForm";
 import ViewSurveyForm from "../components/SurveyForm/ViewSurveyForm";
 import setAuthorizationToken from "../utils/setAuthorizationToken";
 import Employee from "../models/Employee";
+import ViewAllToolProcessScore from "./ToolProcess/ViewAllToolProcessScore";
 let jwt = require("jsonwebtoken");
 
 export interface IMainPagesProps extends RouteComponentProps {
@@ -22,7 +23,7 @@ export interface IMainPagesProps extends RouteComponentProps {
 	user: Employee;
 }
 
-export interface IMainPagesState {}
+export interface IMainPagesState { }
 
 class MainPages extends React.Component<IMainPagesProps, IMainPagesState> {
 	constructor(props: IMainPagesProps) {
@@ -90,10 +91,13 @@ class MainPages extends React.Component<IMainPagesProps, IMainPagesState> {
 											<span>{`Welcome, ${this.props.user.name}`}</span>
 										</Menu.Item>
 										<Menu.Item onClick={() => this.props.logout()}>Logout</Menu.Item>
+										<Menu.Item>
+											<Link to="/viewToolProcessScores">View All Tool Process Scores</Link>
+										</Menu.Item>
 									</SubMenu>
 								) : (
-									""
-								)}
+										""
+									)}
 								<SubMenu
 									title={
 										<span>
@@ -163,6 +167,12 @@ class MainPages extends React.Component<IMainPagesProps, IMainPagesState> {
 									key="getReceivedEvaluations"
 									path="/getReceivedEvaluations"
 									component={ViewAllAssignedEvaluations}
+								/>
+								<SecuredRoute
+									exact
+									key="viewToolProcessScores"
+									path="/viewToolProcessScores"
+									component={ViewAllToolProcessScore}
 								/>
 							</Switch>
 						</Layout.Content>
