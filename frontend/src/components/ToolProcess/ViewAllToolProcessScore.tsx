@@ -1,43 +1,42 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
-import { Button, Popconfirm, Card, Table, Input, Icon, Form, Typography } from 'antd';
+import { Button, Card, Table, Input, Icon, Form } from 'antd';
 import PageTitle from '../Layout/PageTitle';
 import { getAllToolProcessScores, getAllToolProcess } from '../../actions/toolProcessActions';
 import Employee from '../../models/Employee';
 import Highlighter from 'react-highlight-words';
 import { connect } from 'react-redux';
 import Column from 'antd/lib/table/Column';
-import employeeReducer from '../../reducers/employeeReducer';
+import ColumnGroup from 'antd/lib/table/ColumnGroup';
 
 export interface IViewAllToolProcessScoreProps {
 	getAllToolProcessScores: typeof getAllToolProcessScores;
 	getAllToolProcess: typeof getAllToolProcess;
-    errors: any;
-    user: Employee;
-    toolProcessScores: any;
+	errors: any;
+	user: Employee;
+	toolProcessScores: any;
 	toolProcess: any;
 }
 
 export interface IViewAllToolProcessScoreState {
-    searchText: string;
+	searchText: string;
 	filteredInfo: any;
 }
 
 class ViewAllToolProcessScore extends React.Component<IViewAllToolProcessScoreProps, IViewAllToolProcessScoreState> {
-    constructor(props: IViewAllToolProcessScoreProps) {
-        super(props);
+	constructor(props: IViewAllToolProcessScoreProps) {
+		super(props);
 
-        this.state = {
-            searchText: "",
-            filteredInfo: null
-        };
+		this.state = {
+			searchText: "",
+			filteredInfo: null
+		};
 	}
 	// componentWillReceiveProps() {
 	// 	if (this.props.user.employeeId !== undefined) {
 	// 		this.props.getAllToolProcessScores(this.props.user.employeeId);
 	// 	}
 	// }
-    componentWillMount() {
+	componentWillMount() {
 		// console.log(this.props.user);
 		if (this.props.user.employeeId !== undefined) {
 			this.props.getAllToolProcessScores(this.props.user.employeeId);
@@ -57,32 +56,32 @@ class ViewAllToolProcessScore extends React.Component<IViewAllToolProcessScorePr
 			confirm: any;
 			clearFilters: any;
 		}) => (
-			<div style={{ padding: 8 }}>
-				<Input
-					// ref={node => {
-					//   this.setState({ searchInput: node });
-					// }}
-					// placeholder={`Search ${dataIndex}`}
-					placeholder={`Search Surveys`}
-					value={selectedKeys[0]}
-					onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-					onPressEnter={() => this.handleSearch(selectedKeys, confirm)}
-					style={{ width: 188, marginBottom: 8, display: "block" }}
-				/>
-				<Button
-					type="primary"
-					onClick={() => this.handleSearch(selectedKeys, confirm)}
-					icon="search"
-					size="small"
-					style={{ width: 90, marginRight: 8 }}
-				>
-					Search
+				<div style={{ padding: 8 }}>
+					<Input
+						// ref={node => {
+						//   this.setState({ searchInput: node });
+						// }}
+						// placeholder={`Search ${dataIndex}`}
+						placeholder={`Search Surveys`}
+						value={selectedKeys[0]}
+						onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+						onPressEnter={() => this.handleSearch(selectedKeys, confirm)}
+						style={{ width: 188, marginBottom: 8, display: "block" }}
+					/>
+					<Button
+						type="primary"
+						onClick={() => this.handleSearch(selectedKeys, confirm)}
+						icon="search"
+						size="small"
+						style={{ width: 90, marginRight: 8 }}
+					>
+						Search
 				</Button>
-				<Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-					Reset
+					<Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+						Reset
 				</Button>
-			</div>
-		),
+				</div>
+			),
 		filterIcon: (filtered: any) => <Icon type="search" style={{ color: filtered ? "#1890ff" : undefined }} />,
 		onFilter: (value: any, record: any) =>
 			value
@@ -121,12 +120,12 @@ class ViewAllToolProcessScore extends React.Component<IViewAllToolProcessScorePr
 		});
 	};
 
-    public render() {
+	public render() {
 		const dataSource = this.props.toolProcessScores;
-		if(dataSource != undefined) {
-			
-		dataSource.push(this.props.toolProcess);
-		}
+		// if(dataSource != undefined) {
+
+		// dataSource.push(this.props.toolProcessScores.employee.employeeId);
+		// }
 		console.log(this.props);
 		console.log(dataSource);
 		console.log(this.props.toolProcess);
@@ -135,68 +134,74 @@ class ViewAllToolProcessScore extends React.Component<IViewAllToolProcessScorePr
 		// // 	let tryThis:[] = dataSource[0].toolProcessScores;
 		// // console.log(tryThis);
 		// 	console.log(dataSource[0].toolProcessScores["Tool 1"].manager);
-			
+
 		// console.log(columnItems);
 		// }
-		
-		const columns = [
-			{
-				title: "ID",
-				dataIndex: "employee.employeeId",
-				key: "employee.employeeId"
-				// render: (text: any) => <Link to={"viewForm/" + text}>{text}</Link>
-			},
-			{
-				title: "Name",
-				dataIndex: "employee.name",
-				key: "employee.name"
-				// ...this.getColumnSearchProps("surveyFormName")
-			},
-			{
-				title: "Tool 1",
-				dataIndex: "toolProcessScores['Tool 1'].manager",
-				// filters: [{ text: "New", value: "NEW" }, { text: "Ongoing", value: "ONGOING" }, { text: "Completed", value: "COMPLETED" }],
-				// onFilter: (value: any, record: any) => record.status.includes(value)
-			},
-			{
-				title: "Actions",
-				dataIndex: "evaluationId",
-				key: "actions",
-				render: (evaluationId: any) => (
-					<React.Fragment>
-						<Link to={"doAssignedEvaluation/" + evaluationId}>
-							<Button type="primary" shape="circle" icon="search" />
-						</Link>
-						&nbsp;
-						<Popconfirm title="Are you sure you want to delete this form?" okText="Yes" cancelText="No" placement="topRight">
-							<Button type="danger" shape="circle" icon="delete" />
-						</Popconfirm>
-					</React.Fragment>
-				)
-			}
-		];
+
+		// const columns = [
+		// 	{
+		// 		title: "ID",
+		// 		dataIndex: "employee.employeeId",
+		// 		key: "employee.employeeId"
+		// 		// render: (text: any) => <Link to={"viewForm/" + text}>{text}</Link>
+		// 	},
+		// 	{
+		// 		title: "Name",
+		// 		dataIndex: "employee.name",
+		// 		key: "employee.name"
+		// 		// ...this.getColumnSearchProps("surveyFormName")
+		// 	},
+		// 	{
+		// 		title: "Tool 1",
+		// 		dataIndex: "toolProcessScores['Tool 1'].manager",
+		// 		// filters: [{ text: "New", value: "NEW" }, { text: "Ongoing", value: "ONGOING" }, { text: "Completed", value: "COMPLETED" }],
+		// 		// onFilter: (value: any, record: any) => record.status.includes(value)
+		// 	},
+		// 	{
+		// 		title: "Actions",
+		// 		dataIndex: "evaluationId",
+		// 		key: "actions",
+		// 		render: (evaluationId: any) => (
+		// 			<React.Fragment>
+		// 				<Link to={"doAssignedEvaluation/" + evaluationId}>
+		// 					<Button type="primary" shape="circle" icon="search" />
+		// 				</Link>
+		// 				&nbsp;
+		// 				<Popconfirm title="Are you sure you want to delete this form?" okText="Yes" cancelText="No" placement="topRight">
+		// 					<Button type="danger" shape="circle" icon="delete" />
+		// 				</Popconfirm>
+		// 			</React.Fragment>
+		// 		)
+		// 	}
+		// ];
 		return (
 			<div style={{ padding: "2vw 5vw 0 5vw" }}>
 				<PageTitle>View All Tool Process Scores</PageTitle>
 				<Card>
-					<Table rowKey="surveyFormId" dataSource={dataSource} columns={columns} onChange={this.handleChange} >
-					{/* {this.props.toolProcess.map((tool:any) => */}
-						<Column title={"Tool 13"} dataIndex={this.props.toolProcess} 
-						/>
-					{/* )} */}
+					<Table dataSource={dataSource} onChange={this.handleChange} >
+						{/* <Column title={"Id"} dataIndex="employee.employeeId" key={"employee.password"} /> */}
+						<Column title={"Name"} dataIndex="employee.name" />
+						{this.props.toolProcess.map((tool: any, index: number) =>
+							<ColumnGroup title={tool.toolProcessName} key={`colgroup${index}`}>
+								<Column title="Manager" dataIndex={`toolProcessScores[${tool.toolProcessName}].manager`}
+								/>
+								<Column title="Self" dataIndex={`toolProcessScores[${tool.toolProcessName}].self`}
+								/>
+							</ColumnGroup>
+						)}
 					</Table>
 				</Card>
 			</div>
 		);
-    }
+	}
 }
 
 
 const wrappedViewAllToolProcessScore = Form.create({ name: "view_all_tool_process_score" })(ViewAllToolProcessScore);
 
 const mapStateToProps = (state: any) => ({
-    errors: state.errors,
-    user: state.employee.user,
+	errors: state.errors,
+	user: state.employee.user,
 	toolProcessScores: state.toolProcess.toolProcessScoreList,
 	toolProcess: state.toolProcess.toolProcessList
 });

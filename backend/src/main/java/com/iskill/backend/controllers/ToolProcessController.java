@@ -74,6 +74,7 @@ public class ToolProcessController {
                 }
 
             }
+            employeeToolProcessScoreResponse.setKey(e.getEmployeeId());
             employeeToolProcessScoreResponse.setToolProcessScores(toolProcessMap);
             employeeToolProcessScoreResponses.add(employeeToolProcessScoreResponse);
         }

@@ -18,4 +18,5 @@ public class EmployeeToolProcessScoreResponse {
 
     private Employee employee;
     private Map<String, Scores> toolProcessScores;
+    private long key;
 }
