@@ -7,28 +7,59 @@ import Evaluation from "../../models/Evaluation";
 import { Card, Table, Button } from "antd";
 import Column from "antd/lib/table/Column";
 import { Link } from "react-router-dom";
+import { getEvaluationsAssignedToEmployee, getEvaluationsAssignedByManager, getEvaluationsDoneByManager } from "../../actions/evaluationActions";
 
 export interface IViewEvaluationsProps extends RouteComponentProps {
 	user: Employee;
-	evaluationsAssignedToMe: Array<Evaluation>;
-	evaluationsAssignedByMe: Array<Evaluation>;
-	evaluationsDoneByMe: Array<Evaluation>;
+	evaluationsToView: Array<Evaluation>;
+	getEvaluationsAssignedToEmployee: typeof getEvaluationsAssignedToEmployee;
+	getEvaluationsAssignedByManager: typeof getEvaluationsAssignedByManager;
+	getEvaluationsDoneByManager: typeof getEvaluationsDoneByManager;
 }
 
-export interface IViewEvaluationsState {}
+export interface IViewEvaluationsState {
+	mode: string;
+}
 
 class ViewEvaluations extends React.Component<IViewEvaluationsProps, IViewEvaluationsState> {
 	constructor(props: IViewEvaluationsProps) {
 		super(props);
 
-		this.state = {};
+		this.state = {
+			mode: ""
+		};
+	}
+
+	componentWillMount() {
+		const { pathname } = this.props.location;
+		if (this.props.user.employeeId !== undefined) {
+			const { employeeId } = this.props.user;
+			if (pathname === "/evaluationsAssignedToMe") {
+				this.props.getEvaluationsAssignedToEmployee(employeeId);
+			} else if (pathname === "/evaluationsAssignedByMe") {
+				this.props.getEvaluationsAssignedByManager(employeeId);
+			} else if (pathname === "/evaluationsDoneByMe") {
+				this.props.getEvaluationsDoneByManager(employeeId);
+			}
+		}
+	}
+
+	componentDidMount() {
+		const { pathname } = this.props.location;
+		this.setState({ mode: pathname });
 	}
 
 	public render() {
-		const dataSource = undefined;
+		const dataSource: Array<Evaluation> | undefined = this.props.evaluationsToView || undefined;
+		const title =
+			this.state.mode === "/evaluationsAssignedToMe"
+				? "Evaluations Assigned To Me"
+				: this.state.mode === "/evaluationsAssignedByMe"
+				? "Evaluations Assigned By Me"
+				: "Evaluations Done By Me";
 		return (
 			<div style={{ padding: "2vw 5vw 0 5vw" }}>
-				<PageTitle>Score Summary (Highest score shown)</PageTitle>
+				<PageTitle>{title}</PageTitle>
 				<Card>
 					<Table dataSource={dataSource}>
 						<Column title={"Name"} dataIndex="surveyForm.surveyFormName" />
@@ -42,6 +73,9 @@ class ViewEvaluations extends React.Component<IViewEvaluationsProps, IViewEvalua
 							]}
 							onFilter={(value: any, record: any) => record.status.includes(value)}
 						/>
+						{this.state.mode === "/evaluationsAssignedToMe" ? <Column title={"Assigned By"} dataIndex="creator.name" /> : ""}
+						{this.state.mode === "/evaluationsAssignedByMe" ? <Column title={"Assigned To"} dataIndex="evaluator.name" /> : ""}
+						{this.state.mode === "/evaluationsDoneByMe" ? <Column title={"Done For"} dataIndex="evaluatee.name" /> : ""}
 						<Column
 							title={"Actions"}
 							dataIndex="evaluationId"
@@ -60,14 +94,16 @@ class ViewEvaluations extends React.Component<IViewEvaluationsProps, IViewEvalua
 
 const mapStateToProps = (state: any) => ({
 	user: state.employee.user,
-	evaluationsAssignedToMe: state.evaluation.evaluationsAssignedToMe,
-	evaluationsAssignedByMe: state.evaluation.evaluationsAssignedByMe,
-	evaluationsDoneByMe: state.evaluation.evaluationsDoneByMe
+	evaluationsToView: state.evaluation.evaluationsToView
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+	getEvaluationsAssignedToEmployee,
+	getEvaluationsAssignedByManager,
+	getEvaluationsDoneByManager
+};
 
-export default connect(
+export default connect<{}, {}, IViewEvaluationsProps>(
 	mapStateToProps,
 	mapDispatchToProps
 )(ViewEvaluations);

@@ -17,6 +17,7 @@ import Employee from "../models/Employee";
 import ViewAllToolProcessScore from "./ToolProcess/ViewAllToolProcessScore";
 import ManagerSecuredRoute from "./Layout/ManagerSecuredRoute";
 import { Unauthorised } from "./Layout/Unauthorised";
+import ViewEvaluations from "./Evaluation/ViewEvaluations";
 let jwt = require("jsonwebtoken");
 
 export interface IMainPagesProps extends RouteComponentProps {
@@ -72,13 +73,13 @@ class MainPages extends React.Component<IMainPagesProps, IMainPagesState> {
 		}
 
 		let managerEvaluationItems = [
-			<Menu.Item>
+			<Menu.Item key="getReceivedEval">
 				<Link to="/getReceivedEvaluations">Assigned By Me</Link>
 			</Menu.Item>,
-			<Menu.Item>
+			<Menu.Item key="assignEval">
 				<Link to="/assignEvaluations">Assign Evaluation</Link>
 			</Menu.Item>,
-			<Menu.Item>
+			<Menu.Item key="createEval">
 				<Link to="/createEvaluation">Do Evaluation</Link>
 			</Menu.Item>
 		];
@@ -183,12 +184,14 @@ class MainPages extends React.Component<IMainPagesProps, IMainPagesState> {
 									component={CreateUpdateEvaluation}
 								/>
 								<ManagerSecuredRoute exact key="assignEvaluations" path="/assignEvaluations" component={AssignEvaluation} />
-								<SecuredRoute
+								<SecuredRoute exact key="evaluationsAssignedToMe" path="/evaluationsAssignedToMe" component={ViewEvaluations} />
+								<ManagerSecuredRoute
 									exact
-									key="getReceivedEvaluations"
-									path="/getReceivedEvaluations"
-									component={ViewAllAssignedEvaluations}
+									key="evaluationsAssignedByMe"
+									path="/evaluationsAssignedByMe"
+									component={ViewEvaluations}
 								/>
+								<ManagerSecuredRoute exact key="evaluationsDoneByMe" path="/evaluationsDoneByMe" component={ViewEvaluations} />
 								<ManagerSecuredRoute
 									exact
 									key="viewToolProcessScores"

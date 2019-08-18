@@ -1,6 +1,6 @@
 import { CreateEvaluationRequest, UpdateEvaluationRequest, AssignEvaluationRequest } from "../models/CreateUpdateEvaluationRequest";
 import axios from "axios";
-import { GET_ERRORS, CREATE_EVALUATION_SUCCESS, GET_EVALUATION_SUCCESS, UPDATE_EVALUATION_SUCCESS, CLEAR_UPDATING_EVALUATION, ASSIGN_EVALUATION_SUCCESS, GET_ASSIGNED_EVALUATIONS_SUCCESS } from "./types";
+import { GET_ERRORS, CREATE_EVALUATION_SUCCESS, GET_EVALUATION_SUCCESS, UPDATE_EVALUATION_SUCCESS, CLEAR_UPDATING_EVALUATION, ASSIGN_EVALUATION_SUCCESS, GET_EVALUATIONS_SUCCESS } from "./types";
 import Evaluation from "../models/Evaluation";
 
 const getErrors = (errorData: any) => ({
@@ -116,15 +116,15 @@ export const clearUpdatingEvaluation = () => ({
     type: CLEAR_UPDATING_EVALUATION
 })
 
-export const getAssignedEvaluations = (
-    employeeId:number
+export const getEvaluationsAssignedToEmployee = (
+    employeeId: number
 ) => {
-    let url = `/api/evaluation/getReceivedEvaluations?employeeId=${employeeId}`;
+    let url = `/api/evaluation/getEvaluationsAssignedToEmployee?employeeId=${employeeId}`;
     return (dispatch: any) => {
         axios
             .get(url)
             .then(response => {
-                dispatch(getAssignedEvaluationSuccess(response.data));
+                dispatch(getEvaluationsSuccess(response.data));
             })
             .catch(err => {
                 dispatch(getErrors(err));
@@ -136,8 +136,47 @@ export const getAssignedEvaluations = (
     };
 };
 
+export const getEvaluationsAssignedByManager = (
+    employeeId: number
+) => {
+    let url = `/api/evaluation/getEvaluationsAssignedByManager?employeeId=${employeeId}`;
+    return (dispatch: any) => {
+        axios
+            .get(url)
+            .then(response => {
+                dispatch(getEvaluationsSuccess(response.data));
+            })
+            .catch(err => {
+                dispatch(getErrors(err));
+                // if (err.response.status === 500) {
+                // 	alert("Internal server error has occured. Please contact the system administrator.");
+                // 	console.log(err.response)
+                // }
+            });
+    };
+};
 
-const getAssignedEvaluationSuccess = (assignedEvaluations: Evaluation[]) => ({
-    type: GET_ASSIGNED_EVALUATIONS_SUCCESS,
-    assignedEvaluations: assignedEvaluations
+export const getEvaluationsDoneByManager = (
+    employeeId: number
+) => {
+    let url = `/api/evaluation/getEvaluationsDoneByManager?employeeId=${employeeId}`;
+    return (dispatch: any) => {
+        axios
+            .get(url)
+            .then(response => {
+                dispatch(getEvaluationsSuccess(response.data));
+            })
+            .catch(err => {
+                dispatch(getErrors(err));
+                // if (err.response.status === 500) {
+                // 	alert("Internal server error has occured. Please contact the system administrator.");
+                // 	console.log(err.response)
+                // }
+            });
+    };
+};
+
+const getEvaluationsSuccess = (evaluations: Evaluation[]) => ({
+    type: GET_EVALUATIONS_SUCCESS,
+    evaluationsToView: evaluations
 })
