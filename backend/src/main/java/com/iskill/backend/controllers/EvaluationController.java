@@ -73,22 +73,31 @@ public class EvaluationController {
         return new ResponseEntity<>(evaluation, HttpStatus.OK);
     }
 
-    @GetMapping("/getGivenEvaluations")
-    public ResponseEntity<?> getGivenEvaluationsForEmployee(@RequestParam Long employeeId){
-        List<Evaluation> evalList = evaluationService.getEmployeeGivenEvaluations(employeeId);
-        return new ResponseEntity<>(evalList, HttpStatus.OK);
+    @GetMapping("/getEvaluationsAssignedToEmployee")
+    public ResponseEntity<?> getEvaluationsAssignedToEmployee(@RequestParam Long employeeId){
+        List<Evaluation> evals = evaluationService.getEvaluationsAssignedToEmployee(employeeId);
+        for (Evaluation e: evals){
+            e.getSurveyForm().setEvaluations(null);
+        }
+        return new ResponseEntity<>(evals, HttpStatus.OK);
     }
 
-    @GetMapping("/getReceivedEvaluations")
-    public ResponseEntity<?> getReceivedEvaluationsForEmployee(@RequestParam("employeeId") Long employeeId){
-        List<Evaluation> evalList = evaluationService.getEmployeeReceivedEvaluations(employeeId);
-        return new ResponseEntity<>(evalList, HttpStatus.OK);
+    @GetMapping("/getEvaluationsAssignedByManager")
+    public ResponseEntity<?> getEvaluationsAssignedByEmployee(@RequestParam Long employeeId){
+        List<Evaluation> evals = evaluationService.getEvaluationsAssignedByEmployee(employeeId);
+        for (Evaluation e: evals){
+            e.getSurveyForm().setEvaluations(null);
+        }
+        return new ResponseEntity<>(evals, HttpStatus.OK);
     }
 
-    @GetMapping("/getCreatedEvaluations")
-    public ResponseEntity<?> getCreatedEvaluationsForEmployee(@RequestParam Long employeeId){
-        List<Evaluation> evalList = evaluationService.getEmployeeCreatedEvaluations(employeeId);
-        return new ResponseEntity<>(evalList, HttpStatus.OK);
+    @GetMapping("/getEvaluationsDoneByManager")
+    public ResponseEntity<?> getEvaluationsDoneByManager(@RequestParam Long employeeId){
+        List<Evaluation> evals = evaluationService.getEvaluationsDoneByManager(employeeId);
+        for (Evaluation e: evals){
+            e.getSurveyForm().setEvaluations(null);
+        }
+        return new ResponseEntity<>(evals, HttpStatus.OK);
     }
 
     @PostMapping("/updateEvaluation")

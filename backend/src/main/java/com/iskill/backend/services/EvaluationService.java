@@ -85,14 +85,14 @@ public class EvaluationService {
         );
     }
 
-    public List<Evaluation> getEmployeeCreatedEvaluations(Long creatorEmployeeId){
-        return evaluationRepository.findEvaluationByCreatorEmployeeId(creatorEmployeeId);
-    }
-
-    public List<Evaluation> getEmployeeGivenEvaluations(Long evaluatorEmployeeId){
-        return evaluationRepository.findEvaluationByEvaluatorEmployeeId(evaluatorEmployeeId);
-    }
-
+//    public List<Evaluation> getEmployeeCreatedEvaluations(Long creatorEmployeeId){
+//        return evaluationRepository.findEvaluationByCreatorEmployeeId(creatorEmployeeId);
+//    }
+//
+//    public List<Evaluation> getEmployeeGivenEvaluations(Long evaluatorEmployeeId){
+//        return evaluationRepository.findEvaluationByEvaluatorEmployeeId(evaluatorEmployeeId);
+//    }
+//
     public List<Evaluation> getEmployeeReceivedEvaluations(Long evaluateeEmployeeId){
         List<Evaluation> allEval = evaluationRepository.findEvaluationByEvaluateeEmployeeId(evaluateeEmployeeId);
 
@@ -100,6 +100,21 @@ public class EvaluationService {
             e.getSurveyForm().setEvaluations(null);
         }
         return allEval;
+    }
+
+    public List<Evaluation> getEvaluationsAssignedToEmployee(Long evaluateeEmployeeId){
+        //evaluator and evaluatee are the same
+        return evaluationRepository.findEvaluationsByEvaluatorEmployeeIdAndEvaluateeEmployeeId(evaluateeEmployeeId, evaluateeEmployeeId);
+    }
+
+    public List<Evaluation> getEvaluationsAssignedByEmployee(Long evaluatorEmployeeId){
+        //evaluator and evaluatee are the same
+        return evaluationRepository.findEvaluationsByCreatorEmployeeIdAndEvaluatorEmployeeIdNot(evaluatorEmployeeId, evaluatorEmployeeId);
+    }
+
+    public List<Evaluation> getEvaluationsDoneByManager(Long managerEmployeeId){
+        //evaluator and evaluatee are the same
+        return evaluationRepository.findEvaluationsByCreatorEmployeeIdAndEvaluatorEmployeeId(managerEmployeeId, managerEmployeeId);
     }
 
     public Evaluation updateEvaluation(Evaluation updatedEvaluation, Long newEvaluatorEmployeeId, Long newEvaluateeEmployeeId, Long newSurveyFormId){
