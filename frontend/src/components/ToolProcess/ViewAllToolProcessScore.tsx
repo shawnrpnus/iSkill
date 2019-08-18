@@ -129,51 +129,6 @@ class ViewAllToolProcessScore extends React.Component<IViewAllToolProcessScorePr
 		console.log(this.props);
 		console.log(dataSource);
 		console.log(this.props.toolProcess);
-
-		// if(dataSource != undefined) {
-		// // 	let tryThis:[] = dataSource[0].toolProcessScores;
-		// // console.log(tryThis);
-		// 	console.log(dataSource[0].toolProcessScores["Tool 1"].manager);
-
-		// console.log(columnItems);
-		// }
-
-		// const columns = [
-		// 	{
-		// 		title: "ID",
-		// 		dataIndex: "employee.employeeId",
-		// 		key: "employee.employeeId"
-		// 		// render: (text: any) => <Link to={"viewForm/" + text}>{text}</Link>
-		// 	},
-		// 	{
-		// 		title: "Name",
-		// 		dataIndex: "employee.name",
-		// 		key: "employee.name"
-		// 		// ...this.getColumnSearchProps("surveyFormName")
-		// 	},
-		// 	{
-		// 		title: "Tool 1",
-		// 		dataIndex: "toolProcessScores['Tool 1'].manager",
-		// 		// filters: [{ text: "New", value: "NEW" }, { text: "Ongoing", value: "ONGOING" }, { text: "Completed", value: "COMPLETED" }],
-		// 		// onFilter: (value: any, record: any) => record.status.includes(value)
-		// 	},
-		// 	{
-		// 		title: "Actions",
-		// 		dataIndex: "evaluationId",
-		// 		key: "actions",
-		// 		render: (evaluationId: any) => (
-		// 			<React.Fragment>
-		// 				<Link to={"doAssignedEvaluation/" + evaluationId}>
-		// 					<Button type="primary" shape="circle" icon="search" />
-		// 				</Link>
-		// 				&nbsp;
-		// 				<Popconfirm title="Are you sure you want to delete this form?" okText="Yes" cancelText="No" placement="topRight">
-		// 					<Button type="danger" shape="circle" icon="delete" />
-		// 				</Popconfirm>
-		// 			</React.Fragment>
-		// 		)
-		// 	}
-		// ];
 		return (
 			<div style={{ padding: "2vw 5vw 0 5vw" }}>
 				<PageTitle>View All Tool Process Scores</PageTitle>

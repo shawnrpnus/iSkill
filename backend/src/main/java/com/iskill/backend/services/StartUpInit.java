@@ -44,14 +44,22 @@ public class StartUpInit {
     private void createManagerIfNotFound(){
         Role managerRole = createRoleIfNotFound("ROLE_MANAGER");
         Role employeeRole = createRoleIfNotFound(("EMPLOYEE"));
-        Employee employee = employeeRepository.findByUsername("manager");
-        if(employee == null) {
+        Employee manager = employeeRepository.findByUsername("manager");
+        if(manager == null) {
             String password = "password";
             String hashedPassword = bCryptPasswordEncoder.encode(password);
             String confirmedHashed = bCryptPasswordEncoder.encode(password);
-            employee = new Employee("Manager", "manager", hashedPassword, confirmedHashed, "Cost Center 1", "shift1", managerRole);
+            manager = new Employee("Manager", "manager", hashedPassword, confirmedHashed, "Cost Center 1", "shift1", managerRole);
 
-        };
+        }
+        employeeRepository.save(manager);
+        Employee employee = employeeRepository.findByUsername("employee");
+        if (employee == null){
+            String password = "password";
+            String hashedPassword = bCryptPasswordEncoder.encode(password);
+            String confirmedHashed = bCryptPasswordEncoder.encode(password);
+            employee = new Employee("Employee", "employee", hashedPassword, confirmedHashed, "Cost Center 1", "shift1", employeeRole);
+        }
         employeeRepository.save(employee);
     }
 
