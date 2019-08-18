@@ -133,13 +133,18 @@ class ViewAllToolProcessScore extends React.Component<IViewAllToolProcessScorePr
 			<div style={{ padding: "2vw 5vw 0 5vw" }}>
 				<PageTitle>Score Summary (Highest score shown)</PageTitle>
 				<Card>
-					<Table dataSource={dataSource} onChange={this.handleChange}>
-						{/* <Column title={"Id"} dataIndex="employee.employeeId" key={"employee.password"} /> */}
-						<Column title={"Name"} dataIndex="employee.name" />
+					<Table
+						dataSource={dataSource}
+						onChange={this.handleChange}
+						bordered
+						scroll={{ x: "max-content" }}
+						pagination={{ pageSize: 5, pageSizeOptions: ["5", "10", "15", "20"], showSizeChanger: true }}
+					>
+						<Column title={"Name"} dataIndex="employee.name" fixed="left" width={200} />
 						{this.props.toolProcess.map((tool: any, index: number) => (
 							<ColumnGroup title={tool.toolProcessName} key={`colgroup${index}`}>
-								<Column title="Manager" dataIndex={`toolProcessScores[${tool.toolProcessName}].manager`} />
-								<Column title="Self" dataIndex={`toolProcessScores[${tool.toolProcessName}].self`} />
+								<Column title="Manager" dataIndex={`toolProcessScores[${tool.toolProcessName}].manager`} align="center" />
+								<Column title="Self" dataIndex={`toolProcessScores[${tool.toolProcessName}].self`} align="center" />
 							</ColumnGroup>
 						))}
 					</Table>

@@ -47,7 +47,11 @@ export const getLoginDetails = (
 				dispatch(setCurrentUser(jwt.decode(token)));
 				console.log("dispatched");
 				// window.location.reload();
-				history.push("/viewAllForms");
+				if (thisUser.role.name === "ROLE_MANAGER") {
+					history.push("/viewAllForms")
+				} else {
+					history.push("/evaluationsAssignedToMe");
+				}
 			})
 			.catch(err => {
 				console.log("got reach");

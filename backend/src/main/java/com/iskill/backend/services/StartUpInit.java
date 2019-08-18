@@ -70,10 +70,10 @@ public class StartUpInit {
     }
 
     private void createToolProcessIfNotFound() {
-        ToolProcess toolProcess1 = toolProcessRepository.findByToolProcessName("Tool 1").orElse(new ToolProcess("Tool 1"));
-        ToolProcess toolProcess2 = toolProcessRepository.findByToolProcessName("Tool 2").orElse(new ToolProcess("Tool 2"));
-        toolProcessRepository.save(toolProcess1);
-        toolProcessRepository.save(toolProcess2);
+        for (int i = 1; i <= 10; i++){
+            ToolProcess t = toolProcessRepository.findByToolProcessName("Tool " + i).orElse(new ToolProcess("Tool " + i));
+            toolProcessRepository.save(t);
+        }
     }
 
 }

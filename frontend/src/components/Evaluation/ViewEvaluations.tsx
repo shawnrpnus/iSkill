@@ -147,7 +147,12 @@ class ViewEvaluations extends React.Component<IViewEvaluationsProps, IViewEvalua
 				<div style={{ padding: "2vw 5vw 0 5vw" }}>
 					<PageTitle>{title}</PageTitle>
 					<Card>
-						<Table dataSource={dataSource} bordered rowKey="evaluationId">
+						<Table
+							dataSource={dataSource}
+							bordered
+							rowKey="evaluationId"
+							pagination={{ pageSize: 5, pageSizeOptions: ["5", "10", "15", "20"], showSizeChanger: true }}
+						>
 							<Column
 								title={"Name"}
 								dataIndex="surveyForm.surveyFormName"

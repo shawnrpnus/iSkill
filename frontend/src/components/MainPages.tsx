@@ -167,7 +167,7 @@ class MainPages extends React.Component<IMainPagesProps, IMainPagesState> {
 						</Layout.Sider>
 						<Layout.Content>
 							<Switch>
-								<Route exact path="/" render={() => <Redirect to={this.props.user ? "/viewAllForms" : "/login"} />} />
+								<Route exact path="/" render={() => <Redirect to={this.props.user ? "/evaluationsAssignedToMe" : "/login"} />} />
 								<ManagerSecuredRoute
 									exact
 									key="create" //key is to force a rerender
