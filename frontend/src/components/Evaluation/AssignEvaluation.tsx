@@ -1,18 +1,17 @@
-import * as React from "react";
-import { Form, Card, Row, Col, Select, Button, Affix } from "antd";
-import { connect } from "react-redux";
+import { Affix, Button, Card, Col, Form, Row, Select } from "antd";
 import { FormComponentProps } from "antd/lib/form";
+import * as React from "react";
+import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router-dom";
 import { getEmployeesForManager, setCurrentUser } from "../../actions/employeeAction";
-import Employee from "../../models/Employee";
-import { getAllSurveyForms } from "../../actions/surveyFormActions";
-import SurveyForm from "../../models/SurveyForm";
-import PageTitle from "../Layout/PageTitle";
-import AffixedButtons from "../Layout/AffixedButtons";
-import { EvaluationReqObject, CreateEvaluationRequest, AssignEvaluationRequest } from "../../models/CreateUpdateEvaluationRequest";
 import { assignEvaluation } from "../../actions/evaluationActions";
-import { sortCategoriesByCategorySequence } from "../../utils/SurveyFormUtils";
+import { getAllSurveyForms } from "../../actions/surveyFormActions";
 import Category from "../../models/Category";
+import { AssignEvaluationRequest } from "../../models/CreateUpdateEvaluationRequest";
+import Employee from "../../models/Employee";
+import SurveyForm from "../../models/SurveyForm";
+import { sortCategoriesByCategorySequence } from "../../utils/SurveyFormUtils";
+import PageTitle from "../Layout/PageTitle";
 import SurveyFormTemplate from "../SurveyForm/SurveyFormTemplate";
 
 export interface IAssignEvaluationProps extends FormComponentProps, RouteComponentProps {
@@ -66,7 +65,7 @@ class AssignEvaluation extends React.Component<IAssignEvaluationProps, IAssignEv
 		let evaluateeEmployeeIds: Array<number> = this.props.form.getFieldValue("evaluatees");
 		let surveyFormId: number = this.props.form.getFieldValue("surveyForm");
 		let currentUserId: number = 0;
-		if (this.props.user.employeeId != undefined) {
+		if (this.props.user.employeeId !== undefined) {
 			currentUserId = this.props.user.employeeId;
 		}
 		let assignEvaluationRequest = new AssignEvaluationRequest(currentUserId, evaluateeEmployeeIds, evaluateeEmployeeIds, surveyFormId);

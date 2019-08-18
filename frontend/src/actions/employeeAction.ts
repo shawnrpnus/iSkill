@@ -2,7 +2,7 @@ import axios from "axios";
 import { History } from "history";
 import Employee from "../models/Employee";
 import setAuthorizationToken from "../utils/setAuthorizationToken";
-import { GET_EMPLOYEES_FOR_MANAGER_SUCCESS, GET_ERRORS, GET_LOGIN_DETAILS, REGISTER_NEW_EMPLOYEE, SET_CURRENT_USER } from "./types";
+import { GET_EMPLOYEES_FOR_MANAGER_SUCCESS, GET_ERRORS, REGISTER_NEW_EMPLOYEE, SET_CURRENT_USER } from "./types";
 
 const getErrors = (errorData: any) => ({
 	type: GET_ERRORS,
@@ -68,12 +68,6 @@ export function logout(): any {
 		dispatch(setCurrentUser({}));
 	}
 }
-
-const getLoginDetailsSuccess = (payload: any) => ({
-	type: GET_LOGIN_DETAILS,
-	// employeeLoggedIn: employee
-	payload: payload
-});
 
 export const registerNewEmployee = (
 	newEmployee: Employee

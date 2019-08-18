@@ -189,7 +189,7 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 
 	public render() {
 		console.log(this.props.evaluationToUpdate);
-		console.log(this.props.evaluationToUpdate != undefined && this.props.evaluationToUpdate.status == EvaluationStatusEnum.COMPLETED);
+		console.log(this.props.evaluationToUpdate !== undefined && this.props.evaluationToUpdate.status === EvaluationStatusEnum.COMPLETED);
 		const { getFieldDecorator } = this.props.form;
 		let surveyFormId = this.props.form.getFieldValue("surveyForm");
 		if (!surveyFormId && this.props.evaluationToUpdate && this.props.evaluationToUpdate.evaluationId) {
@@ -212,10 +212,10 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 			}
 		}
 		return (
-			<div style={{ pointerEvents: (this.props.evaluationToUpdate != undefined && this.props.evaluationToUpdate.status == EvaluationStatusEnum.COMPLETED) ? "none" : "auto" }}>
+			<div style={{ pointerEvents: (this.props.evaluationToUpdate !== undefined && this.props.evaluationToUpdate.status === EvaluationStatusEnum.COMPLETED) ? "none" : "auto" }}>
 				<Spin spinning={((this.props.match.params as IRouteParams).evaluationId ? true : false) && !this.props.evaluationToUpdate}>
 					<Form onSubmit={this.handleSubmit} style={{ padding: "2vw 5vw 0 5vw" }}>
-						<PageTitle>{this.props.evaluationToUpdate ? (this.props.evaluationToUpdate.status == EvaluationStatusEnum.COMPLETED ? "View Evaluation" : "Update Evaluation") : "Creating Evaluation"}</PageTitle>
+						<PageTitle>{this.props.evaluationToUpdate ? (this.props.evaluationToUpdate.status === EvaluationStatusEnum.COMPLETED ? "View Evaluation" : "Update Evaluation") : "Creating Evaluation"}</PageTitle>
 						<Card
 							title={
 								<Row gutter={24} type="flex" justify="center">
@@ -231,7 +231,7 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 													? this.props.evaluationToUpdate.evaluatee.employeeId
 													: undefined
 											})(
-												<Select placeholder="Select Employee" size="large" style={{ width: "100%" }} disabled={this.props.evaluationToUpdate != undefined && this.props.evaluationToUpdate.evaluatee.employeeId == this.props.evaluationToUpdate.evaluator.employeeId}>
+												<Select placeholder="Select Employee" size="large" style={{ width: "100%" }} disabled={this.props.evaluationToUpdate !== undefined && this.props.evaluationToUpdate.evaluatee.employeeId === this.props.evaluationToUpdate.evaluator.employeeId}>
 													{this.props.employees.map(employee => (
 														<Select.Option key={employee.username} value={employee.employeeId}>
 															{employee.name}
@@ -254,7 +254,7 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 														? this.getSurveyFormIdForEvaluation(this.props.evaluationToUpdate.evaluationId)
 														: undefined
 											})(
-												<Select placeholder="Select Form" size="large" style={{ width: "100%" }} disabled={this.props.evaluationToUpdate != undefined}>
+												<Select placeholder="Select Form" size="large" style={{ width: "100%" }} disabled={this.props.evaluationToUpdate !== undefined}>
 													{this.props.surveyForms.map((surveyForm: SurveyForm) => (
 														<Select.Option key={surveyForm.surveyFormName} value={surveyForm.surveyFormId}>
 															{surveyForm.surveyFormName}
@@ -291,7 +291,7 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 							) : (
 									""
 								)}
-							<Form.Item style={{ textAlign: "right", marginTop: "10px", display: (this.props.evaluationToUpdate != undefined && this.props.evaluationToUpdate.status == EvaluationStatusEnum.COMPLETED) ? "none" : "auto" }}>
+							<Form.Item style={{ textAlign: "right", marginTop: "10px", display: (this.props.evaluationToUpdate !== undefined && this.props.evaluationToUpdate.status === EvaluationStatusEnum.COMPLETED) ? "none" : "auto" }}>
 								<AffixedButtons
 									leftButtonText="Save as Draft"
 									leftButtonOnClickFunction={this.handleSaveAsDraft}
