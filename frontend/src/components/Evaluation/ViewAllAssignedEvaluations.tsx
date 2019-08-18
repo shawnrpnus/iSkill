@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Form, Button, Popconfirm, Card, Table, Icon, Input } from "antd";
 import { connect } from "react-redux";
-import { getAssignedEvaluations } from "../../actions/evaluationActions";
+import { getEvaluationsAssignedToEmployee } from "../../actions/evaluationActions";
 import { Link } from "react-router-dom";
 import Evaluation from "../../models/Evaluation";
 import PageTitle from "../Layout/PageTitle";
@@ -9,7 +9,7 @@ import Employee from "../../models/Employee";
 import Highlighter from "react-highlight-words";
 
 export interface IViewAllAssignedEvalutionsProps {
-	getAssignedEvaluations: typeof getAssignedEvaluations;
+	getAssignedEvaluations: typeof getEvaluationsAssignedToEmployee;
 	errors: any;
 	assignedEvaluations: Array<Evaluation>;
 	user: Employee;
@@ -37,6 +37,7 @@ class ViewAllAssignedEvalutions extends React.Component<IViewAllAssignedEvalutio
 		}
 	}
 
+	//returns props of filterDropdown, filterIcon, onFilter, onFilterDropdownVisiblechange, render
 	getColumnSearchProps = (dataIndex: string) => ({
 		filterDropdown: ({
 			setSelectedKeys,
@@ -167,13 +168,13 @@ class ViewAllAssignedEvalutions extends React.Component<IViewAllAssignedEvalutio
 const wrappedViewAllAssignedEval = Form.create({ name: "view_all_assigned_evaluations" })(ViewAllAssignedEvalutions);
 
 const mapStateToProps = (state: any) => ({
-    errors: state.errors,
-    user: state.employee.user,
-    assignedEvaluations: state.evaluation.assignedEvaluations,
+	errors: state.errors,
+	user: state.employee.user,
+	assignedEvaluations: state.evaluation.assignedEvaluations
 });
 
 const mapDispatchToProps = {
-	getAssignedEvaluations
+	getAssignedEvaluations: getEvaluationsAssignedToEmployee
 };
 
 export default connect(

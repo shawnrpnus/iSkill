@@ -1,6 +1,6 @@
 import { CreateEvaluationRequest, UpdateEvaluationRequest, AssignEvaluationRequest } from "../models/CreateUpdateEvaluationRequest";
 import axios from "axios";
-import { GET_ERRORS, CREATE_EVALUATION_SUCCESS, GET_EVALUATION_SUCCESS, UPDATE_EVALUATION_SUCCESS, CLEAR_UPDATING_EVALUATION, ASSIGN_EVALUATION_SUCCESS, GET_EVALUATIONS_SUCCESS } from "./types";
+import { GET_ERRORS, CREATE_EVALUATION_SUCCESS, GET_EVALUATION_SUCCESS, UPDATE_EVALUATION_SUCCESS, CLEAR_UPDATING_EVALUATION, ASSIGN_EVALUATION_SUCCESS, GET_EVALUATIONS_SUCCESS, CLEAR_VIEWING_EVALUATIONS } from "./types";
 import Evaluation from "../models/Evaluation";
 
 const getErrors = (errorData: any) => ({
@@ -179,4 +179,8 @@ export const getEvaluationsDoneByManager = (
 const getEvaluationsSuccess = (evaluations: Evaluation[]) => ({
     type: GET_EVALUATIONS_SUCCESS,
     evaluationsToView: evaluations
+})
+
+export const clearViewingEvaluations = () => ({
+    type: CLEAR_VIEWING_EVALUATIONS
 })

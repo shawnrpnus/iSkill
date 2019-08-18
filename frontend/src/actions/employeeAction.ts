@@ -1,9 +1,8 @@
 import axios from "axios";
-import { GET_ERRORS, GET_LOGIN_DETAILS, REGISTER_NEW_EMPLOYEE, GET_EMPLOYEES_FOR_MANAGER_SUCCESS, SET_CURRENT_USER } from "./types";
-import Employee from "../models/Employee";
-import Role from "../models/Role";
-import setAuthorizationToken from "../utils/setAuthorizationToken";
 import { History } from "history";
+import Employee from "../models/Employee";
+import setAuthorizationToken from "../utils/setAuthorizationToken";
+import { GET_EMPLOYEES_FOR_MANAGER_SUCCESS, GET_ERRORS, GET_LOGIN_DETAILS, REGISTER_NEW_EMPLOYEE, SET_CURRENT_USER } from "./types";
 
 const getErrors = (errorData: any) => ({
 	type: GET_ERRORS,

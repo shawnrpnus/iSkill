@@ -6,7 +6,6 @@ import LoginEmployee from "./components/Employee/LoginEmployee";
 import RegisterEmployee from "./components/Employee/RegisterEmployee";
 import MainPages from "./components/MainPages";
 import store from "./store";
-import SecuredRoute from "./components/Layout/SecuredRoute";
 
 const App: React.FC = () => {
 	return (

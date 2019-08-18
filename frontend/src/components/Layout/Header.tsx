@@ -1,9 +1,8 @@
+import { Typography } from "antd";
 import * as React from "react";
-import { Typography, Button, Menu, Icon, Row, Col } from "antd";
-import "./Header.css";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import Employee from "../../models/Employee";
+import "./Header.css";
 
 export interface IHeaderProps {
 	user: Employee;

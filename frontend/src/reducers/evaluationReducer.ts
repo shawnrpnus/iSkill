@@ -1,9 +1,10 @@
-import { CREATE_EVALUATION_SUCCESS, GET_EVALUATION_SUCCESS, UPDATE_EVALUATION_SUCCESS, CLEAR_UPDATING_EVALUATION, ASSIGN_EVALUATION_SUCCESS, GET_EVALUATIONS_SUCCESS } from "../actions/types";
+import { CREATE_EVALUATION_SUCCESS, GET_EVALUATION_SUCCESS, UPDATE_EVALUATION_SUCCESS, CLEAR_UPDATING_EVALUATION, ASSIGN_EVALUATION_SUCCESS, GET_EVALUATIONS_SUCCESS, CLEAR_VIEWING_EVALUATIONS } from "../actions/types";
 import Evaluation from "../models/Evaluation";
 
 const initialState = {
 	//initialState of the surveyForm attribute in the global redux store (defined in RootReducer.ts)
-	evaluationToViewOrUpdate: undefined
+	evaluationToViewOrUpdate: undefined,
+	evaluationsToView: undefined
 };
 
 interface Action {
@@ -30,6 +31,11 @@ export default function (state = initialState, action: Action | any) {
 			return {
 				...state,
 				evaluationsToView: action.evaluationsToView
+			}
+		case CLEAR_VIEWING_EVALUATIONS:
+			return {
+				...state,
+				evaluationsToView: undefined
 			}
 		case UPDATE_EVALUATION_SUCCESS:
 			alert("Evaluation Updated!");

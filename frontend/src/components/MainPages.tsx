@@ -6,18 +6,17 @@ import { Link, Redirect, Route, RouteComponentProps, Switch } from "react-router
 import { logout, setCurrentUser } from "../actions/employeeAction";
 import AssignEvaluation from "../components/Evaluation/AssignEvaluation";
 import CreateUpdateEvaluation from "../components/Evaluation/CreateUpdateEvaluation";
-import ViewAllAssignedEvaluations from "../components/Evaluation/ViewAllAssignedEvaluations";
 import Header from "../components/Layout/Header";
 import SecuredRoute from "../components/Layout/SecuredRoute";
 import CreateUpdateSurveyForm from "../components/SurveyForm/CreateUpdateSurveyForm";
 import ViewAllSurveyForm from "../components/SurveyForm/ViewAllSurveyForm";
 import ViewSurveyForm from "../components/SurveyForm/ViewSurveyForm";
-import setAuthorizationToken from "../utils/setAuthorizationToken";
 import Employee from "../models/Employee";
-import ViewAllToolProcessScore from "./ToolProcess/ViewAllToolProcessScore";
+import setAuthorizationToken from "../utils/setAuthorizationToken";
+import ViewEvaluations from "./Evaluation/ViewEvaluations";
 import ManagerSecuredRoute from "./Layout/ManagerSecuredRoute";
 import { Unauthorised } from "./Layout/Unauthorised";
-import ViewEvaluations from "./Evaluation/ViewEvaluations";
+import ViewAllToolProcessScore from "./ToolProcess/ViewAllToolProcessScore";
 let jwt = require("jsonwebtoken");
 
 export interface IMainPagesProps extends RouteComponentProps {
@@ -73,8 +72,11 @@ class MainPages extends React.Component<IMainPagesProps, IMainPagesState> {
 		}
 
 		let managerEvaluationItems = [
-			<Menu.Item key="getReceivedEval">
-				<Link to="/getReceivedEvaluations">Assigned By Me</Link>
+			<Menu.Item key="assignedByMe">
+				<Link to="/evaluationsAssignedByMe">Assigned By Me</Link>
+			</Menu.Item>,
+			<Menu.Item key="doneByMe">
+				<Link to="/evaluationsDoneByMe">Done By Me</Link>
 			</Menu.Item>,
 			<Menu.Item key="assignEval">
 				<Link to="/assignEvaluations">Assign Evaluation</Link>
@@ -110,7 +112,7 @@ class MainPages extends React.Component<IMainPagesProps, IMainPagesState> {
 								) : (
 									""
 								)}
-								{this.props.user.role && this.props.user.role.name == "ROLE_MANAGER" ? (
+								{this.props.user.role && this.props.user.role.name === "ROLE_MANAGER" ? (
 									<SubMenu
 										title={
 											<span>
@@ -127,7 +129,7 @@ class MainPages extends React.Component<IMainPagesProps, IMainPagesState> {
 								) : (
 									""
 								)}
-								{this.props.user.role && this.props.user.role.name == "ROLE_MANAGER" ? (
+								{this.props.user.role && this.props.user.role.name === "ROLE_MANAGER" ? (
 									<SubMenu
 										title={
 											<span>
@@ -157,9 +159,9 @@ class MainPages extends React.Component<IMainPagesProps, IMainPagesState> {
 									key="Eval"
 								>
 									<Menu.Item>
-										<Link to="/">Assigned To Me</Link>
+										<Link to="/evaluationsAssignedToMe">Assigned To Me</Link>
 									</Menu.Item>
-									{this.props.user.role && this.props.user.role.name == "ROLE_MANAGER" ? managerEvaluationItems : ""}
+									{this.props.user.role && this.props.user.role.name === "ROLE_MANAGER" ? managerEvaluationItems : ""}
 								</SubMenu>
 							</Menu>
 						</Layout.Sider>
