@@ -15,6 +15,8 @@ import ViewSurveyForm from "../components/SurveyForm/ViewSurveyForm";
 import setAuthorizationToken from "../utils/setAuthorizationToken";
 import Employee from "../models/Employee";
 import ViewAllToolProcessScore from "./ToolProcess/ViewAllToolProcessScore";
+import ManagerSecuredRoute from "./Layout/ManagerSecuredRoute";
+import { Unauthorised } from "./Layout/Unauthorised";
 let jwt = require("jsonwebtoken");
 
 export interface IMainPagesProps extends RouteComponentProps {
@@ -23,7 +25,7 @@ export interface IMainPagesProps extends RouteComponentProps {
 	user: Employee;
 }
 
-export interface IMainPagesState { }
+export interface IMainPagesState {}
 
 class MainPages extends React.Component<IMainPagesProps, IMainPagesState> {
 	constructor(props: IMainPagesProps) {
@@ -96,8 +98,8 @@ class MainPages extends React.Component<IMainPagesProps, IMainPagesState> {
 										</Menu.Item>
 									</SubMenu>
 								) : (
-										""
-									)}
+									""
+								)}
 								<SubMenu
 									title={
 										<span>
@@ -144,15 +146,15 @@ class MainPages extends React.Component<IMainPagesProps, IMainPagesState> {
 						<Layout.Content>
 							<Switch>
 								<Route exact path="/" render={() => <Redirect to={this.props.user ? "/viewAllForms" : "/login"} />} />
-								<SecuredRoute
+								<ManagerSecuredRoute
 									exact
 									key="create" //key is to force a rerender
 									path="/createForm"
 									component={CreateUpdateSurveyForm}
 								/>
-								<SecuredRoute exact key="update" path="/updateForm/:formId" component={CreateUpdateSurveyForm} />
-								<SecuredRoute exact key="viewOne" path="/viewForm/:formId" component={ViewSurveyForm} />
-								<SecuredRoute exact key="view" path="/viewAllForms" component={ViewAllSurveyForm} />
+								<ManagerSecuredRoute exact key="update" path="/updateForm/:formId" component={CreateUpdateSurveyForm} />
+								<ManagerSecuredRoute exact key="viewOne" path="/viewForm/:formId" component={ViewSurveyForm} />
+								<ManagerSecuredRoute exact key="view" path="/viewAllForms" component={ViewAllSurveyForm} />
 								<SecuredRoute exact key="createEval" path="/createEvaluation" component={CreateUpdateEvaluation} />
 								<SecuredRoute exact key="updateEval" path="/updateEvaluation/:evaluationId" component={CreateUpdateEvaluation} />
 								<SecuredRoute
@@ -161,19 +163,20 @@ class MainPages extends React.Component<IMainPagesProps, IMainPagesState> {
 									path="/doAssignedEvaluation/:evaluationId"
 									component={CreateUpdateEvaluation}
 								/>
-								<SecuredRoute exact key="assignEvaluations" path="/assignEvaluations" component={AssignEvaluation} />
+								<ManagerSecuredRoute exact key="assignEvaluations" path="/assignEvaluations" component={AssignEvaluation} />
 								<SecuredRoute
 									exact
 									key="getReceivedEvaluations"
 									path="/getReceivedEvaluations"
 									component={ViewAllAssignedEvaluations}
 								/>
-								<SecuredRoute
+								<ManagerSecuredRoute
 									exact
 									key="viewToolProcessScores"
 									path="/viewToolProcessScores"
 									component={ViewAllToolProcessScore}
 								/>
+								<SecuredRoute exact key="unauth" path="/unauthorised" component={Unauthorised} />
 							</Switch>
 						</Layout.Content>
 					</Layout>

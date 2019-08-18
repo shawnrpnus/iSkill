@@ -27,7 +27,7 @@ public class JwtTokenProvider {
         claims.put("employeeId",(Long.toString(employee.getEmployeeId())));
         claims.put("username", employee.getUsername());
         claims.put("name", employee.getName());
-        claims.put("role", employee.getRole());
+        claims.put("role", employee.getRole().getName());
 
         return Jwts.builder()
                 .setSubject(employeeId)
