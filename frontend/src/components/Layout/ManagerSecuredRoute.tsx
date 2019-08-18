@@ -7,7 +7,7 @@ const SecuredRoute = ({ component: Component, security, ...otherProps }: any) =>
 	<Route
 		{...otherProps}
 		render={props =>
-			security.isAuthenticated && security.user.role === "ROLE_MANAGER" ? <Component {...props} /> : <Redirect to="/unauthorised" />
+			security.isAuthenticated && security.user.role.name === "ROLE_MANAGER" ? <Component {...props} /> : <Redirect to="/unauthorised" />
 		}
 	/>
 );

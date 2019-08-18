@@ -70,6 +70,18 @@ class MainPages extends React.Component<IMainPagesProps, IMainPagesState> {
 				collapsedWidth: "0"
 			};
 		}
+
+		let managerEvaluationItems = [
+			<Menu.Item>
+				<Link to="/getReceivedEvaluations">Assigned By Me</Link>
+			</Menu.Item>,
+			<Menu.Item>
+				<Link to="/assignEvaluations">Assign Evaluation</Link>
+			</Menu.Item>,
+			<Menu.Item>
+				<Link to="/createEvaluation">Do Evaluation</Link>
+			</Menu.Item>
+		];
 		return (
 			<React.Fragment>
 				<Layout>
@@ -93,29 +105,47 @@ class MainPages extends React.Component<IMainPagesProps, IMainPagesState> {
 											<span>{`Welcome, ${this.props.user.name}`}</span>
 										</Menu.Item>
 										<Menu.Item onClick={() => this.props.logout()}>Logout</Menu.Item>
+									</SubMenu>
+								) : (
+									""
+								)}
+								{this.props.user.role && this.props.user.role.name == "ROLE_MANAGER" ? (
+									<SubMenu
+										title={
+											<span>
+												<Icon type="form" />
+												<span>Overview</span>
+											</span>
+										}
+										key="Overview"
+									>
 										<Menu.Item>
-											<Link to="/viewToolProcessScores">View All Tool Process Scores</Link>
+											<Link to="/viewToolProcessScores">Score Summary</Link>
 										</Menu.Item>
 									</SubMenu>
 								) : (
 									""
 								)}
-								<SubMenu
-									title={
-										<span>
-											<Icon type="form" />
-											<span>Forms</span>
-										</span>
-									}
-									key="Forms"
-								>
-									<Menu.Item>
-										<Link to="/createForm">Create New Form</Link>
-									</Menu.Item>
-									<Menu.Item>
-										<Link to="/viewAllForms">My Forms</Link>
-									</Menu.Item>
-								</SubMenu>
+								{this.props.user.role && this.props.user.role.name == "ROLE_MANAGER" ? (
+									<SubMenu
+										title={
+											<span>
+												<Icon type="form" />
+												<span>Forms</span>
+											</span>
+										}
+										key="Forms"
+									>
+										<Menu.Item>
+											<Link to="/createForm">Create New Form</Link>
+										</Menu.Item>
+										<Menu.Item>
+											<Link to="/viewAllForms">My Forms</Link>
+										</Menu.Item>
+									</SubMenu>
+								) : (
+									""
+								)}
 								<SubMenu
 									title={
 										<span>
@@ -126,20 +156,9 @@ class MainPages extends React.Component<IMainPagesProps, IMainPagesState> {
 									key="Eval"
 								>
 									<Menu.Item>
-										<Link to="/">Evaluations To Do</Link>
+										<Link to="/">Assigned To Me</Link>
 									</Menu.Item>
-									<Menu.Item>
-										<Link to="/getReceivedEvaluations">Assigned Evaluations</Link>
-									</Menu.Item>
-									<Menu.Item>
-										<Link to="/assignEvaluations">Assign Evaluation</Link>
-									</Menu.Item>
-									<Menu.Item>
-										<Link to="/createEvaluation">Do Evaluation</Link>
-									</Menu.Item>
-									<Menu.Item>
-										<Link to="/login">Login</Link>
-									</Menu.Item>
+									{this.props.user.role && this.props.user.role.name == "ROLE_MANAGER" ? managerEvaluationItems : ""}
 								</SubMenu>
 							</Menu>
 						</Layout.Sider>

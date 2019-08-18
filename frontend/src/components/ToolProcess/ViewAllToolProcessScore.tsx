@@ -1,12 +1,12 @@
-import * as React from 'react';
-import { Button, Card, Table, Input, Icon, Form } from 'antd';
-import PageTitle from '../Layout/PageTitle';
-import { getAllToolProcessScores, getAllToolProcess } from '../../actions/toolProcessActions';
-import Employee from '../../models/Employee';
-import Highlighter from 'react-highlight-words';
-import { connect } from 'react-redux';
-import Column from 'antd/lib/table/Column';
-import ColumnGroup from 'antd/lib/table/ColumnGroup';
+import * as React from "react";
+import { Button, Card, Table, Input, Icon, Form } from "antd";
+import PageTitle from "../Layout/PageTitle";
+import { getAllToolProcessScores, getAllToolProcess } from "../../actions/toolProcessActions";
+import Employee from "../../models/Employee";
+import Highlighter from "react-highlight-words";
+import { connect } from "react-redux";
+import Column from "antd/lib/table/Column";
+import ColumnGroup from "antd/lib/table/ColumnGroup";
 
 export interface IViewAllToolProcessScoreProps {
 	getAllToolProcessScores: typeof getAllToolProcessScores;
@@ -56,32 +56,32 @@ class ViewAllToolProcessScore extends React.Component<IViewAllToolProcessScorePr
 			confirm: any;
 			clearFilters: any;
 		}) => (
-				<div style={{ padding: 8 }}>
-					<Input
-						// ref={node => {
-						//   this.setState({ searchInput: node });
-						// }}
-						// placeholder={`Search ${dataIndex}`}
-						placeholder={`Search Surveys`}
-						value={selectedKeys[0]}
-						onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-						onPressEnter={() => this.handleSearch(selectedKeys, confirm)}
-						style={{ width: 188, marginBottom: 8, display: "block" }}
-					/>
-					<Button
-						type="primary"
-						onClick={() => this.handleSearch(selectedKeys, confirm)}
-						icon="search"
-						size="small"
-						style={{ width: 90, marginRight: 8 }}
-					>
-						Search
+			<div style={{ padding: 8 }}>
+				<Input
+					// ref={node => {
+					//   this.setState({ searchInput: node });
+					// }}
+					// placeholder={`Search ${dataIndex}`}
+					placeholder={`Search Surveys`}
+					value={selectedKeys[0]}
+					onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+					onPressEnter={() => this.handleSearch(selectedKeys, confirm)}
+					style={{ width: 188, marginBottom: 8, display: "block" }}
+				/>
+				<Button
+					type="primary"
+					onClick={() => this.handleSearch(selectedKeys, confirm)}
+					icon="search"
+					size="small"
+					style={{ width: 90, marginRight: 8 }}
+				>
+					Search
 				</Button>
-					<Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-						Reset
+				<Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+					Reset
 				</Button>
-				</div>
-			),
+			</div>
+		),
 		filterIcon: (filtered: any) => <Icon type="search" style={{ color: filtered ? "#1890ff" : undefined }} />,
 		onFilter: (value: any, record: any) =>
 			value
@@ -131,26 +131,23 @@ class ViewAllToolProcessScore extends React.Component<IViewAllToolProcessScorePr
 		console.log(this.props.toolProcess);
 		return (
 			<div style={{ padding: "2vw 5vw 0 5vw" }}>
-				<PageTitle>View All Tool Process Scores</PageTitle>
+				<PageTitle>Score Summary (Highest score shown)</PageTitle>
 				<Card>
-					<Table dataSource={dataSource} onChange={this.handleChange} >
+					<Table dataSource={dataSource} onChange={this.handleChange}>
 						{/* <Column title={"Id"} dataIndex="employee.employeeId" key={"employee.password"} /> */}
 						<Column title={"Name"} dataIndex="employee.name" />
-						{this.props.toolProcess.map((tool: any, index: number) =>
+						{this.props.toolProcess.map((tool: any, index: number) => (
 							<ColumnGroup title={tool.toolProcessName} key={`colgroup${index}`}>
-								<Column title="Manager" dataIndex={`toolProcessScores[${tool.toolProcessName}].manager`}
-								/>
-								<Column title="Self" dataIndex={`toolProcessScores[${tool.toolProcessName}].self`}
-								/>
+								<Column title="Manager" dataIndex={`toolProcessScores[${tool.toolProcessName}].manager`} />
+								<Column title="Self" dataIndex={`toolProcessScores[${tool.toolProcessName}].self`} />
 							</ColumnGroup>
-						)}
+						))}
 					</Table>
 				</Card>
 			</div>
 		);
 	}
 }
-
 
 const wrappedViewAllToolProcessScore = Form.create({ name: "view_all_tool_process_score" })(ViewAllToolProcessScore);
 
