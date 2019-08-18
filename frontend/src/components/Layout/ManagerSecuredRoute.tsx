@@ -6,8 +6,8 @@ import PropTypes from "prop-types";
 const SecuredRoute = ({ component: Component, security, ...otherProps }: any) => (
 	<Route
 		{...otherProps}
-		render={props =>
-			security.isAuthenticated && security.user.role.name === "ROLE_MANAGER" ? <Component {...props} /> : <Redirect to="/unauthorised" />
+		render={routeProps =>
+			security.isAuthenticated && security.user.role.name === "ROLE_MANAGER" ? <Component {...routeProps} /> : <Redirect to="/unauthorised" />
 		}
 	/>
 );

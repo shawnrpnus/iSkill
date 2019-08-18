@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 const SecuredRoute = ({ component: Component, security, ...otherProps }: any) => (
-	<Route {...otherProps} render={props => (security.isAuthenticated === true ? <Component {...props} /> : <Redirect to="/login" />)} />
+	<Route {...otherProps} render={routeProps => (security.isAuthenticated === true ? <Component {...routeProps} /> : <Redirect to="/login" />)} />
 );
 
 SecuredRoute.propTypes = {
