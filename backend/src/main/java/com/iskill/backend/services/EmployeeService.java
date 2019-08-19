@@ -67,8 +67,7 @@ public class EmployeeService {
     private void checkForDuplicateUsername(String username) {
         Optional<Employee> employeeResult = Optional.ofNullable(employeeRepository.findByUsername(username));
         employeeResult.ifPresent(employee1 -> {
-            throw new CreateNewEmployeeException("Employee Account with username '" + username + "' already exists! " +
-                    "Please use a different username");
+            throw new CreateNewEmployeeException("Username '" + username + "' is already taken");
         }); //name already exist
     }
 }
