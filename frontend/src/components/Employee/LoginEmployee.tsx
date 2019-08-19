@@ -1,23 +1,25 @@
-import { Button, Checkbox, Form, Icon, Input } from "antd";
+import { Button, Checkbox, Form, Icon, Input, Card, Row, Col, Typography } from "antd";
 import "antd/dist/antd.css";
 import { FormComponentProps } from "antd/lib/form";
 import * as React from "react";
 import { connect } from "react-redux";
 import { Redirect, RouteComponentProps } from "react-router";
 import { getLoginDetails, logout } from "../../actions/employeeAction";
+import { clearStateErrors } from "../../actions/surveyFormActions";
 import Employee from "../../models/Employee";
 import "./LoginEmployee.css";
+import { Link } from "react-router-dom";
 
 export interface ILoginEmployeeProps extends FormComponentProps, RouteComponentProps<any> {
 	getLoginDetails: typeof getLoginDetails;
-	logout: typeof logout;
+	clearStateErrors: typeof clearStateErrors;
 	errors: any;
 	// employeeToCreate: Employee;
 	employeeLoggedIn: Employee;
 	auth: any;
 }
 
-export interface ILoginEmployeeState { }
+export interface ILoginEmployeeState {}
 
 class LoginEmployee extends React.Component<ILoginEmployeeProps, ILoginEmployeeState> {
 	constructor(props: ILoginEmployeeProps) {
@@ -31,11 +33,8 @@ class LoginEmployee extends React.Component<ILoginEmployeeProps, ILoginEmployeeS
 		this.props.form.validateFields();
 	}
 
-	componentDidUpdate() {
-		// 	if (this.props.auth.isAuthenticated) {
-
-		// 	return <Redirect to="/" />
-		//   }
+	componentWillUpdate() {
+		if (Object.keys(this.props.errors).length !== 0) this.props.clearStateErrors();
 	}
 
 	handleSubmit(e: React.FormEvent<EventTarget>) {
@@ -48,11 +47,6 @@ class LoginEmployee extends React.Component<ILoginEmployeeProps, ILoginEmployeeS
 		return Object.keys(fieldsError).some(field => fieldsError[field]);
 	}
 
-	logout(e: any) {
-		e.preventDefault();
-		this.props.logout();
-	}
-
 	render() {
 		const { getFieldDecorator } = this.props.form;
 		const { isAuthenticated } = this.props.auth;
@@ -60,58 +54,68 @@ class LoginEmployee extends React.Component<ILoginEmployeeProps, ILoginEmployeeS
 		// console.log(this.props.auth.isAuthenticated);
 		// console.log(this.props);
 
-		const userLinks = (
-			<Redirect to="/" />
-			// <Button>
-			// 	<a onClick={this.logout.bind(this)}>Logout</a>
-			// </Button>
-		);
+		const userLinks = <Redirect to="/" />;
 
 		const guestLinks = (
 			<Form onSubmit={this.handleSubmit} className="login-form">
-				<Form.Item
-					validateStatus={this.props.errors.username ? "error" : ""}
-					help={this.props.errors.username}
-					hasFeedback={true}
-					
-				>
-					{getFieldDecorator("username")(
-						<Input
-							prefix={<Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
-							placeholder="Username"
-						/>
-					)}
-				</Form.Item>
-				<Form.Item
-					validateStatus={this.props.errors.username ? "error" : ""}
-					help={this.props.errors.password}
-					hasFeedback={true}>
-					{getFieldDecorator("password")(
-						<Input
-							prefix={<Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />}
-							type="password"
-							placeholder="Password"
-						/>
-					)}
-				</Form.Item>
-				<Form.Item>
-					{getFieldDecorator("remember", {
-						valuePropName: "checked",
-						initialValue: true
-					})(<Checkbox>Remember me</Checkbox>)}
-					<a className="login-form-forgot" href="/">
-						Forgot password
-							</a>
-					<Button
-						type="primary"
-						htmlType="submit"
-						className="login-form-button"
-						onSubmit={this.handleSubmit}
-					>
-						Log in
-							</Button>
-					Or <a href="/register">register now!</a>
-				</Form.Item>
+				<Row type="flex" justify="center" align="middle" style={{ width: "100vw", height: "100vh", backgroundColor: "#f2f2f2" }}>
+					<Col lg={10} md={18} sm={22} xs={22}>
+						<Card
+							className="login-card"
+							bordered={false}
+							bodyStyle={{ padding: "24px 32px 16px 32px" }}
+							title={
+								<div style={{ display: "flex", justifyContent: "center", alignContent: "middle" }}>
+									<Typography.Title style={{ marginBottom: 0 }}>iSkill</Typography.Title>
+								</div>
+							}
+						>
+							<Form.Item
+								validateStatus={this.props.errors.username ? "error" : ""}
+								help={this.props.errors.username}
+								hasFeedback={true}
+								label={"Username"}
+							>
+								{getFieldDecorator("username")(
+									<Input size="large" prefix={<Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />} placeholder="Username" />
+								)}
+							</Form.Item>
+							<Form.Item
+								validateStatus={this.props.errors.username ? "error" : ""}
+								help={this.props.errors.password}
+								hasFeedback={true}
+								label={"Password"}
+							>
+								{getFieldDecorator("password")(
+									<Input
+										size="large"
+										prefix={<Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />}
+										type="password"
+										placeholder="Password"
+									/>
+								)}
+							</Form.Item>
+							<Form.Item>
+								{getFieldDecorator("remember", {
+									valuePropName: "checked",
+									initialValue: true
+								})(
+									<Button type="primary" size="large" htmlType="submit" className="login-form-button" onSubmit={this.handleSubmit}>
+										Log in
+									</Button>
+								)}
+								{/* <a className="login-form-forgot" href="/">
+									Forgot password
+								</a> */}
+							</Form.Item>
+							<Form.Item>
+								<Button type="dashed" size="large" htmlType="button" className="login-form-button">
+									<Link to="/register">Don't have an account? Register</Link>
+								</Button>
+							</Form.Item>
+						</Card>
+					</Col>
+				</Row>
 			</Form>
 		);
 
@@ -136,7 +140,7 @@ const mapStateToProps = (state: any) => ({
 //action creators
 const mapDispatchToProps = {
 	getLoginDetails,
-	logout
+	clearStateErrors
 };
 
 export default connect(

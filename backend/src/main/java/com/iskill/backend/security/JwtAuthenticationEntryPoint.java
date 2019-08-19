@@ -1,7 +1,7 @@
 package com.iskill.backend.security;
 
 import com.google.gson.Gson;
-import com.iskill.backend.exceptions.InvalidLoginResponse;
+import com.iskill.backend.response.InvalidLoginResponse;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;

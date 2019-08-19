@@ -1,4 +1,4 @@
-package com.iskill.backend.exceptions;
+package com.iskill.backend.response;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,8 +9,8 @@ public class InvalidLoginResponse {
     private String password;
 
     public InvalidLoginResponse(){
-        username = "Invalid Username";
-        password = "Invalid Password";
+        username = "Invalid Username or Password";
+        password = "Invalid Username or Password";
     }
 
 }
