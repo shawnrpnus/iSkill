@@ -2,6 +2,7 @@ package com.iskill.backend.services;
 
 import com.iskill.backend.exceptions.Employee.CreateNewEmployeeException.CreateNewEmployeeException;
 import com.iskill.backend.exceptions.Employee.EmployeeNotFound.EmployeeNotFoundException;
+import com.iskill.backend.exceptions.Employee.PasswordsDoNotMatchException.PasswordsDoNotMatchException;
 import com.iskill.backend.models.Employee;
 import com.iskill.backend.models.Evaluation;
 import com.iskill.backend.models.Role;
@@ -55,11 +56,11 @@ public class EmployeeService {
         checkForDuplicateUsername(newEmployee.getUsername());
         String password = newEmployee.getPassword();
         String hashedPassword = bCryptPasswordEncoder.encode(password);
-//        System.out.println(hashedPassword);
         newEmployee.setPassword(hashedPassword);
         String confirmPassword = newEmployee.getConfirmPassword();
-        String confirmedHashed = bCryptPasswordEncoder.encode(confirmPassword);
-        newEmployee.setConfirmPassword(confirmedHashed);
+        if (!password.equals(confirmPassword)){
+            throw new PasswordsDoNotMatchException("Passwords do not match!");
+        }
         return employeeRepository.save(newEmployee);
     }
 

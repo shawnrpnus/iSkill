@@ -31,17 +31,20 @@ public class Employee implements UserDetails {
     private String username;
 
     @NotBlank(message = "Password is required")
+    @Size(min = 6, message = "Password must be at least 6 characters")
     private String password; //field must be called password by default, otherwise override the getPassword() method
 
     @Transient
+    @NotBlank(message = "Please confirm your password")
     private String confirmPassword;
 
     @NotBlank(message = "Cost Center is required")
     private String costCenter;
 
+    @NotBlank(message = "Shift is required")
     private String shift;
 
-    @NotNull
+    @NotNull(message = "Role is required")
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
     private Role role;

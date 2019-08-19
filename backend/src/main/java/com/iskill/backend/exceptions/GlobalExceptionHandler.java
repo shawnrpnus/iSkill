@@ -3,6 +3,8 @@ package com.iskill.backend.exceptions;
 import com.iskill.backend.exceptions.Category.CategoryNotFound.CategoryNotFoundException;
 import com.iskill.backend.exceptions.Employee.CreateNewEmployeeException.CreateNewEmployeeException;
 import com.iskill.backend.exceptions.Employee.CreateNewEmployeeException.CreateNewEmployeeExceptionResponse;
+import com.iskill.backend.exceptions.Employee.PasswordsDoNotMatchException.PasswordsDoNotMatchException;
+import com.iskill.backend.exceptions.Employee.PasswordsDoNotMatchException.PasswordsDoNotMatchExceptionResponse;
 import com.iskill.backend.exceptions.Evaluation.EvaluationCannotDelete.EvaluationCannotDeleteException;
 import com.iskill.backend.exceptions.Evaluation.EvaluationCannotDelete.EvaluationCannotDeleteExceptionResponse;
 import com.iskill.backend.exceptions.Evaluation.EvaluationNotFound.EvaluationNotFoundException;
@@ -109,6 +111,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler
     public final ResponseEntity<Object> handleEvaluationCannotDeleteException(EvaluationCannotDeleteException ex, WebRequest req){
         EvaluationCannotDeleteExceptionResponse expRsp = new EvaluationCannotDeleteExceptionResponse(ex.getMessage()); //format to json response
+        return new ResponseEntity<>(expRsp, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public final ResponseEntity<Object> handlePasswordsDoNotMatchException(PasswordsDoNotMatchException ex, WebRequest req){
+        PasswordsDoNotMatchExceptionResponse expRsp = new PasswordsDoNotMatchExceptionResponse(ex.getMessage(), ex.getMessage()); //format to json response
         return new ResponseEntity<>(expRsp, HttpStatus.BAD_REQUEST);
     }
 

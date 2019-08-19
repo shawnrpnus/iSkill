@@ -1,18 +1,21 @@
-import { Button, Checkbox, Form, Icon, Input, Select, Tooltip } from "antd";
+import { Button, Checkbox, Form, Icon, Input, Select, Tooltip, Row, Col, Card, Typography } from "antd";
 import "antd/dist/antd.css";
 import { FormComponentProps } from "antd/lib/form";
 import * as React from "react";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router";
 import { registerNewEmployee } from "../../actions/employeeAction";
+import { clearStateErrors } from "../../actions/surveyFormActions";
 import { getAllRoles } from "../../actions/roleAction";
 import Employee from "../../models/Employee";
 import Role from "../../models/Role";
 import "./RegisterEmployee.css";
+import AffixedButtons from "../Layout/AffixedButtons";
 
 export interface IRegisterEmployeeProps extends FormComponentProps, RouteComponentProps<any> {
 	registerNewEmployee: typeof registerNewEmployee;
 	getAllRoles: typeof getAllRoles;
+	clearStateErrors: typeof clearStateErrors;
 	roles: typeof Role[];
 	errors: any;
 	employeeToCreate: Employee;
@@ -20,7 +23,7 @@ export interface IRegisterEmployeeProps extends FormComponentProps, RouteCompone
 
 export interface IRegisterEmployeeState {
 	confirmDirty: boolean;
-	autoCompleteResult: [];
+	passwordsMatch: boolean;
 }
 
 const { Option } = Select;
@@ -30,9 +33,12 @@ class RegisterEmployee extends React.Component<IRegisterEmployeeProps, IRegister
 		super(props);
 		this.state = {
 			confirmDirty: false,
-			autoCompleteResult: []
+			passwordsMatch: true
 		};
 		this.handleSubmit = this.handleSubmit.bind(this);
+		this.backToLogin = this.backToLogin.bind(this);
+		this.generateEmployeeModel = this.generateEmployeeModel.bind(this);
+		this.comparePasswords = this.comparePasswords.bind(this);
 	}
 
 	componentWillMount() {
@@ -41,16 +47,15 @@ class RegisterEmployee extends React.Component<IRegisterEmployeeProps, IRegister
 		console.log(this.props);
 	}
 
-	componentDidMount() {
-		// To disabled submit button at the beginning.
-		this.props.form.validateFields();
+	componentWillUpdate() {
+		if (Object.keys(this.props.errors).length !== 0) this.props.clearStateErrors();
 	}
 
-	generateEmployeeModel(isPreview: boolean) {
+	generateEmployeeModel() {
 		let username = this.props.form.getFieldValue("username");
 		let name = this.props.form.getFieldValue("name");
 		let password = this.props.form.getFieldValue("password");
-		let confirm = this.props.form.getFieldValue("confirm");
+		let confirm = this.props.form.getFieldValue("confirmPassword");
 		let costCenter = this.props.form.getFieldValue("costCenter");
 		let shift = this.props.form.getFieldValue("shift");
 		let role = this.props.form.getFieldValue("role");
@@ -61,49 +66,23 @@ class RegisterEmployee extends React.Component<IRegisterEmployeeProps, IRegister
 		return employeeModel;
 	}
 
+	backToLogin() {
+		this.props.history.push("/login");
+	}
+
+	comparePasswords(e: React.ChangeEvent<HTMLInputElement>) {
+		const { value } = e.target;
+		if (!!value && this.props.form.getFieldValue("password") !== this.props.form.getFieldValue("confirmPassword")) {
+			this.setState((state: any) => ({ passwordsMatch: false }));
+		} else if (this.props.form.getFieldValue("password") === this.props.form.getFieldValue("confirmPassword")) {
+			this.setState((state: any) => ({ passwordsMatch: true }));
+		}
+	}
+
 	handleSubmit(e: React.FormEvent<EventTarget>) {
 		e.preventDefault();
-		let employeeModel = this.generateEmployeeModel(true);
+		let employeeModel = this.generateEmployeeModel();
 		this.props.registerNewEmployee(employeeModel);
-	}
-
-	hasErrors(fieldsError: any) {
-		return Object.keys(fieldsError).some(field => fieldsError[field]);
-	}
-
-	handleConfirmBlur = (e: any) => {
-		const { value } = e.target;
-		this.setState({ confirmDirty: this.state.confirmDirty || !!value });
-	};
-
-	compareToFirstPassword = (rule: any, value: any, callback: any) => {
-		const { form } = this.props;
-		if (value && value !== form.getFieldValue("password")) {
-			callback("Two passwords that you enter is inconsistent!");
-		} else {
-			callback();
-		}
-	};
-
-	validateToNextPassword = (rule: any, value: any, callback: any) => {
-		const { form } = this.props;
-		if (value && this.state.confirmDirty) {
-			form.validateFields(["confirm"], { force: true });
-		}
-		callback();
-	};
-
-	handleWebsiteChange = (value: any) => {
-		let autoCompleteResult: any;
-		if (!value) {
-			autoCompleteResult = [];
-		} else {
-			autoCompleteResult = [".com", ".org", ".net"].map(domain => `${value}${domain}`);
-		}
-		this.setState({ autoCompleteResult });
-	};
-	handleChange(value: any) {
-		console.log(`selected ${value}`);
 	}
 
 	render() {
@@ -113,122 +92,146 @@ class RegisterEmployee extends React.Component<IRegisterEmployeeProps, IRegister
 		const formItemLayout = {
 			labelCol: {
 				xs: { span: 24 },
-				sm: { span: 8 }
+				sm: { span: 24 },
+				md: { span: 24 },
+				lg: { span: 4 }
 			},
 			wrapperCol: {
 				xs: { span: 24 },
-				sm: { span: 16 }
+				sm: { span: 24 },
+				md: { span: 24 },
+				lg: { span: 20 }
 			}
 		};
 		const tailFormItemLayout = {
 			wrapperCol: {
 				xs: {
-					span: 24,
-					offset: 0
+					span: 24
 				},
 				sm: {
-					span: 16,
-					offset: 8
+					span: 24
+				},
+				md: {
+					span: 24
+				},
+				lg: {
+					span: 20,
+					offset: 4
 				}
 			}
 		};
-		// const prefixSelector = getFieldDecorator("prefix", {
-		// 	initialValue: "86"
-		// })(
-		// 	<Select style={{ width: 70 }}>
-		// 		<Option value="86">+86</Option>
-		// 		<Option value="87">+87</Option>
-		// 	</Select>
-		// );
-
-		// const websiteOptions = autoCompleteResult.map(website => (
-		// 	<AutoCompleteOption key={website}>{website}</AutoCompleteOption>
-		// ));
 
 		return (
-			<div style={{ padding: "24px" }}>
-				<Form {...formItemLayout} onSubmit={this.handleSubmit}>
-					<Form.Item label="Name">{getFieldDecorator("name")(<Input />)}</Form.Item>
-					<Form.Item label="Username">{getFieldDecorator("username")(<Input />)}</Form.Item>
-					<Form.Item label="Password" hasFeedback>
-						{getFieldDecorator("password")(<Input.Password />)}
-					</Form.Item>
-					<Form.Item label="Confirm Password" hasFeedback>
-						{getFieldDecorator("confirm", {
-							rules: [
-								{
-									required: true,
-									message: "Please confirm your password!"
-								},
-								{
-									validator: this.compareToFirstPassword
+			<Form {...formItemLayout} onSubmit={this.handleSubmit} colon={false}>
+				<Row type="flex" justify="center" align="middle" style={{ width: "100vw", height: "100%", backgroundColor: "#f2f2f2" }}>
+					<Col md={15} sm={22} xs={22}>
+						<Card
+							className="register-card"
+							bordered={false}
+							bodyStyle={{ padding: "24px 32px 0px 32px" }}
+							title={
+								<div style={{ display: "flex", justifyContent: "center", alignContent: "middle", wordWrap: "break-word" }}>
+									<Typography.Title style={{ marginBottom: 0 }}>iSkill Registration</Typography.Title>
+								</div>
+							}
+						>
+							<Form.Item
+								validateStatus={this.props.errors.name ? "error" : ""}
+								help={this.props.errors.name}
+								hasFeedback={true}
+								label="Name"
+							>
+								{getFieldDecorator("name")(<Input />)}
+							</Form.Item>
+							<Form.Item
+								validateStatus={this.props.errors.username ? "error" : ""}
+								help={this.props.errors.username}
+								hasFeedback={true}
+								label="Username"
+							>
+								{getFieldDecorator("username")(<Input autoComplete="new-password" />)}
+							</Form.Item>
+							<Form.Item
+								validateStatus={this.props.errors.password ? "error" : ""}
+								help={this.props.errors.password}
+								hasFeedback={true}
+								label="Password"
+							>
+								{getFieldDecorator("password")(<Input.Password autoComplete="new-password" onBlur={this.comparePasswords} />)}
+							</Form.Item>
+							<Form.Item
+								validateStatus={this.props.errors.confirmPassword || !this.state.passwordsMatch ? "error" : ""}
+								help={this.state.passwordsMatch ? this.props.errors.confirmPassword : "Passwords do not match"}
+								hasFeedback={true}
+								label="Confirm Password"
+							>
+								{getFieldDecorator("confirmPassword", {})(<Input.Password onBlur={this.comparePasswords} />)}
+							</Form.Item>
+							<Form.Item
+								validateStatus={this.props.errors.costCenter ? "error" : ""}
+								help={this.props.errors.costCenter}
+								hasFeedback={true}
+								label={
+									<span>
+										Cost Center&nbsp;
+										<Tooltip title="Enter your assigned Cost Center.">
+											<Icon type="question-circle-o" />
+										</Tooltip>
+									</span>
 								}
-							]
-						})(<Input.Password onBlur={this.handleConfirmBlur} />)}
-					</Form.Item>
-					<Form.Item
-						label={
-							<span>
-								Cost Center&nbsp;
-								<Tooltip title="Enter your assigned Cost Center.">
-									<Icon type="question-circle-o" />
-								</Tooltip>
-							</span>
-						}
-					>
-						{getFieldDecorator("costCenter")(<Input />)}
-					</Form.Item>
-					{/* <Form.Item label="Habitual Residence">
-                        {getFieldDecorator('residence', {
-                            initialValue: ['zhejiang', 'hangzhou', 'xihu'],
-                            rules: [
-                                { type: 'array', required: true, message: 'Please select your habitual residence!' },
-                            ],
-                        })(<Cascader options={residences} />)}
-                    </Form.Item> */}
-					<Form.Item label="Shift">
-						{getFieldDecorator("shift", {
-							rules: [{ required: true, message: "Please input your designated shift!" }]
-						})(
-							<Select style={{ width: 120 }} onChange={this.handleChange}>
-								<Option value="shift1">Shift 1</Option>
-								<Option value="shift2">Shift 2</Option>
-								<Option value="disabled" disabled>
-									Disabled
-								</Option>
-								<Option value="Yiminghe">yiminghe</Option>
-							</Select>
-						)}
-					</Form.Item>
-					<Form.Item label="Role">
-						{getFieldDecorator("role", {
-							rules: [{ required: true, message: "Please input your designated shift!" }]
-						})(
-							<Select style={{ width: 120 }} onChange={this.handleChange}>
-								{this.props.roles.map((role: Role) => (
-									<Select.Option key={role.roleId} value={role.roleId}>
-										{role.name}
-									</Select.Option>
-								))}
-							</Select>
-						)}
-					</Form.Item>
-					<Form.Item {...tailFormItemLayout}>
-						{getFieldDecorator("agreement", {
-							valuePropName: "checked"
-						})(
-							<Checkbox>
-								I have read the <a href="/">agreement</a>
-							</Checkbox>
-						)}
-					</Form.Item>
-					<Form.Item {...tailFormItemLayout}>
-						<Button type="primary" htmlType="submit" onSubmit={this.handleSubmit}>
-							Register
-						</Button>
-					</Form.Item>
-				</Form>
-			</div>
+							>
+								{getFieldDecorator("costCenter")(<Input />)}
+							</Form.Item>
+
+							<Form.Item
+								validateStatus={this.props.errors.shift ? "error" : ""}
+								help={this.props.errors.shift}
+								hasFeedback={true}
+								label="Shift"
+							>
+								{getFieldDecorator("shift", {})(
+									<Select>
+										<Option value="shift1">Shift 1</Option>
+										<Option value="shift2">Shift 2</Option>
+										<Option value="disabled" disabled>
+											Disabled
+										</Option>
+										<Option value="Yiminghe">yiminghe</Option>
+									</Select>
+								)}
+							</Form.Item>
+
+							<Form.Item
+								validateStatus={this.props.errors.role ? "error" : ""}
+								help={this.props.errors.role}
+								hasFeedback={true}
+								label="Role"
+							>
+								{getFieldDecorator("role", {})(
+									<Select>
+										{this.props.roles.map((role: Role) => (
+											<Select.Option key={role.roleId} value={role.roleId}>
+												{role.name}
+											</Select.Option>
+										))}
+									</Select>
+								)}
+							</Form.Item>
+
+							<Form.Item {...tailFormItemLayout}>
+								<AffixedButtons
+									leftButtonText="Back to login"
+									leftButtonOnClickFunction={this.backToLogin}
+									leftButtonIconType="arrow-left"
+									rightButtonText="Register"
+									rightButtonOnSubmitFunction={this.handleSubmit}
+									rightButtonIconType="user-add"
+								/>
+							</Form.Item>
+						</Card>
+					</Col>
+				</Row>
+			</Form>
 		);
 	}
 }
@@ -243,7 +246,8 @@ const mapStateToProps = (state: any) => ({
 //action creators
 const mapDispatchToProps = {
 	registerNewEmployee,
-	getAllRoles
+	getAllRoles,
+	clearStateErrors
 };
 
 export default connect(

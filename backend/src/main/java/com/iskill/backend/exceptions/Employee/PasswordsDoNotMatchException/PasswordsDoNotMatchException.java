@@ -5,9 +5,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 
-public class PasswordDoNotMatchException extends RuntimeException{
+public class PasswordsDoNotMatchException extends RuntimeException{
 
-    public PasswordDoNotMatchException(String message){
+    public PasswordsDoNotMatchException(String message){
         super(message);
     }
 }

@@ -70,7 +70,7 @@ public class EmployeeController {
 
     @PostMapping("/register")
     public ResponseEntity<?> employeeRegister(@Valid @RequestBody Employee newEmployee, BindingResult result) {
-        employeeValidator.validate(newEmployee, result);
+//        employeeValidator.validate(newEmployee, result);
         ResponseEntity<Map<String, String>> errorMapRsp = validationService.generateErrorMapResponse(result);
         if (errorMapRsp != null) {
             return errorMapRsp;

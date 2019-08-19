@@ -50,16 +50,13 @@ class LoginEmployee extends React.Component<ILoginEmployeeProps, ILoginEmployeeS
 	render() {
 		const { getFieldDecorator } = this.props.form;
 		const { isAuthenticated } = this.props.auth;
-		// console.log(isAuthenticated);
-		// console.log(this.props.auth.isAuthenticated);
-		// console.log(this.props);
 
 		const userLinks = <Redirect to="/" />;
 
 		const guestLinks = (
 			<Form onSubmit={this.handleSubmit} className="login-form">
 				<Row type="flex" justify="center" align="middle" style={{ width: "100vw", height: "100vh", backgroundColor: "#f2f2f2" }}>
-					<Col lg={10} md={18} sm={22} xs={22}>
+					<Col lg={10} md={18} sm={22} xs={22} style={{ padding: "24px" }}>
 						<Card
 							className="login-card"
 							bordered={false}
@@ -75,17 +72,17 @@ class LoginEmployee extends React.Component<ILoginEmployeeProps, ILoginEmployeeS
 								help={this.props.errors.username}
 								hasFeedback={true}
 							>
-								{getFieldDecorator("username")(
+								{getFieldDecorator("username", { initialValue: "" })(
 									<Input size="large" prefix={<Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />} placeholder="Username" />
 								)}
 							</Form.Item>
 							<Form.Item
-								validateStatus={this.props.errors.username ? "error" : ""}
+								validateStatus={this.props.errors.password ? "error" : ""}
 								help={this.props.errors.password}
 								hasFeedback={true}
 							>
 								{getFieldDecorator("password")(
-									<Input
+									<Input.Password
 										size="large"
 										prefix={<Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />}
 										type="password"
@@ -117,14 +114,7 @@ class LoginEmployee extends React.Component<ILoginEmployeeProps, ILoginEmployeeS
 			</Form>
 		);
 
-		return (
-			<div>
-				<div>
-					{isAuthenticated ? userLinks : guestLinks}
-					{/* {guestLinks} */}
-				</div>
-			</div>
-		);
+		return <div>{isAuthenticated ? userLinks : guestLinks}</div>;
 	}
 }
 

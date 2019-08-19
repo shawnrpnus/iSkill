@@ -22,10 +22,6 @@ export const getLoginDetails = (
 	history: History
 ) => {
 	let url = `/api/employee/login`;
-	// let bodyFormData = new FormData();
-	// bodyFormData.set('username', username);
-	// bodyFormData.set('password', password);
-	// console.log(bodyFormData);
 	return (dispatch: any) => {
 		axios
 			.post(url, {
@@ -35,18 +31,13 @@ export const getLoginDetails = (
 			.then(response => {
 				console.log(response);
 				const token: string = response.data.token.substring(7, response.data.token.length);
-				// const token1 = token.substring(7, token.length);
 				localStorage.setItem('jwtToken', token);
 				setAuthorizationToken(token);
 				let jwt = require('jsonwebtoken');
-				// console.log(jwt);
-				// console.log(token);
 				let thisUser: Employee = jwt.decode(token);
 				console.log(thisUser); //this returns employee object
-				// dispatch(getLoginDetailsSuccess(response.data));
 				dispatch(setCurrentUser(jwt.decode(token)));
 				console.log("dispatched");
-				// window.location.reload();
 				if (thisUser.role.name === "ROLE_MANAGER") {
 					history.push("/viewAllForms")
 				} else {
@@ -82,9 +73,9 @@ export const registerNewEmployee = (
 		axios
 			.post(url, newEmployee)
 			.then(response => {
-				console.log(response);
 				dispatch(registerNewEmployeeSuccess(response.data));
-				console.log("dispatched");
+				alert("Registration Successful!");
+				window.location.reload();
 			})
 			.catch(err => {
 				dispatch(getErrors(err.response.data));
