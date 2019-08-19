@@ -1,14 +1,14 @@
-import { Button, Checkbox, Form, Icon, Input, Card, Row, Col, Typography } from "antd";
+import { Button, Card, Col, Form, Icon, Input, Row, Typography } from "antd";
 import "antd/dist/antd.css";
 import { FormComponentProps } from "antd/lib/form";
 import * as React from "react";
 import { connect } from "react-redux";
 import { Redirect, RouteComponentProps } from "react-router";
-import { getLoginDetails, logout } from "../../actions/employeeAction";
+import { Link } from "react-router-dom";
+import { getLoginDetails } from "../../actions/employeeAction";
 import { clearStateErrors } from "../../actions/surveyFormActions";
 import Employee from "../../models/Employee";
 import "./LoginEmployee.css";
-import { Link } from "react-router-dom";
 
 export interface ILoginEmployeeProps extends FormComponentProps, RouteComponentProps<any> {
 	getLoginDetails: typeof getLoginDetails;

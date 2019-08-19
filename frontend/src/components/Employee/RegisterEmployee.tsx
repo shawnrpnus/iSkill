@@ -1,16 +1,16 @@
-import { Button, Checkbox, Form, Icon, Input, Select, Tooltip, Row, Col, Card, Typography } from "antd";
+import { Card, Col, Form, Icon, Input, Row, Select, Tooltip, Typography } from "antd";
 import "antd/dist/antd.css";
 import { FormComponentProps } from "antd/lib/form";
 import * as React from "react";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router";
 import { registerNewEmployee } from "../../actions/employeeAction";
-import { clearStateErrors } from "../../actions/surveyFormActions";
 import { getAllRoles } from "../../actions/roleAction";
+import { clearStateErrors } from "../../actions/surveyFormActions";
 import Employee from "../../models/Employee";
 import Role from "../../models/Role";
-import "./RegisterEmployee.css";
 import AffixedButtons from "../Layout/AffixedButtons";
+import "./RegisterEmployee.css";
 
 export interface IRegisterEmployeeProps extends FormComponentProps, RouteComponentProps<any> {
 	registerNewEmployee: typeof registerNewEmployee;
@@ -87,7 +87,6 @@ class RegisterEmployee extends React.Component<IRegisterEmployeeProps, IRegister
 
 	render() {
 		const { getFieldDecorator } = this.props.form;
-		// const { autoCompleteResult } = this.state;
 
 		const formItemLayout = {
 			labelCol: {
