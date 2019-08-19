@@ -74,7 +74,6 @@ class LoginEmployee extends React.Component<ILoginEmployeeProps, ILoginEmployeeS
 								validateStatus={this.props.errors.username ? "error" : ""}
 								help={this.props.errors.username}
 								hasFeedback={true}
-								label={"Username"}
 							>
 								{getFieldDecorator("username")(
 									<Input size="large" prefix={<Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />} placeholder="Username" />
@@ -84,7 +83,6 @@ class LoginEmployee extends React.Component<ILoginEmployeeProps, ILoginEmployeeS
 								validateStatus={this.props.errors.username ? "error" : ""}
 								help={this.props.errors.password}
 								hasFeedback={true}
-								label={"Password"}
 							>
 								{getFieldDecorator("password")(
 									<Input
@@ -109,7 +107,7 @@ class LoginEmployee extends React.Component<ILoginEmployeeProps, ILoginEmployeeS
 								</a> */}
 							</Form.Item>
 							<Form.Item>
-								<Button type="dashed" size="large" htmlType="button" className="login-form-button">
+								<Button type="dashed" size="large" htmlType="button" className="login-form-button" style={{ marginTop: 0 }}>
 									<Link to="/register">Don't have an account? Register</Link>
 								</Button>
 							</Form.Item>
