@@ -17,6 +17,7 @@ import ManagerSecuredRoute from "./Layout/ManagerSecuredRoute";
 import { Unauthorised } from "./Layout/Unauthorised";
 import ViewAllToolProcessScore from "./ToolProcess/ViewAllToolProcessScore";
 import ViewSurveyForms from "./SurveyForm/ViewSurveyForms";
+import Profile from "./Employee/Profile";
 let jwt = require("jsonwebtoken");
 
 export interface IMainPagesProps extends RouteComponentProps {
@@ -105,7 +106,7 @@ class MainPages extends React.Component<IMainPagesProps, IMainPagesState> {
 										}
 									>
 										<Menu.Item>
-											<span>{`Welcome, ${this.props.user.name}`}</span>
+											<Link to="/profile">{`Welcome, ${this.props.user.name}`}</Link>
 										</Menu.Item>
 										<Menu.Item onClick={() => this.props.logout()}>Logout</Menu.Item>
 									</SubMenu>
@@ -200,6 +201,7 @@ class MainPages extends React.Component<IMainPagesProps, IMainPagesState> {
 									path="/viewToolProcessScores"
 									component={ViewAllToolProcessScore}
 								/>
+								<SecuredRoute exact key="profile" path="/profile" component={Profile} />
 								<SecuredRoute exact key="unauth" path="/unauthorised" component={Unauthorised} />
 							</Switch>
 						</Layout.Content>
