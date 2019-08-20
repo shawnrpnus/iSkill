@@ -29,6 +29,7 @@ import PageTitle from "../Layout/PageTitle";
 import Category from "./Category/Category";
 import "./CreateUpdateSurveyForm.css";
 import ViewSurveyForm from "./ViewSurveyForm";
+import Employee from "../../models/Employee";
 
 export interface ICreateSurveyFormProps extends FormComponentProps, RouteComponentProps<any> {
 	errors: any;
@@ -42,6 +43,7 @@ export interface ICreateSurveyFormProps extends FormComponentProps, RouteCompone
 	clearPreviewForm: typeof clearPreviewForm;
 	toolProcessList: Array<ToolProcess>;
 	surveyFormToViewOrUpdate?: SurveyFormModel;
+	user: Employee;
 }
 
 export interface ICreateSurveyFormState {
@@ -232,7 +234,7 @@ class CreateUpdateSurveyForm extends React.Component<ICreateSurveyFormProps, ICr
 	handleSubmit(e: React.FormEvent<EventTarget>) {
 		e.preventDefault();
 		let surveyFormModel = this.generateSurveyModel(false);
-		let employeeId = 1;
+		let employeeId = this.props.user.employeeId || 0;
 
 		if (this.props.surveyFormToViewOrUpdate) {
 			//update
@@ -491,7 +493,8 @@ const mapStateToProps = (state: any) => {
 	return {
 		errors: state.errors,
 		toolProcessList: state.toolProcess.toolProcessList,
-		surveyFormToViewOrUpdate: state.surveyForm.surveyFormToViewOrUpdate
+		surveyFormToViewOrUpdate: state.surveyForm.surveyFormToViewOrUpdate,
+		user: state.employee.user
 	};
 };
 //action creators

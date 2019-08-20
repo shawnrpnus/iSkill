@@ -50,12 +50,9 @@ class Question extends React.Component<IQuestionProps, IQuestionState> {
 			newUpperBoundOptions.push(i);
 		}
 		let currentUpperBound =
-			this.props.form.getFieldValue(`upperBound-${this.props.categoryId}-${this.props.questionId}`) <=
-			lowerBoundValue
+			this.props.form.getFieldValue(`upperBound-${this.props.categoryId}-${this.props.questionId}`) <= lowerBoundValue
 				? lowerBoundValue + 1
-				: this.props.form.getFieldValue(
-						`upperBound-${this.props.categoryId}-${this.props.questionId}`
-				  );
+				: this.props.form.getFieldValue(`upperBound-${this.props.categoryId}-${this.props.questionId}`);
 		this.setState((prevState, props) => ({
 			upperBoundOptions: newUpperBoundOptions,
 			currentRadioOption: lowerBoundValue
@@ -72,12 +69,9 @@ class Question extends React.Component<IQuestionProps, IQuestionState> {
 		}
 
 		let currentLowerBound =
-			this.props.form.getFieldValue(`lowerBound-${this.props.categoryId}-${this.props.questionId}`) >=
-			upperBoundValue
+			this.props.form.getFieldValue(`lowerBound-${this.props.categoryId}-${this.props.questionId}`) >= upperBoundValue
 				? upperBoundValue - 1
-				: this.props.form.getFieldValue(
-						`lowerBound-${this.props.categoryId}-${this.props.questionId}`
-				  );
+				: this.props.form.getFieldValue(`lowerBound-${this.props.categoryId}-${this.props.questionId}`);
 		this.setState((prevState, props) => ({
 			lowerBoundOptions: newLowerBoundOptions,
 			currentRadioOption: currentLowerBound
@@ -94,11 +88,8 @@ class Question extends React.Component<IQuestionProps, IQuestionState> {
 	loadRadioOptions() {
 		let currentRadioOptions = [];
 		for (
-			let i = this.props.form.getFieldValue(
-				`lowerBound-${this.props.categoryId}-${this.props.questionId}`
-			);
-			i <=
-			this.props.form.getFieldValue(`upperBound-${this.props.categoryId}-${this.props.questionId}`);
+			let i = this.props.form.getFieldValue(`lowerBound-${this.props.categoryId}-${this.props.questionId}`);
+			i <= this.props.form.getFieldValue(`upperBound-${this.props.categoryId}-${this.props.questionId}`);
 			i++
 		) {
 			currentRadioOptions.push(i);
@@ -115,21 +106,11 @@ class Question extends React.Component<IQuestionProps, IQuestionState> {
 					<Form.Item
 						key={this.props.questionId}
 						validateStatus={
-							this.props.errors[
-								`categories[${this.props.parentCategoryIndex}].questions[${
-									this.props.index
-								}].questionText`
-							]
+							this.props.errors[`categories[${this.props.parentCategoryIndex}].questions[${this.props.index}].questionText`]
 								? "error"
 								: ""
 						}
-						help={
-							this.props.errors[
-								`categories[${this.props.parentCategoryIndex}].questions[${
-									this.props.index
-								}].questionText`
-							]
-						}
+						help={this.props.errors[`categories[${this.props.parentCategoryIndex}].questions[${this.props.index}].questionText`]}
 						hasFeedback={true}
 					>
 						{getFieldDecorator(`questionText-${this.props.categoryId}-${this.props.questionId}`, {
@@ -148,12 +129,7 @@ class Question extends React.Component<IQuestionProps, IQuestionState> {
 							<Select onChange={this.lowerBoundChange}>
 								{this.state.lowerBoundOptions.map(option => {
 									return (
-										<Option
-											key={`lowerBound-${option}-${this.props.categoryId}-${
-												this.props.questionId
-											}`}
-											value={option}
-										>
+										<Option key={`lowerBound-${option}-${this.props.categoryId}-${this.props.questionId}`} value={option}>
 											{option}
 										</Option>
 									);
@@ -173,12 +149,7 @@ class Question extends React.Component<IQuestionProps, IQuestionState> {
 							<Select onChange={this.upperBoundChange}>
 								{this.state.upperBoundOptions.map(option => {
 									return (
-										<Option
-											key={`upperBound-${option}-${this.props.categoryId}-${
-												this.props.questionId
-											}`}
-											value={option}
-										>
+										<Option key={`upperBound-${option}-${this.props.categoryId}-${this.props.questionId}`} value={option}>
 											{option}
 										</Option>
 									);

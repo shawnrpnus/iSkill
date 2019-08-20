@@ -25,6 +25,7 @@ import EvaluationStatusEnum from "../../models/EvaluationStatusEnum";
 
 export interface ICreateEvaluationProps extends FormComponentProps, RouteComponentProps {
 	errors: any;
+	user: Employee;
 	employees: Array<Employee>;
 	surveyForms: Array<SurveyForm>;
 	evaluationToUpdate?: Evaluation;
@@ -37,7 +38,7 @@ export interface ICreateEvaluationProps extends FormComponentProps, RouteCompone
 	clearUpdatingEvaluation: typeof clearUpdatingEvaluation;
 }
 
-export interface ICreateEvaluationState { }
+export interface ICreateEvaluationState {}
 
 interface IRouteParams {
 	evaluationId?: number;
@@ -57,13 +58,13 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 	}
 
 	componentWillMount() {
-		let token = localStorage.getItem("jwtToken");
-		let jwt = require("jsonwebtoken");
-		console.log(jwt.decode(token)); //this returns employee object
-		let thisUser: Employee = jwt.decode(token);
-		console.log(thisUser.employeeId);
-		let loggedInEmployeeId: number = thisUser.employeeId || 0;
-		this.props.getEmployeesForManager(loggedInEmployeeId); // TODO: Use dynamic id based on who is logged in
+		// let token = localStorage.getItem("jwtToken");
+		// let jwt = require("jsonwebtoken");
+		// let thisUser: Employee = jwt.decode(token);
+		// let loggedInEmployeeId: number = thisUser.employeeId || 0;
+		if (this.props.user.employeeId) {
+			this.props.getEmployeesForManager(this.props.user.employeeId);
+		}
 		this.props.getAllSurveyForms();
 		let params: IRouteParams = this.props.match.params;
 		if (params.evaluationId) {
@@ -122,8 +123,8 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 	}
 
 	generateCreateEvaluationRequest() {
-		let creatorEmployeeId = 1;
-		let evaluatorEmployeeId = 1;
+		let creatorEmployeeId = this.props.user.employeeId || 0;
+		let evaluatorEmployeeId = this.props.user.employeeId || 0;
 		let evaluateeEmployeeId = this.props.form.getFieldValue("evaluatee");
 		let surveyFormId = this.props.form.getFieldValue("surveyForm");
 		let status = "COMPLETED";
@@ -142,7 +143,7 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 	}
 
 	generateUpdateEvaluationRequest() {
-		let evaluatorEmployeeId = 1;
+		let evaluatorEmployeeId = this.props.user.employeeId || 0;
 		let evaluateeEmployeeId = this.props.form.getFieldValue("evaluatee");
 		let surveyFormId = this.props.form.getFieldValue("surveyForm");
 		let status = "ONGOING";
@@ -212,10 +213,23 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 			}
 		}
 		return (
-			<div style={{ pointerEvents: (this.props.evaluationToUpdate !== undefined && this.props.evaluationToUpdate.status === EvaluationStatusEnum.COMPLETED) ? "none" : "auto" }}>
+			<div
+				style={{
+					pointerEvents:
+						this.props.evaluationToUpdate !== undefined && this.props.evaluationToUpdate.status === EvaluationStatusEnum.COMPLETED
+							? "none"
+							: "auto"
+				}}
+			>
 				<Spin spinning={((this.props.match.params as IRouteParams).evaluationId ? true : false) && !this.props.evaluationToUpdate}>
 					<Form onSubmit={this.handleSubmit} style={{ padding: "2vw 5vw 0 5vw" }}>
-						<PageTitle>{this.props.evaluationToUpdate ? (this.props.evaluationToUpdate.status === EvaluationStatusEnum.COMPLETED ? "View Evaluation" : "Update Evaluation") : "Creating Evaluation"}</PageTitle>
+						<PageTitle>
+							{this.props.evaluationToUpdate
+								? this.props.evaluationToUpdate.status === EvaluationStatusEnum.COMPLETED
+									? "View Evaluation"
+									: "Update Evaluation"
+								: "Creating Evaluation"}
+						</PageTitle>
 						<Card
 							title={
 								<Row gutter={24} type="flex" justify="center">
@@ -231,7 +245,16 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 													? this.props.evaluationToUpdate.evaluatee.employeeId
 													: undefined
 											})(
-												<Select placeholder="Select Employee" size="large" style={{ width: "100%" }} disabled={this.props.evaluationToUpdate !== undefined && this.props.evaluationToUpdate.evaluatee.employeeId === this.props.evaluationToUpdate.evaluator.employeeId}>
+												<Select
+													placeholder="Select Employee"
+													size="large"
+													style={{ width: "100%" }}
+													disabled={
+														this.props.evaluationToUpdate !== undefined &&
+														this.props.evaluationToUpdate.evaluatee.employeeId ===
+															this.props.evaluationToUpdate.evaluator.employeeId
+													}
+												>
 													{this.props.employees.map(employee => (
 														<Select.Option key={employee.username} value={employee.employeeId}>
 															{employee.name}
@@ -254,7 +277,12 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 														? this.getSurveyFormIdForEvaluation(this.props.evaluationToUpdate.evaluationId)
 														: undefined
 											})(
-												<Select placeholder="Select Form" size="large" style={{ width: "100%" }} disabled={this.props.evaluationToUpdate !== undefined}>
+												<Select
+													placeholder="Select Form"
+													size="large"
+													style={{ width: "100%" }}
+													disabled={this.props.evaluationToUpdate !== undefined}
+												>
 													{this.props.surveyForms.map((surveyForm: SurveyForm) => (
 														<Select.Option key={surveyForm.surveyFormName} value={surveyForm.surveyFormId}>
 															{surveyForm.surveyFormName}
@@ -289,9 +317,19 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 									answers={this.props.evaluationToUpdate ? this.props.evaluationToUpdate.answers : undefined}
 								/>
 							) : (
-									""
-								)}
-							<Form.Item style={{ textAlign: "right", marginTop: "10px", display: (this.props.evaluationToUpdate !== undefined && this.props.evaluationToUpdate.status === EvaluationStatusEnum.COMPLETED) ? "none" : "auto" }}>
+								""
+							)}
+							<Form.Item
+								style={{
+									textAlign: "right",
+									marginTop: "10px",
+									display:
+										this.props.evaluationToUpdate !== undefined &&
+										this.props.evaluationToUpdate.status === EvaluationStatusEnum.COMPLETED
+											? "none"
+											: "auto"
+								}}
+							>
 								<AffixedButtons
 									leftButtonText="Save as Draft"
 									leftButtonOnClickFunction={this.handleSaveAsDraft}
@@ -315,7 +353,8 @@ const mapStateToProps = (state: any) => ({
 	errors: state.errors,
 	employees: state.employee.employeesForManager,
 	surveyForms: state.surveyForm.surveyForms,
-	evaluationToUpdate: state.evaluation.evaluationToViewOrUpdate
+	evaluationToUpdate: state.evaluation.evaluationToViewOrUpdate,
+	user: state.employee.user
 });
 
 const mapDispatchToProps = {
