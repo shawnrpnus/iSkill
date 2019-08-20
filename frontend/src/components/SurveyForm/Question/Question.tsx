@@ -20,7 +20,6 @@ export interface IQuestionProps {
 export interface IQuestionState {
 	lowerBoundOptions: Array<number>;
 	upperBoundOptions: Array<number>;
-	currentRadioOption: number;
 }
 
 const COL_ONE_SIZE = 10;
@@ -33,14 +32,11 @@ class Question extends React.Component<IQuestionProps, IQuestionState> {
 
 		this.state = {
 			lowerBoundOptions: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-			upperBoundOptions: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-			currentRadioOption: 1
+			upperBoundOptions: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 		};
 
 		this.upperBoundChange = this.upperBoundChange.bind(this);
 		this.lowerBoundChange = this.lowerBoundChange.bind(this);
-		// this.onRadioChange = this.onRadioChange.bind(this);
-		this.onTaskNameChange = this.onTaskNameChange.bind(this);
 		this.loadRadioOptions = this.loadRadioOptions.bind(this);
 	}
 
@@ -54,8 +50,7 @@ class Question extends React.Component<IQuestionProps, IQuestionState> {
 				? lowerBoundValue + 1
 				: this.props.form.getFieldValue(`upperBound-${this.props.categoryId}-${this.props.questionId}`);
 		this.setState((prevState, props) => ({
-			upperBoundOptions: newUpperBoundOptions,
-			currentRadioOption: lowerBoundValue
+			upperBoundOptions: newUpperBoundOptions
 		}));
 		this.props.form.setFieldsValue({
 			[`upperBound-${this.props.categoryId}-${this.props.questionId}`]: currentUpperBound
@@ -73,16 +68,11 @@ class Question extends React.Component<IQuestionProps, IQuestionState> {
 				? upperBoundValue - 1
 				: this.props.form.getFieldValue(`lowerBound-${this.props.categoryId}-${this.props.questionId}`);
 		this.setState((prevState, props) => ({
-			lowerBoundOptions: newLowerBoundOptions,
-			currentRadioOption: currentLowerBound
+			lowerBoundOptions: newLowerBoundOptions
 		}));
 		this.props.form.setFieldsValue({
 			[`lowerBound-${this.props.categoryId}-${this.props.questionId}`]: currentLowerBound
 		});
-	}
-
-	onTaskNameChange() {
-		// TODO: Redux
 	}
 
 	loadRadioOptions() {
