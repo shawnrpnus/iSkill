@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static com.iskill.backend.security.SecurityConstants.FRONTEND_DEPLOYMENT_URL;
+
 @RestController
 @RequestMapping("/api/role")
-@CrossOrigin
+@CrossOrigin(origins = {"http://localhost:3000", FRONTEND_DEPLOYMENT_URL})
 public class RoleController {
     private final RoleService roleService;
 

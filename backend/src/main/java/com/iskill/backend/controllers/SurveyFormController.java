@@ -15,9 +15,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.iskill.backend.security.SecurityConstants.FRONTEND_DEPLOYMENT_URL;
+
 @RestController
 @RequestMapping("/api/surveyForm")
-@CrossOrigin
+@CrossOrigin(origins = {"http://localhost:3000", FRONTEND_DEPLOYMENT_URL})
 public class SurveyFormController {
 
     private final SurveyFormService surveyFormService;

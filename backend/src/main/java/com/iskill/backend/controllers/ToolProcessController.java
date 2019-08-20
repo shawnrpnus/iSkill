@@ -19,9 +19,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.iskill.backend.security.SecurityConstants.FRONTEND_DEPLOYMENT_URL;
+
 @RestController
 @RequestMapping("/api/toolProcess")
-@CrossOrigin
+@CrossOrigin(origins = {"http://localhost:3000", FRONTEND_DEPLOYMENT_URL})
 public class ToolProcessController {
 
     private final ToolProcessService toolProcessService;
@@ -61,7 +63,7 @@ public class ToolProcessController {
                 String toolProcessName = evaluation.getSurveyForm().getToolProcess().getToolProcessName();
                 BigDecimal percentageScore = new BigDecimal((evaluation.getTotalScore()*100.0)/evaluation.getMaxScore());
                 percentageScore = percentageScore.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-                if(evaluation.getEvaluatee().getEmployeeId() == evaluation.getEvaluator().getEmployeeId()) {
+                if(evaluation.getEvaluatee().getEmployeeId().equals(evaluation.getEvaluator().getEmployeeId())) {
                     // means self evaluation
                     if(percentageScore.compareTo(toolProcessMap.get(toolProcessName).getSelf()) >= 0) {
                         toolProcessMap.get(toolProcessName).setSelf(percentageScore);

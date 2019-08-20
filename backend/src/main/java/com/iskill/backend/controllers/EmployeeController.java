@@ -19,11 +19,12 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Map;
 
+import static com.iskill.backend.security.SecurityConstants.FRONTEND_DEPLOYMENT_URL;
 import static com.iskill.backend.security.SecurityConstants.TOKEN_PREFIX;
 
 @RestController
 @RequestMapping("/api/employee")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000", FRONTEND_DEPLOYMENT_URL})
 public class EmployeeController {
 
     private final EmployeeService employeeService;

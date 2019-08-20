@@ -17,9 +17,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.iskill.backend.security.SecurityConstants.FRONTEND_DEPLOYMENT_URL;
+
 @RestController
 @RequestMapping("/api/evaluation")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000", FRONTEND_DEPLOYMENT_URL})
 public class EvaluationController {
 
     private final EvaluationService evaluationService;
