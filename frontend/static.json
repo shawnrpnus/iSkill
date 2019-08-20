@@ -5,7 +5,7 @@
     },
     "proxies": {
         "/api/": {
-            "origin": "https://iskill-api.herokuapp.com"
+            "origin": "https://iskill-api.herokuapp.com/api/"
         }
     }
 }
