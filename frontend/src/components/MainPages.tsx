@@ -9,7 +9,6 @@ import CreateUpdateEvaluation from "../components/Evaluation/CreateUpdateEvaluat
 import Header from "../components/Layout/Header";
 import SecuredRoute from "../components/Layout/SecuredRoute";
 import CreateUpdateSurveyForm from "../components/SurveyForm/CreateUpdateSurveyForm";
-import ViewAllSurveyForm from "../components/SurveyForm/ViewAllSurveyForm";
 import ViewSurveyForm from "../components/SurveyForm/ViewSurveyForm";
 import Employee from "../models/Employee";
 import setAuthorizationToken from "../utils/setAuthorizationToken";
@@ -17,6 +16,7 @@ import ViewEvaluations from "./Evaluation/ViewEvaluations";
 import ManagerSecuredRoute from "./Layout/ManagerSecuredRoute";
 import { Unauthorised } from "./Layout/Unauthorised";
 import ViewAllToolProcessScore from "./ToolProcess/ViewAllToolProcessScore";
+import ViewSurveyForms from "./SurveyForm/ViewSurveyForms";
 let jwt = require("jsonwebtoken");
 
 export interface IMainPagesProps extends RouteComponentProps {
@@ -176,7 +176,7 @@ class MainPages extends React.Component<IMainPagesProps, IMainPagesState> {
 								/>
 								<ManagerSecuredRoute exact key="update" path="/updateForm/:formId" component={CreateUpdateSurveyForm} />
 								<ManagerSecuredRoute exact key="viewOne" path="/viewForm/:formId" component={ViewSurveyForm} />
-								<ManagerSecuredRoute exact key="view" path="/viewAllForms" component={ViewAllSurveyForm} />
+								<ManagerSecuredRoute exact key="view" path="/viewAllForms" component={ViewSurveyForms} />
 								<SecuredRoute exact key="createEval" path="/createEvaluation" component={CreateUpdateEvaluation} />
 								<SecuredRoute exact key="updateEval" path="/updateEvaluation/:evaluationId" component={CreateUpdateEvaluation} />
 								<SecuredRoute

@@ -8,12 +8,17 @@ import { Link } from "react-router-dom";
 import { deleteSurveyForm, getAllSurveyForms } from "../../actions/surveyFormActions";
 import SurveyForm from "../../models/SurveyForm";
 import PageTitle from "../Layout/PageTitle";
+import Column from "antd/lib/table/Column";
+import Employee from "../../models/Employee";
+
+var objectPath = require("object-path");
 
 export interface IViewAllSurveyFormProps extends FormComponentProps, RouteComponentProps<any> {
 	getAllSurveyForms: typeof getAllSurveyForms;
 	deleteSurveyForm: typeof deleteSurveyForm;
 	surveyForms: typeof SurveyForm[];
 	errors: any;
+	user: Employee;
 }
 
 export interface IViewAllSurveyFormState {
@@ -56,11 +61,7 @@ class ViewAllSurveyForm extends React.Component<IViewAllSurveyFormProps, IViewAl
 		}) => (
 			<div style={{ padding: 8 }}>
 				<Input
-					// ref={node => {
-					//   this.setState({ searchInput: node });
-					// }}
-					// placeholder={`Search ${dataIndex}`}
-					placeholder={`Search Surveys`}
+					placeholder={`Search`}
 					value={selectedKeys[0]}
 					onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
 					onPressEnter={() => this.handleSearch(selectedKeys, confirm)}
@@ -82,15 +83,11 @@ class ViewAllSurveyForm extends React.Component<IViewAllSurveyFormProps, IViewAl
 		),
 		filterIcon: (filtered: any) => <Icon type="search" style={{ color: filtered ? "#1890ff" : undefined }} />,
 		onFilter: (value: any, record: any) =>
-			record[dataIndex]
+			objectPath
+				.get(record, dataIndex)
 				.toString()
 				.toLowerCase()
 				.includes(value.toLowerCase()),
-		onFilterDropdownVisibleChange: (visible: any) => {
-			if (visible) {
-				// setTimeout(() => this.state.searchInput.select());
-			}
-		},
 		render: (text: string) => (
 			<Highlighter
 				highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
@@ -111,13 +108,6 @@ class ViewAllSurveyForm extends React.Component<IViewAllSurveyFormProps, IViewAl
 		this.setState({ searchText: "" });
 	};
 
-	handleChange = (pagination: any, filters: any, sorter: any) => {
-		console.log("Various parameters", pagination, filters, sorter);
-		this.setState({
-			filteredInfo: filters
-		});
-	};
-
 	deleteForm(surveyFormId: any) {
 		this.props.deleteSurveyForm(surveyFormId, this.props.history);
 	}
@@ -131,61 +121,6 @@ class ViewAllSurveyForm extends React.Component<IViewAllSurveyFormProps, IViewAl
 
 	public render() {
 		const dataSource = this.props.surveyForms;
-		const columns = [
-			{
-				title: "ID",
-				dataIndex: "surveyFormId",
-				key: "surveyFormId",
-				render: (text: any) => <Link to={"viewForm/" + text}>{text}</Link>
-			},
-			{
-				title: "Name",
-				dataIndex: "surveyFormName",
-				key: "surveyFormName",
-				...this.getColumnSearchProps("surveyFormName")
-			},
-			{
-				title: "Created By",
-				dataIndex: "creator.name",
-				filters: [{ text: "Manager", value: "Manager" }, { text: "Manager 2", value: "Manager 2" }],
-				onFilter: (value: any, record: any) => record.creator.name.includes(value)
-			},
-			{
-				title: "Tool/Process",
-				dataIndex: "toolProcess.toolProcessName",
-				filters: [{ text: "Tool 1", value: "Tool 1" }, { text: "Tool 2", value: "Tool 2" }],
-				onFilter: (value: any, record: any) => record.toolProcess.toolProcessName.includes(value)
-				// defaultSortOrder: "descend",
-				// sorter: (a:any, b:any) => a.toolProcess.toolProcessName - b.toolProcess.toolProcessName,
-			},
-			{
-				title: "Evaluated",
-				dataIndex: "evaluations.length"
-			},
-			{
-				title: "Actions",
-				dataIndex: "surveyFormId",
-				key: "actions",
-				render: (surveyFormId: any) => (
-					<React.Fragment>
-						<Link to={"viewForm/" + surveyFormId}>
-							<Button type="primary" shape="circle" icon="search" />
-						</Link>
-						&nbsp;
-						<Popconfirm
-							title="Are you sure you want to delete this form?"
-							onConfirm={() => this.deleteForm(surveyFormId)}
-							okText="Yes"
-							cancelText="No"
-							placement="topRight"
-						>
-							<Button type="danger" shape="circle" icon="delete" />
-						</Popconfirm>
-					</React.Fragment>
-				)
-			}
-		];
-
 		if (this.props.errors.surveyFormCannotDelete) {
 			this.openNotification();
 		}
@@ -193,7 +128,68 @@ class ViewAllSurveyForm extends React.Component<IViewAllSurveyFormProps, IViewAl
 			<div style={{ padding: "2vw 5vw 0 5vw" }}>
 				<PageTitle>View All Forms</PageTitle>
 				<Card>
-					<Table rowKey="surveyFormId" dataSource={dataSource} columns={columns} onChange={this.handleChange} />
+					<Table
+						rowKey="surveyFormId"
+						dataSource={dataSource}
+						bordered
+						pagination={{ pageSize: 5, pageSizeOptions: ["5", "10", "15", "20"], showSizeChanger: true }}
+					>
+						<Column
+							title={"Name"}
+							dataIndex="surveyFormName"
+							sorter={(a: any, b: any) => a.surveyFormName.localeCompare(b.surveyFormName)}
+							sortDirections={["descend", "ascend"]}
+							{...this.getColumnSearchProps("surveyFormName")}
+						/>
+						<Column
+							title={"Created By"}
+							dataIndex="creator.name"
+							sorter={(a: any, b: any) => a.creator.name.localeCompare(b.creator.name)}
+							sortDirections={["descend", "ascend"]}
+							{...this.getColumnSearchProps("creator.name")}
+						/>
+						<Column
+							title={"Tool/Process"}
+							dataIndex="toolProcess.toolProcessName"
+							sorter={(a: any, b: any) => a.toolProcess.toolProcessName.localeCompare(b.toolProcess.toolProcessName)}
+							sortDirections={["descend", "ascend"]}
+							{...this.getColumnSearchProps("toolProcess.toolProcessName")}
+						/>
+						<Column
+							title={"Evaluated"}
+							dataIndex="evaluations.length"
+							sorter={(a: any, b: any) => a.evaluations.length - b.evaluations.length}
+							sortDirections={["descend", "ascend"]}
+						/>
+						<Column
+							title={"Actions"}
+							dataIndex="surveyFormId"
+							align="center"
+							render={(surveyFormId: any, record: SurveyForm) => (
+								<React.Fragment>
+									<Link to={"viewForm/" + surveyFormId}>
+										<Button type="primary" shape="circle" icon="search" />
+									</Link>
+									&nbsp;
+									{record.creator &&
+									record.creator.employeeId &&
+									Number(record.creator.employeeId) === Number(this.props.user.employeeId) ? (
+										<Popconfirm
+											title="Are you sure you want to delete this form?"
+											onConfirm={() => this.deleteForm(surveyFormId)}
+											okText="Yes"
+											cancelText="No"
+											placement="topRight"
+										>
+											<Button type="danger" shape="circle" icon="delete" />
+										</Popconfirm>
+									) : (
+										""
+									)}
+								</React.Fragment>
+							)}
+						/>
+					</Table>
 				</Card>
 			</div>
 		);
@@ -204,7 +200,8 @@ const wrappedViewAllSurveyForm = Form.create({ name: "view_all_survey_form" })(V
 
 const mapStateToProps = (state: any) => ({
 	surveyForms: state.surveyForm.surveyForms,
-	errors: state.errors
+	errors: state.errors,
+	user: state.employee.user
 });
 
 //action creators
