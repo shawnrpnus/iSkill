@@ -84,11 +84,11 @@ public class SurveyFormController {
 
     @DeleteMapping("/deleteSurveyForm")
     public ResponseEntity<?> deleteSurveyForm(@RequestParam("surveyFormId") Long surveyFormId){
-        String deletedSurveyFormName = surveyFormService.deleteSurveyForm(surveyFormId);
+        Long deletedSurveyFormId = surveyFormService.deleteSurveyForm(surveyFormId);
 
-        HashMap<String, String> deleteSuccessMessage = new HashMap<>();
+        HashMap<String, Long> deleteSuccessMessage = new HashMap<>();
 
-        deleteSuccessMessage.put("SurveyFormDeleted", deletedSurveyFormName);
+        deleteSuccessMessage.put("surveyFormId", deletedSurveyFormId);
 
         return new ResponseEntity<>(deleteSuccessMessage, HttpStatus.OK);
     }

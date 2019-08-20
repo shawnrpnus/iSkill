@@ -128,7 +128,7 @@ const getAllSurveyFormSuccess = (surveyForms: any) => ({
 export const deleteSurveyForm = (surveyFormId: number, history: History) => {
 	return (dispatch: any) => {
 		axios.delete(`/api/surveyForm/deleteSurveyForm?surveyFormId=${surveyFormId}`).then(response => {
-			dispatch(deleteSurveyFormSuccess(response.data))
+			dispatch(deleteSurveyFormSuccess(response.data.surveyFormId))
 			alert("Form deleted!");
 			history.push("/viewAllForms");
 		}).catch(err => {

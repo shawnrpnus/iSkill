@@ -191,7 +191,7 @@ public class SurveyFormService {
         return surveyFormRepository.save(surveyFormToUpdate);
     }
 
-    public String deleteSurveyForm(Long surveyFormId){
+    public Long deleteSurveyForm(Long surveyFormId){
         SurveyForm surveyForm = getSurveyForm(surveyFormId);
 
         if (surveyForm.getEvaluations() != null && surveyForm.getEvaluations().size() > 0){ //has evaluations
@@ -209,7 +209,7 @@ public class SurveyFormService {
         surveyForm.setToolProcess(null);
 
         surveyFormRepository.delete(surveyForm);
-        return surveyForm.getSurveyFormName();
+        return surveyForm.getSurveyFormId();
     }
 
     private void checkForDuplicateFormName(String surveyFormName) {
