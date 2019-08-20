@@ -58,10 +58,6 @@ class CreateEvaluation extends React.Component<ICreateEvaluationProps, ICreateEv
 	}
 
 	componentWillMount() {
-		// let token = localStorage.getItem("jwtToken");
-		// let jwt = require("jsonwebtoken");
-		// let thisUser: Employee = jwt.decode(token);
-		// let loggedInEmployeeId: number = thisUser.employeeId || 0;
 		if (this.props.user.employeeId) {
 			this.props.getEmployeesForManager(this.props.user.employeeId);
 		}

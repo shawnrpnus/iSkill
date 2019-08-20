@@ -37,15 +37,9 @@ class AssignEvaluation extends React.Component<IAssignEvaluationProps, IAssignEv
 	}
 
 	componentWillMount() {
-		// localStorage.setItem('jwtToken',token);
-		let token = localStorage.getItem("jwtToken");
-		let jwt = require("jsonwebtoken");
-		console.log(jwt.decode(token)); //this returns employee object
-		let thisUser: Employee = jwt.decode(token);
-		console.log(thisUser.employeeId);
-		let loggedInEmployeeId: number = thisUser.employeeId || 0;
-		console.log(loggedInEmployeeId);
-		this.props.getEmployeesForManager(loggedInEmployeeId);
+		if (this.props.user.employeeId) {
+			this.props.getEmployeesForManager(this.props.user.employeeId);
+		}
 
 		this.props.getAllSurveyForms();
 
@@ -61,13 +55,10 @@ class AssignEvaluation extends React.Component<IAssignEvaluationProps, IAssignEv
 	handleSubmit(e: React.FormEvent<EventTarget>) {
 		console.log("submit");
 		e.preventDefault();
-		//this.props.createEvaluation(this.generateCreateEvaluationRequest());
+
 		let evaluateeEmployeeIds: Array<number> = this.props.form.getFieldValue("evaluatees");
 		let surveyFormId: number = this.props.form.getFieldValue("surveyForm");
-		let currentUserId: number = 0;
-		if (this.props.user.employeeId !== undefined) {
-			currentUserId = this.props.user.employeeId;
-		}
+		let currentUserId: number = this.props.user.employeeId || 0;
 		let assignEvaluationRequest = new AssignEvaluationRequest(currentUserId, evaluateeEmployeeIds, evaluateeEmployeeIds, surveyFormId);
 
 		this.props.assignEvaluation(assignEvaluationRequest);
@@ -106,11 +97,16 @@ class AssignEvaluation extends React.Component<IAssignEvaluationProps, IAssignEv
 								>
 									{getFieldDecorator("evaluatees", {})(
 										<Select mode="multiple" placeholder="Select Employee" size="large" style={{ width: "100%" }}>
-											{this.props.employees.map(employee => (
-												<Select.Option key={employee.username} value={employee.employeeId}>
-													{employee.name}
-												</Select.Option>
-											))}
+											{this.props.employees.map(employee => {
+												if (Number(employee.employeeId) !== Number(this.props.user.employeeId)) {
+													return (
+														<Select.Option key={employee.username} value={employee.employeeId}>
+															{employee.name}
+														</Select.Option>
+													);
+												}
+												return null;
+											})}
 										</Select>
 									)}
 								</Form.Item>
