@@ -63,25 +63,21 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
 							<Input readOnly={!this.state.updating} autoComplete="new-password" />
 						)}
 					</Form.Item>
-                    <Form.Item
+					<Form.Item
 						// validateStatus={this.props.errors.username ? "error" : ""}
 						// help={this.props.errors.username}
 						// hasFeedback={true}
 						label="Cost Center"
 					>
-						{getFieldDecorator("costCenter", { initialValue: this.props.user.costCenter })(
-							<Input readOnly={!this.state.updating} autoComplete="new-password" />
-						)}
+						{getFieldDecorator("costCenter", { initialValue: this.props.user.costCenter })(<Input readOnly={!this.state.updating} />)}
 					</Form.Item>
-                    <Form.Item
+					<Form.Item
 						// validateStatus={this.props.errors.username ? "error" : ""}
 						// help={this.props.errors.username}
 						// hasFeedback={true}
 						label="Shift"
 					>
-						{getFieldDecorator("shift", { initialValue: this.props.user.shift })(
-							<Input readOnly={!this.state.updating} autoComplete="new-password" />
-						)}
+						{getFieldDecorator("shift", { initialValue: this.props.user.shift })(<Input readOnly={!this.state.updating} />)}
 					</Form.Item>
 				</Card>
 			</Form>
