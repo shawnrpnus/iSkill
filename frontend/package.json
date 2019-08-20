@@ -50,7 +50,7 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:8080",
+  "proxy": "https://iskill-api.herokuapp.com/",
   "devDependencies": {
     "@types/node": "^12.0.10"
   }
