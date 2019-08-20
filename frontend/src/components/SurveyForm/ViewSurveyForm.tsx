@@ -13,6 +13,7 @@ import { sortCategoriesByCategorySequence } from "../../utils/SurveyFormUtils";
 import PageTitle from "../Layout/PageTitle";
 import SurveyFormTemplate from "./SurveyFormTemplate";
 import "./ViewSurveyForm.css";
+import Employee from "../../models/Employee";
 
 export interface IViewSurveyFormProps extends FormComponentProps, RouteComponentProps {
 	getSurveyForm: typeof getSurveyForm;
@@ -22,6 +23,7 @@ export interface IViewSurveyFormProps extends FormComponentProps, RouteComponent
 	deleteSurveyForm: typeof deleteSurveyForm;
 	clearStateErrors: typeof clearStateErrors;
 	errors: any;
+	user: Employee;
 }
 
 export interface IViewSurveyFormState {}
@@ -109,26 +111,32 @@ class ViewSurveyForm extends React.Component<IViewSurveyFormProps, IViewSurveyFo
 				) : (
 					<Row>
 						<PageTitle>Viewing Evaluation Form</PageTitle>
-						<Col span={24}>
-							<Link to={`/updateForm/${surveyFormId}`}>
-								<Button type="primary" size="large">
-									<Icon type="edit" />
-									Edit Form
-								</Button>
-							</Link>
-							<Popconfirm
-								title="Are you sure you want to delete this form?"
-								onConfirm={() => this.deleteSelf()}
-								okText="Yes"
-								cancelText="No"
-								placement="topRight"
-							>
-								<Button type="danger" size="large">
-									<Icon type="delete" />
-									Delete Form
-								</Button>
-							</Popconfirm>
-						</Col>
+						{this.props.surveyFormToViewOrUpdate &&
+						this.props.surveyFormToViewOrUpdate.creator &&
+						Number(this.props.user.employeeId) === Number(this.props.surveyFormToViewOrUpdate.creator.employeeId) ? (
+							<Col span={24}>
+								<Link to={`/updateForm/${surveyFormId}`}>
+									<Button type="primary" size="large">
+										<Icon type="edit" />
+										Edit Form
+									</Button>
+								</Link>
+								<Popconfirm
+									title="Are you sure you want to delete this form?"
+									onConfirm={() => this.deleteSelf()}
+									okText="Yes"
+									cancelText="No"
+									placement="topRight"
+								>
+									<Button type="danger" size="large">
+										<Icon type="delete" />
+										Delete Form
+									</Button>
+								</Popconfirm>
+							</Col>
+						) : (
+							""
+						)}
 						<Col span={24}>
 							{this.props.errors.surveyFormCannotDelete ? (
 								<Alert
@@ -160,7 +168,8 @@ const wrappedViewSurveyForm = Form.create({ name: "view_survey_form" })(ViewSurv
 const mapStateToProps = (state: any) => ({
 	surveyFormToViewOrUpdate: state.surveyForm.surveyFormToViewOrUpdate,
 	surveyFormToPreview: state.surveyForm.surveyFormToPreview,
-	errors: state.errors
+	errors: state.errors,
+	user: state.employee.user
 });
 
 const mapDispatchToProps = {

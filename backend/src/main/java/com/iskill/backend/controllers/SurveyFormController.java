@@ -45,7 +45,6 @@ public class SurveyFormController {
     @GetMapping("/{surveyFormId}")
     public ResponseEntity<?> getSurveyForm(@PathVariable Long surveyFormId){
         SurveyForm surveyForm = surveyFormService.getSurveyForm(surveyFormId);
-        surveyForm.setCreator(null);
         for(Evaluation e: surveyForm.getEvaluations()) {
             e.setSurveyForm(null);
         }
