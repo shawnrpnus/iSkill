@@ -23,7 +23,7 @@ export interface IViewAllSurveyFormProps extends FormComponentProps, RouteCompon
 
 export interface IViewAllSurveyFormState {
 	searchText: string;
-	filteredInfo: any;
+	searchDataIndex: string;
 }
 
 class ViewAllSurveyForm extends React.Component<IViewAllSurveyFormProps, IViewAllSurveyFormState> {
@@ -32,7 +32,7 @@ class ViewAllSurveyForm extends React.Component<IViewAllSurveyFormProps, IViewAl
 
 		this.state = {
 			searchText: "",
-			filteredInfo: null
+			searchDataIndex: ""
 		};
 	}
 
@@ -64,12 +64,12 @@ class ViewAllSurveyForm extends React.Component<IViewAllSurveyFormProps, IViewAl
 					placeholder={`Search`}
 					value={selectedKeys[0]}
 					onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-					onPressEnter={() => this.handleSearch(selectedKeys, confirm)}
+					onPressEnter={() => this.handleSearch(selectedKeys, dataIndex, confirm)}
 					style={{ width: 188, marginBottom: 8, display: "block" }}
 				/>
 				<Button
 					type="primary"
-					onClick={() => this.handleSearch(selectedKeys, confirm)}
+					onClick={() => this.handleSearch(selectedKeys, dataIndex, confirm)}
 					icon="search"
 					size="small"
 					style={{ width: 90, marginRight: 8 }}
@@ -91,21 +91,21 @@ class ViewAllSurveyForm extends React.Component<IViewAllSurveyFormProps, IViewAl
 		render: (text: string) => (
 			<Highlighter
 				highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
-				searchWords={[this.state.searchText]}
+				searchWords={this.state.searchDataIndex === dataIndex ? [this.state.searchText] : [""]}
 				autoEscape
 				textToHighlight={text.toString()}
 			/>
 		)
 	});
 
-	handleSearch = (selectedKeys: string[], confirm: () => void) => {
+	handleSearch = (selectedKeys: string[], dataIndex: string, confirm: Function) => {
 		confirm();
-		this.setState({ searchText: selectedKeys[0] });
+		this.setState({ searchText: selectedKeys[0], searchDataIndex: dataIndex });
 	};
 
-	handleReset = (clearFilters: () => void) => {
+	handleReset = (clearFilters: Function) => {
 		clearFilters();
-		this.setState({ searchText: "" });
+		this.setState({ searchText: "", searchDataIndex: "" });
 	};
 
 	deleteForm(surveyFormId: any) {

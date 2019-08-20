@@ -29,6 +29,7 @@ export interface IViewEvaluationsProps extends RouteComponentProps {
 export interface IViewEvaluationsState {
 	mode: string;
 	searchText: string;
+	searchDataIndex: string;
 }
 
 class ViewEvaluations extends React.Component<IViewEvaluationsProps, IViewEvaluationsState> {
@@ -37,7 +38,8 @@ class ViewEvaluations extends React.Component<IViewEvaluationsProps, IViewEvalua
 
 		this.state = {
 			mode: "",
-			searchText: ""
+			searchText: "",
+			searchDataIndex: ""
 		};
 	}
 
@@ -89,12 +91,12 @@ class ViewEvaluations extends React.Component<IViewEvaluationsProps, IViewEvalua
 						placeholder={`Search`}
 						value={selectedKeys[0]}
 						onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-						onPressEnter={() => this.handleSearch(selectedKeys, confirm)}
+						onPressEnter={() => this.handleSearch(selectedKeys, dataIndex, confirm)}
 						style={{ width: 188, marginBottom: 8, display: "block" }}
 					/>
 					<Button
 						type="primary"
-						onClick={() => this.handleSearch(selectedKeys, confirm)}
+						onClick={() => this.handleSearch(selectedKeys, dataIndex, confirm)}
 						icon="search"
 						size="small"
 						style={{ width: 90, marginRight: 8 }}
@@ -116,7 +118,7 @@ class ViewEvaluations extends React.Component<IViewEvaluationsProps, IViewEvalua
 			render: (text: string) => (
 				<Highlighter
 					highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
-					searchWords={[this.state.searchText]}
+					searchWords={this.state.searchDataIndex === dataIndex ? [this.state.searchText] : [""]}
 					autoEscape
 					textToHighlight={text.toString()}
 				/>
@@ -124,9 +126,9 @@ class ViewEvaluations extends React.Component<IViewEvaluationsProps, IViewEvalua
 		};
 	}
 
-	handleSearch = (selectedKeys: string[], confirm: Function) => {
+	handleSearch = (selectedKeys: string[], dataIndex: string, confirm: Function) => {
 		confirm();
-		this.setState({ searchText: selectedKeys[0] });
+		this.setState({ searchText: selectedKeys[0], searchDataIndex: dataIndex });
 	};
 
 	handleReset = (clearFilters: Function) => {
