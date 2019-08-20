@@ -58,10 +58,10 @@ class RegisterEmployee extends React.Component<IRegisterEmployeeProps, IRegister
 		let confirm = this.props.form.getFieldValue("confirmPassword");
 		let costCenter = this.props.form.getFieldValue("costCenter");
 		let shift = this.props.form.getFieldValue("shift");
-		let role = this.props.form.getFieldValue("role");
-		let roleAct = this.props.roles[role - 1];
+		let roleIdx = this.props.form.getFieldValue("role");
+		let role = this.props.roles[roleIdx];
 
-		let employeeModel = new Employee(name, username, password, confirm, costCenter, shift, roleAct);
+		let employeeModel = new Employee(name, username, password, confirm, costCenter, shift, role);
 		console.log(employeeModel);
 		return employeeModel;
 	}
@@ -208,8 +208,8 @@ class RegisterEmployee extends React.Component<IRegisterEmployeeProps, IRegister
 							>
 								{getFieldDecorator("role", {})(
 									<Select>
-										{this.props.roles.map((role: Role) => (
-											<Select.Option key={role.roleId} value={role.roleId}>
+										{this.props.roles.map((role: Role, index: number) => (
+											<Select.Option key={role.roleId} value={index}>
 												{role.name}
 											</Select.Option>
 										))}
